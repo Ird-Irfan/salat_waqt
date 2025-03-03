@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:salat_waqt/core/config/salat_waqt_screen.dart';
+import 'package:salat_waqt/core/constant/salat_color.dart';
 import 'package:salat_waqt/presentation/home/ui/home_page.dart';
 
 class SalatWaqt extends StatefulWidget {
@@ -23,6 +24,10 @@ class _SalatWaqtState extends State<SalatWaqt> {
     return ResponsiveSizer(
       builder: (context, orientation, deviceType) {
         return GetMaterialApp(
+          theme: ThemeData(
+            scaffoldBackgroundColor: SalatColor.primaryColorDark900,
+            brightness: Brightness.dark,
+          ),
           navigatorKey: SalatWaqt.navigatorKey,
           builder: (context, child) {
             return Overlay(
