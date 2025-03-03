@@ -7,6 +7,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBarSection(),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -14,10 +15,6 @@ class HomePage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // const SizedBox(height: 16),
-                // Location and notification bar
-                const AppBarSection(),
-                const SizedBox(height: 16),
                 // Date Display
                 const DateDisplay(),
                 const SizedBox(height: 20),
