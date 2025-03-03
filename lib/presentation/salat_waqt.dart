@@ -1,0 +1,49 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:salat_waqt/core/config/salat_waqt_screen.dart';
+import 'package:salat_waqt/presentation/home/ui/home_page.dart';
+
+class SalatWaqt extends StatefulWidget {
+  const SalatWaqt({super.key});
+
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
+
+  static BuildContext get globalContext =>
+      navigatorKey.currentContext ?? Get.context!;
+
+  @override
+  State<SalatWaqt> createState() => _SalatWaqtState();
+}
+
+class _SalatWaqtState extends State<SalatWaqt> {
+  @override
+  Widget build(BuildContext context) {
+    return ResponsiveSizer(
+      builder: (context, orientation, deviceType) {
+        return GetMaterialApp(
+          navigatorKey: SalatWaqt.navigatorKey,
+          builder: (context, child) {
+            return Overlay(
+              initialEntries: [
+                OverlayEntry(
+                  builder: (context) {
+                    SalatWaqtScreen.setUp(context); // Initialize screen sizes
+                    return child!;
+                  },
+                ),
+              ],
+            );
+          },
+          onInit: () => SalatWaqtScreen.setUp(context),
+          onReady: () => SalatWaqtScreen.setUp(context),
+          debugShowCheckedModeBanner: false,
+          title: 'Salat Waqt',
+          themeMode: ThemeMode.dark,
+          home: const HomePage(),
+        );
+      },
+    );
+  }
+}
