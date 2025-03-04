@@ -4,6 +4,7 @@ import 'package:salat_waqt/core/constant/app_contant.dart';
 import 'package:salat_waqt/presentation/home/ui/appber/appber_section.dart';
 import 'package:salat_waqt/presentation/home/ui/current_prayer_time/current_prayer_time.dart';
 import 'package:salat_waqt/presentation/home/ui/date_display/date_display.dart';
+import 'package:salat_waqt/presentation/home/ui/forbidden_time/forbidden_time.dart';
 import 'package:salat_waqt/presentation/home/ui/iftaar_timer/iftaar_time_counter.dart';
 import 'package:salat_waqt/presentation/home/ui/sahri_Iftaar_time_section/sahri_iftar_times_section.dart';
 
@@ -54,7 +55,7 @@ class HomePage extends StatelessWidget {
                     const SadaqaAppBanner(),
                     const SizedBox(height: 20),
                     // Forbidden Times Section
-                    const ForbiddenTimesSection(),
+                    const ForbiddenTime(),
                     const SizedBox(height: 20),
                     // About Us Footer
                     const AboutUsFooter(),
@@ -69,8 +70,6 @@ class HomePage extends StatelessWidget {
     );
   }
 }
-
-
 
 class QuickToolsSection extends StatelessWidget {
   const QuickToolsSection({Key? key}) : super(key: key);
@@ -291,93 +290,6 @@ class SadaqaAppBanner extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class ForbiddenTimesSection extends StatelessWidget {
-  const ForbiddenTimesSection({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFF1A2234),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: const [
-                  Icon(Icons.do_not_disturb, color: Colors.red, size: 20),
-                  SizedBox(width: 8),
-                  Text(
-                    'Forbidden Times',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-              const Text(
-                'Today For Salah',
-                style: TextStyle(fontSize: 12, color: Colors.grey),
-              ),
-              const Icon(Icons.expand_more),
-            ],
-          ),
-          const SizedBox(height: 16),
-          buildForbiddenTimeRow(
-            'MORNING',
-            '06:24 - 05:39',
-            Icons.wb_sunny_outlined,
-          ),
-          const SizedBox(height: 12),
-          buildForbiddenTimeRow(
-            'NOON',
-            '12:08 - 12:15',
-            Icons.wb_sunny_outlined,
-          ),
-          const SizedBox(height: 12),
-          buildForbiddenTimeRow(
-            'EVENING',
-            '05:43 - 05:58',
-            Icons.wb_sunny_outlined,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget buildForbiddenTimeRow(String title, String time, IconData icon) {
-    return Row(
-      children: [
-        Row(
-          children: [
-            Icon(icon, size: 16, color: Colors.amber),
-            const SizedBox(width: 4),
-            const Icon(Icons.cloud_outlined, size: 16, color: Colors.grey),
-          ],
-        ),
-        const SizedBox(width: 12),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(fontSize: 12, color: Colors.grey),
-            ),
-            Text(
-              time,
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-            ),
-          ],
-        ),
-        const SizedBox(width: 8),
-        const Icon(Icons.info_outline, size: 16, color: Colors.grey),
-      ],
     );
   }
 }
