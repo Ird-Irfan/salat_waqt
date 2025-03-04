@@ -12,7 +12,7 @@ class AppBarSection extends StatelessWidget implements PreferredSizeWidget {
       title: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: const Color(0xFF1A2234),
+          
           borderRadius: BorderRadius.circular(20),
         ),
         child: Row(

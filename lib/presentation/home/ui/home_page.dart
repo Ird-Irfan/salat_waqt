@@ -1,50 +1,69 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:salat_waqt/core/constant/app_contant.dart';
 import 'package:salat_waqt/presentation/home/ui/appber/appber_section.dart';
 import 'package:salat_waqt/presentation/home/ui/date_display/date_display.dart';
 import 'package:salat_waqt/presentation/home/ui/iftaar_timer/iftaar_time_counter.dart';
+import 'package:salat_waqt/presentation/home/ui/sahri_Iftaar_time_section/sahri_iftar_times_section.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBarSection(),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Date Display
-                const DateDisplay(),
-                const SizedBox(height: 20),
-                // Iftar Time Counter
-                const IftarTimeCounter(),
-                const SizedBox(height: 20),
-                // Sahri & Iftar Times
-                const SahriIftarTimesSection(),
-                const SizedBox(height: 16),
-                // Current Prayer Time
-                const CurrentPrayerTime(),
-                const SizedBox(height: 16),
-                // Prayer Times for Day
-                const PrayerTimesRow(),
-                const SizedBox(height: 20),
-                // Quick Tools Section
-                const QuickToolsSection(),
-                const SizedBox(height: 20),
-                // Sadaqa App Banner
-                const SadaqaAppBanner(),
-                const SizedBox(height: 20),
-                // Forbidden Times Section
-                const ForbiddenTimesSection(),
-                const SizedBox(height: 20),
-                // About Us Footer
-                const AboutUsFooter(),
-                const SizedBox(height: 20),
-              ],
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+      ),
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        backgroundColor: Colors.transparent,
+        appBar: AppBarSection(),
+        body: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(AppConstant.appBg),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: SafeArea(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Date Display
+                    const DateDisplay(),
+                    const SizedBox(height: 20),
+                    // Iftar Time Counter
+                    const IftarTimeCounter(),
+                    const SizedBox(height: 20),
+                    // Sahri & Iftar Times
+                    const SahriIftarTimesSection(),
+                    const SizedBox(height: 16),
+                    // Current Prayer Time
+                    const CurrentPrayerTime(),
+                    const SizedBox(height: 16),
+                    // Prayer Times for Day
+                    const PrayerTimesRow(),
+                    const SizedBox(height: 20),
+                    // Quick Tools Section
+                    const QuickToolsSection(),
+                    const SizedBox(height: 20),
+                    // Sadaqa App Banner
+                    const SadaqaAppBanner(),
+                    const SizedBox(height: 20),
+                    // Forbidden Times Section
+                    const ForbiddenTimesSection(),
+                    const SizedBox(height: 20),
+                    // About Us Footer
+                    const AboutUsFooter(),
+                    const SizedBox(height: 20),
+                  ],
+                ),
+              ),
             ),
           ),
         ),
@@ -53,90 +72,6 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class SahriIftarTimesSection extends StatelessWidget {
-  const SahriIftarTimesSection({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const Row(
-      children: [
-        Expanded(
-          child: TimeInfoCard(
-            title: 'SAHRI LAST TIME',
-            time: '04:15 AM',
-            icon: Icons.nightlight_outlined,
-            showWeatherIcon: true,
-          ),
-        ),
-        SizedBox(width: 12),
-        Expanded(
-          child: TimeInfoCard(
-            title: 'IFTAAR LAST TIME',
-            time: '04:15 AM',
-            icon: Icons.wb_sunny_outlined,
-            showWeatherIcon: false,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class TimeInfoCard extends StatelessWidget {
-  final String title;
-  final String time;
-  final IconData icon;
-  final bool showWeatherIcon;
-
-  const TimeInfoCard({
-    Key? key,
-    required this.title,
-    required this.time,
-    required this.icon,
-    required this.showWeatherIcon,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFF1A2234),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(
-                icon,
-                color: showWeatherIcon ? Colors.amber : Colors.orange,
-                size: 18,
-              ),
-              if (showWeatherIcon)
-                const Icon(
-                  Icons.cloud_outlined,
-                  color: Colors.white54,
-                  size: 18,
-                ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Text(
-            title,
-            style: TextStyle(fontSize: 10, color: Colors.grey.shade400),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            time,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 class CurrentPrayerTime extends StatelessWidget {
   const CurrentPrayerTime({Key? key}) : super(key: key);
