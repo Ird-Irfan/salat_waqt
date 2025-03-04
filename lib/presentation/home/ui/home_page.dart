@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:salat_waqt/core/constant/app_contant.dart';
 import 'package:salat_waqt/presentation/home/ui/appber/appber_section.dart';
+import 'package:salat_waqt/presentation/home/ui/current_prayer_time/current_prayer_time.dart';
 import 'package:salat_waqt/presentation/home/ui/date_display/date_display.dart';
 import 'package:salat_waqt/presentation/home/ui/iftaar_timer/iftaar_time_counter.dart';
 import 'package:salat_waqt/presentation/home/ui/sahri_Iftaar_time_section/sahri_iftar_times_section.dart';
@@ -45,9 +46,6 @@ class HomePage extends StatelessWidget {
                     const SizedBox(height: 16),
                     // Current Prayer Time
                     const CurrentPrayerTime(),
-                    const SizedBox(height: 16),
-                    // Prayer Times for Day
-                    const PrayerTimesRow(),
                     const SizedBox(height: 20),
                     // Quick Tools Section
                     const QuickToolsSection(),
@@ -73,144 +71,6 @@ class HomePage extends StatelessWidget {
 }
 
 
-class CurrentPrayerTime extends StatelessWidget {
-  const CurrentPrayerTime({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFF1A2234),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text(
-                'CURRENT WAQT • DUHUR',
-                style: TextStyle(fontSize: 12, color: Colors.grey),
-              ),
-              SizedBox(height: 4),
-              Text(
-                '12:15 PM - 02:10 PM',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-          const Icon(Icons.notifications, color: Colors.amber),
-        ],
-      ),
-    );
-  }
-}
-
-class PrayerTimesRow extends StatelessWidget {
-  const PrayerTimesRow({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 90,
-      child: Row(
-        children: const [
-          Expanded(
-            child: PrayerTimeItem(
-              name: 'FAJR',
-              time: '05:45',
-              icon: Icons.wb_sunny_outlined,
-              isActive: false,
-            ),
-          ),
-          Expanded(
-            child: PrayerTimeItem(
-              name: 'DUHUR',
-              time: '12:45',
-              icon: Icons.wb_sunny_outlined,
-              isActive: true,
-            ),
-          ),
-          Expanded(
-            child: PrayerTimeItem(
-              name: 'ASR',
-              time: '04:45',
-              icon: Icons.wb_sunny_outlined,
-              isActive: false,
-            ),
-          ),
-          Expanded(
-            child: PrayerTimeItem(
-              name: 'MAGRIB',
-              time: '06:45',
-              icon: Icons.nightlight_outlined,
-              isActive: false,
-            ),
-          ),
-          Expanded(
-            child: PrayerTimeItem(
-              name: 'ISHA',
-              time: '07:45',
-              icon: Icons.nightlight_outlined,
-              isActive: false,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class PrayerTimeItem extends StatelessWidget {
-  final String name;
-  final String time;
-  final IconData icon;
-  final bool isActive;
-
-  const PrayerTimeItem({
-    Key? key,
-    required this.name,
-    required this.time,
-    required this.icon,
-    required this.isActive,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 2),
-      decoration: BoxDecoration(
-        color: isActive ? const Color(0xFF1E3A8A) : const Color(0xFF1A2234),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, color: isActive ? Colors.white : Colors.amber, size: 20),
-          const SizedBox(height: 4),
-          Text(
-            name,
-            style: TextStyle(
-              fontSize: 12,
-              color: isActive ? Colors.white70 : Colors.grey,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            time,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-              color: isActive ? Colors.white : Colors.white,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 class QuickToolsSection extends StatelessWidget {
   const QuickToolsSection({Key? key}) : super(key: key);

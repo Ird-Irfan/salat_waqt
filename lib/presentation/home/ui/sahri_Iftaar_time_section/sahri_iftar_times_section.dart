@@ -56,12 +56,16 @@ class TimeInfoCard extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             title,
-            style: TextStyle(fontSize: 10, color: Colors.grey.shade400),
+            style: const TextStyle(fontSize: 10, color: Colors.white),
           ),
           const SizedBox(height: 4),
           Text(
             time,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
           ),
         ],
       ),

@@ -22,9 +22,8 @@ class SvgIcon extends StatelessWidget {
       svgPath,
       height: height?.px,
       width: width?.px,
-      colorFilter: color != null 
-          ? ColorFilter.mode(color!, BlendMode.srcIn)
-          : null,
+      colorFilter:
+          color != null ? ColorFilter.mode(color!, BlendMode.srcIn) : null,
     );
   }
 }
