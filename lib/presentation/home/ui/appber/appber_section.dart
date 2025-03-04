@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:salat_waqt/presentation/home/ui/appber/custom_switch.dart';
 
 class AppBarSection extends StatelessWidget implements PreferredSizeWidget {
   const AppBarSection({super.key});
@@ -24,27 +25,13 @@ class AppBarSection extends StatelessWidget implements PreferredSizeWidget {
               style: TextStyle(fontSize: 14, color: Colors.grey.shade300),
             ),
             const SizedBox(width: 4),
-            const Icon(
-              Icons.keyboard_arrow_down,
-              size: 18,
-              color: Colors.grey,
-            ),
+            const Icon(Icons.keyboard_arrow_down, size: 18, color: Colors.grey),
           ],
         ),
       ),
       actions: [
-        Container(
-          margin: const EdgeInsets.only(right: 16),
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: const Color(0xFF1A2234),
-            shape: BoxShape.circle,
-          ),
-          child: const Icon(
-            Icons.notifications_none_outlined,
-            color: Colors.amber,
-          ),
-        ),
+        // Switch(value: true, onChanged: (value) {}),
+        CustomSwitch(),
       ],
     );
   }

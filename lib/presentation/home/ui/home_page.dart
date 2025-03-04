@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:salat_waqt/presentation/home/ui/appber/appber_section.dart';
+import 'package:salat_waqt/presentation/home/ui/date_display/date_display.dart';
+import 'package:salat_waqt/presentation/home/ui/iftaar_timer/iftaar_time_counter.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -46,97 +48,6 @@ class HomePage extends StatelessWidget {
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class DateDisplay extends StatelessWidget {
-  const DateDisplay({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      decoration: BoxDecoration(
-        color: const Color(0xFF1A2234),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          IconButton(icon: const Icon(Icons.chevron_left), onPressed: () {}),
-          Column(
-            children: const [
-              Text(
-                '15 Ramadan, 1445',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 4),
-              Text(
-                '16 March 2025',
-                style: TextStyle(fontSize: 12, color: Colors.grey),
-              ),
-            ],
-          ),
-          IconButton(icon: const Icon(Icons.chevron_right), onPressed: () {}),
-        ],
-      ),
-    );
-  }
-}
-
-class IftarTimeCounter extends StatelessWidget {
-  const IftarTimeCounter({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 220,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: const Color(0xFF1A2234),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          SizedBox(
-            height: 180,
-            width: 180,
-            child: CircularProgressIndicator(
-              value: 0.65,
-              strokeWidth: 8,
-              backgroundColor: Colors.grey.shade800,
-              valueColor: const AlwaysStoppedAnimation<Color>(
-                Color(0xFF2196F3),
-              ),
-            ),
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Text(
-                'Iftaar time',
-                style: TextStyle(fontSize: 16, color: Colors.white70),
-              ),
-              SizedBox(height: 8),
-              Text(
-                '06:28',
-                style: TextStyle(
-                  fontSize: 45,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF2196F3),
-                ),
-              ),
-              Text(
-                'Hours',
-                style: TextStyle(fontSize: 16, color: Colors.white70),
-              ),
-            ],
-          ),
-        ],
       ),
     );
   }
