@@ -47,39 +47,39 @@ class _CurrentPrayerTimeState extends State<CurrentPrayerTime>
           ),
           child: Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text(
-                        'CURRENT WAQT • DUHUR',
-                        style: TextStyle(fontSize: 12, color: Colors.white),
-                      ),
-                      SizedBox(height: 4),
-                      Text(
-                        '12:15 PM - 02:10 PM',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    isExpanded = !isExpanded;
+                    if (isExpanded) {
+                      _animationController.forward();
+                    } else {
+                      _animationController.reverse();
+                    }
+                  });
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        Text(
+                          'CURRENT WAQT • DUHUR',
+                          style: TextStyle(fontSize: 12, color: Colors.white),
                         ),
-                      ),
-                    ],
-                  ),
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        isExpanded = !isExpanded;
-                        if (isExpanded) {
-                          _animationController.forward();
-                        } else {
-                          _animationController.reverse();
-                        }
-                      });
-                    },
-                    child: AnimatedRotation(
+                        SizedBox(height: 4),
+                        Text(
+                          '12:15 PM - 02:10 PM',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                    AnimatedRotation(
                       duration: const Duration(milliseconds: 300),
                       turns: isExpanded ? 0.5 : 0,
                       child: SvgIcon(
@@ -89,8 +89,8 @@ class _CurrentPrayerTimeState extends State<CurrentPrayerTime>
                         width: 24,
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               Divider(color: Colors.grey.withOpacity(0.2)),
               const SizedBox(height: 16),

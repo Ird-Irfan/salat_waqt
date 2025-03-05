@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:salat_waqt/core/config/salat_waqt_screen.dart';
 import 'package:salat_waqt/core/constant/app_contant.dart';
 import 'package:salat_waqt/presentation/common/widgets/svg_icons.dart';
 
@@ -47,46 +48,47 @@ class _ForbiddenTimeState extends State<ForbiddenTime>
           ),
           child: Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SvgIcon(
-                    svgPath: AppConstant.icArrowDown,
-                    color: Colors.amber,
-                    height: 24,
-                    width: 24,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text(
-                        'CURRENT WAQT • DUHUR',
-                        style: TextStyle(fontSize: 12, color: Colors.white),
-                      ),
-                      SizedBox(height: 4),
-                      Text(
-                        '12:15 PM - 02:10 PM',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    isExpanded = !isExpanded;
+                    if (isExpanded) {
+                      _animationController.forward();
+                    } else {
+                      _animationController.reverse();
+                    }
+                  });
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SvgIcon(
+                      svgPath: AppConstant.icForbidden,
+                      color: Colors.red,
+                      height: 32.px,
+                      width: 32.px,
+                    ),
+                    SizedBox(width: 16.px),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        Text(
+                          'CURRENT WAQT • DUHUR',
+                          style: TextStyle(fontSize: 12, color: Colors.white),
                         ),
-                      ),
-                    ],
-                  ),
-                  Spacer(),
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        isExpanded = !isExpanded;
-                        if (isExpanded) {
-                          _animationController.forward();
-                        } else {
-                          _animationController.reverse();
-                        }
-                      });
-                    },
-                    child: AnimatedRotation(
+                        SizedBox(height: 4),
+                        Text(
+                          '12:15 PM - 02:10 PM',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Spacer(),
+                    AnimatedRotation(
                       duration: const Duration(milliseconds: 300),
                       turns: isExpanded ? 0.5 : 0,
                       child: SvgIcon(
@@ -96,21 +98,117 @@ class _ForbiddenTimeState extends State<ForbiddenTime>
                         width: 24,
                       ),
                     ),
-                  ),
-                ],
-              ),
-              Divider(color: Colors.grey.withOpacity(0.2)),
-              const SizedBox(height: 16),
-              Expanded(
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 300),
-                  child: isExpanded ? const ColumnItem() : const RowItem(),
+                  ],
                 ),
               ),
+
+              if (isExpanded) ColumnItems(),
             ],
           ),
         );
       },
+    );
+  }
+}
+
+class ColumnItems extends StatelessWidget {
+  const ColumnItems({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Column(
+        children: [
+          Divider(color: Colors.grey.withOpacity(0.2)),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              SvgIcon(
+                svgPath: AppConstant.icForbidden,
+                color: Colors.red,
+                height: 24,
+                width: 24,
+              ),
+              const SizedBox(width: 12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Text(
+                    'After Fajr',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Text(
+                    'Until sunrise',
+                    style: TextStyle(fontSize: 12, color: Colors.white60),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              SvgIcon(
+                svgPath: AppConstant.icForbidden,
+                color: Colors.red,
+                height: 24,
+                width: 24,
+              ),
+              const SizedBox(width: 12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Text(
+                    'At Noon',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Text(
+                    'When sun at zenith',
+                    style: TextStyle(fontSize: 12, color: Colors.white60),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              SvgIcon(
+                svgPath: AppConstant.icForbidden,
+                color: Colors.red,
+                height: 24,
+                width: 24,
+              ),
+              const SizedBox(width: 12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Text(
+                    'After Asr',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Text(
+                    'Until sunset',
+                    style: TextStyle(fontSize: 12, color: Colors.white60),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
@@ -192,63 +290,6 @@ class ColumnItem extends StatelessWidget {
         Text(time, style: const TextStyle(color: Colors.white, fontSize: 12)),
         Icon(notificationIcon, color: Colors.grey, size: 20),
       ],
-    );
-  }
-}
-
-class RowItem extends StatelessWidget {
-  const RowItem({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        _buildPrayerTimeItem(
-          name: 'FAJR',
-          time: '5:45 AM',
-          icon: Icons.wb_sunny_outlined,
-        ),
-        _buildPrayerTimeItem(
-          name: 'FAJR',
-          time: '5:45 AM',
-          icon: Icons.wb_sunny_outlined,
-        ),
-        _buildPrayerTimeItem(
-          name: 'FAJR',
-          time: '5:45 AM',
-          icon: Icons.wb_sunny_outlined,
-        ),
-        _buildPrayerTimeItem(
-          name: 'FAJR',
-          time: '5:45 AM',
-          icon: Icons.wb_sunny_outlined,
-        ),
-        _buildPrayerTimeItem(
-          name: 'FAJR',
-          time: '5:45 AM',
-          icon: Icons.wb_sunny_outlined,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildPrayerTimeItem({
-    required String name,
-    required String time,
-    required IconData icon,
-  }) {
-    return SizedBox(
-      width: 50,
-      height: 100,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(name, style: const TextStyle(fontSize: 12, color: Colors.white)),
-          Icon(icon, color: Colors.white, size: 24),
-          Text(time, style: const TextStyle(fontSize: 12, color: Colors.white)),
-        ],
-      ),
     );
   }
 }
