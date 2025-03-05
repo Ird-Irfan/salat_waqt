@@ -15,15 +15,19 @@ class _ForbiddenTimeState extends State<ForbiddenTime>
   bool isExpanded = false;
   late AnimationController _animationController;
   late Animation<double> _heightAnimation;
+  late Animation<double> _fadeAnimation;
 
   @override
   void initState() {
     super.initState();
     _animationController = AnimationController(
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 500),
       vsync: this,
     );
-    _heightAnimation = Tween<double>(begin: 236, end: 400).animate(
+    _heightAnimation = Tween<double>(begin: 90, end: 300).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
   }
@@ -37,16 +41,16 @@ class _ForbiddenTimeState extends State<ForbiddenTime>
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: _heightAnimation,
+      animation: _animationController,
       builder: (context, child) {
         return Container(
-          height: _heightAnimation.value,
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: const Color(0xFF1A2234),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               InkWell(
                 onTap: () {
@@ -102,7 +106,16 @@ class _ForbiddenTimeState extends State<ForbiddenTime>
                 ),
               ),
 
-              if (isExpanded) ColumnItems(),
+              ClipRect(
+                child: SizeTransition(
+                  sizeFactor: _animationController,
+                  axis: Axis.vertical,
+                  child: FadeTransition(
+                    opacity: _fadeAnimation,
+                    child: const ColumnItems(),
+                  ),
+                ),
+              ),
             ],
           ),
         );
@@ -116,99 +129,91 @@ class ColumnItems extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return Padding(
+      padding: const EdgeInsets.only(top: 16.0),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Divider(color: Colors.grey.withOpacity(0.2)),
           const SizedBox(height: 16),
-          Row(
-            children: [
-              SvgIcon(
-                svgPath: AppConstant.icForbidden,
-                color: Colors.red,
-                height: 24,
-                width: 24,
-              ),
-              const SizedBox(width: 12),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text(
-                    'After Fajr',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  Text(
-                    'Until sunrise',
-                    style: TextStyle(fontSize: 12, color: Colors.white60),
-                  ),
-                ],
-              ),
-            ],
+          _buildForbiddenTimeItem(
+            context,
+            AppConstant.icForbidden,
+            'After Fajr',
+            'Until sunrise',
+            0,
           ),
           const SizedBox(height: 16),
-          Row(
-            children: [
-              SvgIcon(
-                svgPath: AppConstant.icForbidden,
-                color: Colors.red,
-                height: 24,
-                width: 24,
-              ),
-              const SizedBox(width: 12),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text(
-                    'At Noon',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  Text(
-                    'When sun at zenith',
-                    style: TextStyle(fontSize: 12, color: Colors.white60),
-                  ),
-                ],
-              ),
-            ],
+          _buildForbiddenTimeItem(
+            context,
+            AppConstant.icForbidden,
+            'At Noon',
+            'When sun at zenith',
+            1,
           ),
           const SizedBox(height: 16),
-          Row(
-            children: [
-              SvgIcon(
-                svgPath: AppConstant.icForbidden,
-                color: Colors.red,
-                height: 24,
-                width: 24,
-              ),
-              const SizedBox(width: 12),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text(
-                    'After Asr',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  Text(
-                    'Until sunset',
-                    style: TextStyle(fontSize: 12, color: Colors.white60),
-                  ),
-                ],
-              ),
-            ],
+          _buildForbiddenTimeItem(
+            context,
+            AppConstant.icForbidden,
+            'After Asr',
+            'Until sunset',
+            2,
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildForbiddenTimeItem(
+    BuildContext context,
+    String svgPath,
+    String title,
+    String subtitle,
+    int index,
+  ) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0.0, end: 1.0),
+      duration: Duration(milliseconds: 300 + (index * 100)),
+      curve: Curves.easeOut,
+      builder: (context, value, child) {
+        return Transform.translate(
+          offset: Offset((1.0 - value) * 20, 0),
+          child: Opacity(
+            opacity: value,
+            child: Row(
+              children: [
+                SvgIcon(
+                  svgPath: svgPath,
+                  color: Colors.red,
+                  height: 24,
+                  width: 24,
+                ),
+                const SizedBox(width: 12),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Text(
+                      subtitle,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.white60,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
