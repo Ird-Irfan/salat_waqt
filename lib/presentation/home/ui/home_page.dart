@@ -69,7 +69,7 @@ class HomePage extends StatelessWidget {
 }
 
 class SadaqaAppBanner extends StatelessWidget {
-  const SadaqaAppBanner({Key? key}) : super(key: key);
+  const SadaqaAppBanner({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -133,7 +133,7 @@ class SadaqaAppBanner extends StatelessWidget {
 }
 
 class AboutUsFooter extends StatelessWidget {
-  const AboutUsFooter({Key? key}) : super(key: key);
+  const AboutUsFooter({super.key});
 
   @override
   Widget build(BuildContext context) {

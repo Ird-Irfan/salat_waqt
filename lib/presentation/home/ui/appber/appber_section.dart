@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:salat_waqt/core/config/salat_custom_theme.dart';
+import 'package:salat_waqt/core/constant/app_contant.dart';
+import 'package:salat_waqt/core/constant/app_text_styles.dart';
+import 'package:salat_waqt/presentation/common/widgets/svg_icons.dart';
 import 'package:salat_waqt/presentation/home/ui/appber/custom_switch.dart';
 
 class AppBarSection extends StatelessWidget implements PreferredSizeWidget {
@@ -10,22 +15,33 @@ class AppBarSection extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: Colors.transparent,
       elevation: 0,
       title: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding: EdgeInsets.symmetric(horizontal: 16.px, vertical: 8.px),
         decoration: BoxDecoration(
-          
+          color: const Color(0xFF1A2234),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.location_on, size: 18, color: Colors.grey),
-            const SizedBox(width: 4),
+            SvgIcon(svgPath: AppConstant.icGps, width: 24.px, height: 24.px),
+            // const SizedBox(width: 4),
             Text(
               'Dhaka, Bangladesh',
-              style: TextStyle(fontSize: 14, color: Colors.grey.shade300),
+              style: AppTextStyles.title.copyWith(
+                fontSize: 14.px,
+                fontWeight: FontWeight.w400,
+                color:
+                    Theme.of(
+                      context,
+                    ).extension<SalatCustomTheme>()?.primaryColor100,
+              ),
             ),
             const SizedBox(width: 4),
-            const Icon(Icons.keyboard_arrow_down, size: 18, color: Colors.grey),
+            SvgIcon(
+              svgPath: AppConstant.icArrowDown,
+              width: 24.px,
+              height: 24.px,
+            ),
           ],
         ),
       ),

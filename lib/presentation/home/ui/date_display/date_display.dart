@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:salat_waqt/core/constant/salat_color.dart';
+import 'package:salat_waqt/core/config/salat_color.dart';
 import 'package:salat_waqt/presentation/home/ui/date_display/model.dart';
 
 class DateDisplay extends StatefulWidget {
