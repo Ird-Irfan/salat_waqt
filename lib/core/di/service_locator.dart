@@ -1,5 +1,16 @@
 import 'package:get_it/get_it.dart';
 import 'package:salat_waqt/core/base/base_presenter.dart';
+import 'package:salat_waqt/data/data_sources/location_data_source.dart';
+import 'package:salat_waqt/data/data_sources/prayer_time_data_source.dart';
+import 'package:salat_waqt/data/repositories/location_repository_impl.dart';
+import 'package:salat_waqt/data/repositories/prayer_time_repository_impl.dart';
+import 'package:salat_waqt/domain/repositories/location_repository.dart';
+import 'package:salat_waqt/domain/repositories/prayer_time_repository.dart';
+import 'package:salat_waqt/domain/usecases/get_address_from_coordinates_usecase.dart';
+import 'package:salat_waqt/domain/usecases/get_coordinates_from_address_usecase.dart';
+import 'package:salat_waqt/domain/usecases/get_current_location_usecase.dart';
+import 'package:salat_waqt/domain/usecases/get_prayer_times_usecase.dart';
+import 'package:salat_waqt/presentation/home/presenter/home_presenter.dart';
 
 final GetIt _serviceLocator = GetIt.instance;
 T locator<T extends Object>() => _serviceLocator.get<T>();
@@ -21,17 +32,50 @@ class ServiceLocator {
 
   Future<void> _setUpService() async {
     // _serviceLocator.registerLazySingleton(() => QuranDatabase());
+    _serviceLocator.registerLazySingleton<LocationController>(
+      () => LocationController(
+        getCurrentLocationUseCase: locator(),
+        getAddressFromCoordinatesUseCase: locator(),
+        getCoordinatesFromAddressUseCase: locator(),
+        getPrayerTimesUseCase: locator(),
+      ),
+    );
   }
 
   Future<void> _setUpDataSources() async {
     // _serviceLocator
     //     .registerLazySingleton(() => SurahLocalDataSource(database: locator()));
+    _serviceLocator.registerLazySingleton<LocationDataSource>(
+      () => LocationDataSourceImpl(),
+    );
+    _serviceLocator.registerLazySingleton<PrayerTimeDataSource>(
+      () => PrayerTimeDataSourceImpl(),
+    );
   }
 
-  Future<void> _setUpRepositories() async {}
+  Future<void> _setUpRepositories() async {
+    _serviceLocator.registerLazySingleton<LocationRepository>(
+      () => LocationRepositoryImpl(locationDataSource: locator()),
+    );
+    _serviceLocator.registerLazySingleton<PrayerTimeRepository>(
+      () => PrayerTimeRepositoryImpl(prayerTimeDataSource: locator()),
+    );
+  }
 
   Future<void> _setUpUseCases() async {
     // _serviceLocator.registerLazySingleton(() => GetAyahsUseCase(locator()));
+    _serviceLocator.registerLazySingleton<GetCurrentLocationUseCase>(
+      () => GetCurrentLocationUseCase(repository: locator()),
+    );
+    _serviceLocator.registerLazySingleton<GetAddressFromCoordinatesUseCase>(
+      () => GetAddressFromCoordinatesUseCase(repository: locator()),
+    );
+    _serviceLocator.registerLazySingleton<GetCoordinatesFromAddressUseCase>(
+      () => GetCoordinatesFromAddressUseCase(repository: locator()),
+    );
+    _serviceLocator.registerLazySingleton<GetPrayerTimesUseCase>(
+      () => GetPrayerTimesUseCase(repository: locator()),
+    );
   }
 
   Future<void> _setUpPresenters() async {}
