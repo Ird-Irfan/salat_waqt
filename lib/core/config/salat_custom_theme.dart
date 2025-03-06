@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:salat_waqt/core/config/salat_color.dart';
+import 'package:salat_waqt/core/utility/utility.dart';
 
 class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
   final Color primaryColor100;
@@ -115,8 +116,8 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
     primaryColor40: SalatColor.primaryColorLight700,
     primaryColor30: SalatColor.primaryColorLight800,
     primaryColor20: SalatColor.primaryColorLight900,
-    primaryColor10: SalatColor.primaryColorLight900.withOpacity(0.1),
-    primaryColor5: SalatColor.primaryColorLight900.withOpacity(0.05),
+    primaryColor10: SalatColor.primaryColorLight900,
+    primaryColor5: SalatColor.primaryColorLight900,
     primaryColor: SalatColor.primaryColorLight500,
     /*
         secondary: SalatColor.primaryColorLight400,
@@ -126,7 +127,7 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
         topIconHome: Colors.white,
         backgroundColor: Colors.white,
         whiteColor: Colors.white,
-        navBgAc: SalatColor.primaryColorLight300.withOpacity(0.2),
+        navBgAc: SalatColor.primaryColorLight300.withOpacityInt(0.2),
         blackColor: Colors.black,
         subtitleColor: Colors.grey.shade600,
         shade1: Colors.grey.shade100,
@@ -167,8 +168,8 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
     primaryColor40: SalatColor.primaryColorDark700,
     primaryColor30: SalatColor.primaryColorDark750,
     primaryColor20: SalatColor.primaryColorDark800,
-    primaryColor10: SalatColor.primaryColorDark900.withOpacity(0.1),
-    primaryColor5: SalatColor.primaryColorDark900.withOpacity(0.05),
+    primaryColor10: SalatColor.primaryColorDark900.withOpacityInt(0.1),
+    primaryColor5: SalatColor.primaryColorDark900.withOpacityInt(0.05),
     primaryColor: SalatColor.primaryColorDark500,
     /*
         secondary: SalatColor.primaryColorDark400,
@@ -178,7 +179,7 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
         topIconHome: Colors.white,
         backgroundColor: Color(0xFF121212),
         whiteColor: Colors.white,
-        navBgAc: SalatColor.primaryColorDark300.withOpacity(0.2),
+        navBgAc: SalatColor.primaryColorDark300.withOpacityInt(0.2),
         blackColor: Colors.black,
         subtitleColor: Colors.grey.shade400,
         shade1: Color(0xFF1D1D1D),

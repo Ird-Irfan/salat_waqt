@@ -4,14 +4,10 @@ import 'package:salat_waqt/core/config/salat_color.dart';
 import 'package:salat_waqt/core/config/salat_custom_theme.dart';
 import 'package:salat_waqt/core/config/salat_custom_text_theme.dart';
 import 'package:salat_waqt/core/constant/app_text_styles.dart';
+import 'package:salat_waqt/core/utility/utility.dart';
 import 'package:salat_waqt/presentation/salat_waqt.dart';
 
 /// Extension to help with opacity values similar to the withOpacityInt method used in the original code
-extension ColorExtension on Color {
-  Color withOpacityInt(int value) {
-    return withOpacity(value / 100);
-  }
-}
 
 class SalatTheme {
   SalatTheme._();
@@ -66,8 +62,8 @@ class SalatTheme {
         primaryColor40: SalatColor.primaryColorLight700,
         primaryColor30: SalatColor.primaryColorLight800,
         primaryColor20: SalatColor.primaryColorLight900,
-        primaryColor10: SalatColor.primaryColorLight900.withOpacity(0.1),
-        primaryColor5: SalatColor.primaryColorLight900.withOpacity(0.05),
+        primaryColor10: SalatColor.primaryColorLight900.withOpacityInt(10),
+        primaryColor5: SalatColor.primaryColorLight900.withOpacityInt(5),
         primaryColor: SalatColor.primaryColorLight500,
       ),
       SalatCustomTextTheme(
@@ -169,13 +165,11 @@ class SalatTheme {
       onPrimary: Color(0xFFFFFFFF),
       onSecondary: Color(0xFF000000),
       onSurface: Color(0xFF000000),
-      onBackground: Color(0xFF000000),
       onError: Color(0xFFFFFFFF),
       errorContainer: Color(0xFFFFE7DF),
       scrim: Color(0xFFEEEEEE),
       inverseSurface: Colors.white,
       inversePrimary: Colors.black87,
-      background: Colors.white,
     ),
   );
 
@@ -192,8 +186,8 @@ class SalatTheme {
         primaryColor40: SalatColor.primaryColorLight700,
         primaryColor30: SalatColor.primaryColorLight800,
         primaryColor20: SalatColor.primaryColorLight900,
-        primaryColor10: SalatColor.primaryColorLight900.withOpacity(0.1),
-        primaryColor5: SalatColor.primaryColorLight900.withOpacity(0.05),
+        primaryColor10: SalatColor.primaryColorLight900.withOpacityInt(10),
+        primaryColor5: SalatColor.primaryColorLight900.withOpacityInt(5),
         primaryColor: SalatColor.primaryColorLight600,
       ),
       SalatCustomTextTheme(
@@ -295,13 +289,11 @@ class SalatTheme {
       onPrimary: Color(0xFFFFFFFF),
       onSecondary: Color(0xFF000000),
       onSurface: Color(0xFF000000),
-      onBackground: Color(0xFF000000),
       onError: Color(0xFFFFFFFF),
       errorContainer: Color(0xFFFFE7DF),
       scrim: Color(0xFFEEEEEE),
       inverseSurface: Colors.white,
       inversePrimary: Colors.black87,
-      background: Colors.white,
     ),
   );
 
@@ -318,8 +310,8 @@ class SalatTheme {
         primaryColor40: SalatColor.primaryColorDark700,
         primaryColor30: SalatColor.primaryColorDark750,
         primaryColor20: SalatColor.primaryColorDark800,
-        primaryColor10: SalatColor.primaryColorDark900.withOpacity(0.1),
-        primaryColor5: SalatColor.primaryColorDark900.withOpacity(0.05),
+        primaryColor10: SalatColor.primaryColorDark900.withOpacityInt(10),
+        primaryColor5: SalatColor.primaryColorDark900.withOpacityInt(5),
         primaryColor: SalatColor.primaryColorDark500,
       ),
       // SalatCustomTheme.darkTheme,
@@ -429,7 +421,6 @@ class SalatTheme {
       onPrimary: Colors.white,
       onSecondary: Colors.white,
       onSurface: Colors.white,
-      onBackground: Colors.white,
       brightness: Brightness.dark,
       errorContainer: Color(0xFF202939),
       scrim: Color(0xFF2D2D2D),

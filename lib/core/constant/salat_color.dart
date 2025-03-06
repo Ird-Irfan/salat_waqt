@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:salat_waqt/core/utility/utility.dart';
 
 class SalatColor {

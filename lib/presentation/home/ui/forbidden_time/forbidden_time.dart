@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:salat_waqt/core/config/salat_waqt_screen.dart';
 import 'package:salat_waqt/core/constant/app_contant.dart';
+import 'package:salat_waqt/core/utility/utility.dart';
 import 'package:salat_waqt/presentation/common/widgets/svg_icons.dart';
 
 class ForbiddenTime extends StatefulWidget {
@@ -130,7 +131,7 @@ class ColumnItems extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Divider(color: Colors.grey.withOpacity(0.2)),
+          Divider(color: Colors.grey.withOpacityInt(0.2)),
           const SizedBox(height: 16),
           _buildForbiddenTimeItem(
             context,
@@ -230,7 +231,7 @@ class ColumnItem extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
-            child: Divider(color: Colors.grey.withOpacity(0.2)),
+            child: Divider(color: Colors.grey.withOpacityInt(0.2)),
           ),
           _buildPrayerRow(
             Icons.wb_sunny,
@@ -240,7 +241,7 @@ class ColumnItem extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
-            child: Divider(color: Colors.grey.withOpacity(0.2)),
+            child: Divider(color: Colors.grey.withOpacityInt(0.2)),
           ),
           _buildPrayerRow(
             Icons.wb_sunny,
@@ -250,7 +251,7 @@ class ColumnItem extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
-            child: Divider(color: Colors.grey.withOpacity(0.2)),
+            child: Divider(color: Colors.grey.withOpacityInt(0.2)),
           ),
           _buildPrayerRow(
             Icons.wb_twilight,
@@ -260,7 +261,7 @@ class ColumnItem extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
-            child: Divider(color: Colors.grey.withOpacity(0.2)),
+            child: Divider(color: Colors.grey.withOpacityInt(0.2)),
           ),
           _buildPrayerRow(
             Icons.nightlight_round,
