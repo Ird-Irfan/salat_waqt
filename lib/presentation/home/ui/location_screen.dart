@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:salat_waqt/core/di/service_locator.dart';
 import 'package:salat_waqt/presentation/home/presenter/home_presenter.dart';
 
 class LocationScreen extends StatelessWidget {
-  final LocationController controller;
+  final LocationController controller = Get.put(
+    LocationController(
+      getCurrentLocationUseCase: locator(),
+      getAddressFromCoordinatesUseCase: locator(),
+      getCoordinatesFromAddressUseCase: locator(),
+      getPrayerTimesUseCase: locator(),
+    ),
+  );
 
-  const LocationScreen({super.key, required this.controller});
+  LocationScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,52 +23,218 @@ class LocationScreen extends StatelessWidget {
         () =>
             controller.isLoading
                 ? Center(child: CircularProgressIndicator())
-                : Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        'আপনার বর্তমান অবস্থান:',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      Text(
-                        controller.currentAddress,
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      ElevatedButton(
-                        onPressed: () {
-                          _showLocationDialog(
-                            context,
-                          ); // লোকেশন পরিবর্তনের ডায়ালগ বক্স
-                        },
-                        child: Text('লোকেশন পরিবর্তন করুন'),
-                      ),
-                      SizedBox(height: 30),
-                      controller.prayerTimes != null
-                          ? Column(
+                : SingleChildScrollView(
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          // Date Display Section
+                          Card(
+                            elevation: 4,
+                            margin: EdgeInsets.only(bottom: 16),
+                            child: Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    controller.arabicDate,
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    controller.englishDate,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontStyle: FontStyle.italic,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+
+                          Text(
+                            'আপনার বর্তমান অবস্থান:',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          Text(
+                            controller.currentAddress,
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          // Show an indicator if using location permission vs default
+                          !controller.locationPermissionGranted
+                              ? Chip(
+                                label: Text('ডিফল্ট লোকেশন'),
+                                backgroundColor: Colors.amber.shade100,
+                              )
+                              : SizedBox.shrink(),
+                          SizedBox(height: 20),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
-                                'নামাজের সময়সূচী:',
-                                style: TextStyle(fontSize: 18),
+                              ElevatedButton(
+                                onPressed: () {
+                                  _showLocationDialog(
+                                    context,
+                                  ); // লোকেশন পরিবর্তনের ডায়ালগ বক্স
+                                },
+                                child: Text('লোকেশন পরিবর্তন করুন'),
                               ),
-                              SizedBox(height: 10),
-                              Text('ফজর: ${controller.prayerTimes!['Fajr']}'),
-                              Text('যোহর: ${controller.prayerTimes!['Dhuhr']}'),
-                              Text('আসর: ${controller.prayerTimes!['Asr']}'),
-                              Text(
-                                'মাগরিব: ${controller.prayerTimes!['Maghrib']}',
+                              SizedBox(width: 10),
+                              // Add a refresh location button
+                              ElevatedButton(
+                                onPressed:
+                                    () =>
+                                        controller
+                                            .checkAndRequestLocationPermission(),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(Icons.refresh, size: 16),
+                                    SizedBox(width: 5),
+                                    Text('লোকেশন আপডেট'),
+                                  ],
+                                ),
                               ),
-                              Text('ঈশা: ${controller.prayerTimes!['Isha']}'),
                             ],
-                          )
-                          : Container(),
-                    ],
+                          ),
+                          SizedBox(height: 30),
+                          controller.prayerTimes != null
+                              ? Card(
+                                elevation: 4,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        'নামাজের সময়সূচী:',
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(height: 16),
+
+                                      // Ramadan Special Times
+                                      if (controller.prayerTimes!.containsKey(
+                                            'Sehri',
+                                          ) &&
+                                          controller.prayerTimes!.containsKey(
+                                            'Iftar',
+                                          ))
+                                        Container(
+                                          padding: EdgeInsets.all(12),
+                                          margin: EdgeInsets.only(bottom: 16),
+                                          decoration: BoxDecoration(
+                                            color: Colors.green.shade50,
+                                            borderRadius: BorderRadius.circular(
+                                              12,
+                                            ),
+                                            border: Border.all(
+                                              color: Colors.green.shade200,
+                                            ),
+                                          ),
+                                          child: Column(
+                                            children: [
+                                              Text(
+                                                'রমজানের সময়সূচী',
+                                                style: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.green.shade700,
+                                                ),
+                                              ),
+                                              SizedBox(height: 10),
+                                              _buildPrayerTimeRow(
+                                                'সেহরি',
+                                                controller
+                                                    .prayerTimes!['Sehri'],
+                                                Colors.blue.shade700,
+                                              ),
+                                              Divider(),
+                                              _buildPrayerTimeRow(
+                                                'ইফতার',
+                                                controller
+                                                    .prayerTimes!['Iftar'],
+                                                Colors.orange.shade700,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+
+                                      // Regular Prayer Times
+                                      _buildPrayerTimeRow(
+                                        'ফজর',
+                                        controller.prayerTimes!['Fajr'],
+                                        Colors.indigo,
+                                      ),
+                                      Divider(),
+                                      _buildPrayerTimeRow(
+                                        'যোহর',
+                                        controller.prayerTimes!['Dhuhr'],
+                                        Colors.indigo,
+                                      ),
+                                      Divider(),
+                                      _buildPrayerTimeRow(
+                                        'আসর',
+                                        controller.prayerTimes!['Asr'],
+                                        Colors.indigo,
+                                      ),
+                                      Divider(),
+                                      _buildPrayerTimeRow(
+                                        'মাগরিব',
+                                        controller.prayerTimes!['Maghrib'],
+                                        Colors.indigo,
+                                      ),
+                                      Divider(),
+                                      _buildPrayerTimeRow(
+                                        'ঈশা',
+                                        controller.prayerTimes!['Isha'],
+                                        Colors.indigo,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              )
+                              : Container(),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
+      ),
+    );
+  }
+
+  // Helper method to build prayer time rows
+  Widget _buildPrayerTimeRow(String prayerName, String time, Color textColor) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            prayerName,
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          Text(
+            time,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: textColor,
+            ),
+          ),
+        ],
       ),
     );
   }

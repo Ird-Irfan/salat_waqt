@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:salat_waqt/core/config/salat_waqt_screen.dart';
-import 'package:salat_waqt/presentation/home/ui/home_page.dart';
+import 'package:salat_waqt/presentation/home/ui/location_screen.dart';
 
 class SalatWaqt extends StatefulWidget {
   const SalatWaqt({super.key});
@@ -45,7 +45,7 @@ class _SalatWaqtState extends State<SalatWaqt> {
           debugShowCheckedModeBanner: false,
           title: 'Salat Waqt',
           themeMode: ThemeMode.dark,
-          home: const HomePage(),
+          home: LocationScreen(),
         );
       },
     );
