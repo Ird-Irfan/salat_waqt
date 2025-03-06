@@ -23,6 +23,10 @@ class _SalatWaqtState extends State<SalatWaqt> {
     return ResponsiveSizer(
       builder: (context, orientation, deviceType) {
         return GetMaterialApp(
+          // theme: ThemeData(
+          //   scaffoldBackgroundColor: SalatColor.primaryColorDark900,
+          //   brightness: Brightness.dark,
+          // ),
           navigatorKey: SalatWaqt.navigatorKey,
           builder: (context, child) {
             return Overlay(

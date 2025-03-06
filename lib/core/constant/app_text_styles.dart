@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 
 class AppTextStyles {
   // Font families
-  static const String kalpurush = 'kalpurush';
+
   static const String inter = 'Inter';
-  static const String notoSerif = 'NotoSerif';
 
   // Common text sizes
   static const double smallSize = 12.0;
@@ -23,31 +22,31 @@ class AppTextStyles {
   static const TextStyle small = TextStyle(
     fontSize: smallSize,
     fontWeight: FontWeight.w400,
-    fontFamily: kalpurush,
+    fontFamily: inter,
   );
 
   static const TextStyle medium = TextStyle(
     fontSize: mediumSize,
     fontWeight: FontWeight.w400,
-    fontFamily: kalpurush,
+    fontFamily: inter,
   );
 
   static const TextStyle large = TextStyle(
     fontSize: largeSize,
     fontWeight: FontWeight.w400,
-    fontFamily: kalpurush,
+    fontFamily: inter,
   );
 
   static const TextStyle title = TextStyle(
     fontSize: twentySixSize,
     fontWeight: FontWeight.w700,
-    fontFamily: notoSerif,
+    fontFamily: inter,
   );
 
   static const TextStyle heading = TextStyle(
     fontSize: headingSize,
     fontWeight: FontWeight.bold,
-    fontFamily: kalpurush,
+    fontFamily: inter,
   );
 
   // Specific styles used in the app
@@ -61,21 +60,21 @@ class AppTextStyles {
   static TextStyle cardTitle({Color? color}) => TextStyle(
     fontSize: titleSize,
     fontWeight: FontWeight.bold,
-    fontFamily: notoSerif,
+    fontFamily: inter,
     color: color,
   );
 
   static TextStyle subtitle({Color? color}) => TextStyle(
     fontSize: mediumSize,
     fontWeight: FontWeight.w400,
-    fontFamily: kalpurush,
+    fontFamily: inter,
     color: color,
   );
 
   static TextStyle body({Color? color, double? height}) => TextStyle(
     fontSize: fifteenSize,
     fontWeight: FontWeight.w400,
-    fontFamily: kalpurush,
+    fontFamily: inter,  
     color: color,
     height: height,
   );
@@ -83,32 +82,32 @@ class AppTextStyles {
   static TextStyle notificationTitle({Color? color}) => TextStyle(
     fontSize: largeSize,
     fontWeight: FontWeight.w500,
-    fontFamily: kalpurush,
+    fontFamily: inter,
     color: color,
   );
 
   static TextStyle button({Color? color}) => TextStyle(
     fontSize: largeSize,
     fontWeight: FontWeight.w500,
-    fontFamily: kalpurush,
+    fontFamily: inter,
     color: color,
   );
 
   static TextStyle chip({Color? color}) => TextStyle(
     fontSize: smallSize + 2, // 14
     fontWeight: FontWeight.w500,
-    fontFamily: kalpurush,
+    fontFamily: inter,
     color: color,
   );
 
   static TextStyle customAppBarTitle({Color? color}) => TextStyle(
     fontSize: largeSize,
     fontWeight: FontWeight.w500,
-    fontFamily: notoSerif,
+    fontFamily: inter,
     color: color,
   );
 
   static TextStyle customAppBarSubtitle({Color? color}) =>
-      TextStyle(fontSize: smallSize, fontFamily: kalpurush, color: color);
+      TextStyle(fontSize: smallSize, fontFamily: inter, color: color);
 
 }
