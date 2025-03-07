@@ -10,6 +10,9 @@ class HomeUiState extends BaseUiState {
   final double? defaultLongitude;
   final bool loadingPrayerTimes;
   final String? prayerTimesError;
+  final String? nextPrayerName;
+  final String? remainingTime;
+  final double? progressValue;
 
   const HomeUiState({
     required super.userMessage,
@@ -23,6 +26,9 @@ class HomeUiState extends BaseUiState {
     this.defaultLongitude,
     this.loadingPrayerTimes = false,
     this.prayerTimesError,
+    this.nextPrayerName,
+    this.remainingTime,
+    this.progressValue,
   });
 
   factory HomeUiState.empty() {
@@ -38,6 +44,9 @@ class HomeUiState extends BaseUiState {
       userMessage: '',
       loadingPrayerTimes: false,
       prayerTimesError: null,
+      nextPrayerName: null,
+      remainingTime: null,
+      progressValue: 0.0,
     );
   }
 
@@ -53,6 +62,9 @@ class HomeUiState extends BaseUiState {
     defaultLongitude,
     loadingPrayerTimes,
     prayerTimesError,
+    nextPrayerName,
+    remainingTime,
+    progressValue,
   ];
 
   HomeUiState copyWith({
@@ -67,6 +79,9 @@ class HomeUiState extends BaseUiState {
     double? defaultLongitude,
     bool? loadingPrayerTimes,
     String? prayerTimesError,
+    String? nextPrayerName,
+    String? remainingTime,
+    double? progressValue,
   }) {
     return HomeUiState(
       currentAddress: currentAddress ?? this.currentAddress,
@@ -81,6 +96,9 @@ class HomeUiState extends BaseUiState {
       defaultLongitude: defaultLongitude ?? this.defaultLongitude,
       loadingPrayerTimes: loadingPrayerTimes ?? this.loadingPrayerTimes,
       prayerTimesError: prayerTimesError ?? this.prayerTimesError,
+      nextPrayerName: nextPrayerName ?? this.nextPrayerName,
+      remainingTime: remainingTime ?? this.remainingTime,
+      progressValue: progressValue ?? this.progressValue,
     );
   }
 }

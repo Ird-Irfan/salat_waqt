@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
@@ -15,6 +16,9 @@ class HomePresenter extends BasePresenter<HomeUiState> {
   // State management
   final Obs<HomeUiState> uiState = Obs(HomeUiState.empty());
   HomeUiState get currentUiState => uiState.value;
+
+  // Timer for updating remaining time
+  Timer? _timer;
 
   // Use cases
   final GetCurrentLocationUseCase getCurrentLocationUseCase;
@@ -36,6 +40,13 @@ class HomePresenter extends BasePresenter<HomeUiState> {
     super.onInit();
     _updateDates();
     checkAndRequestLocationPermission();
+    _startTimer();
+  }
+
+  @override
+  void onClose() {
+    _timer?.cancel();
+    super.onClose();
   }
 
   // Public methods
@@ -107,6 +118,211 @@ class HomePresenter extends BasePresenter<HomeUiState> {
     uiState.value = uiState.value.copyWith(
       arabicDate: hijri.toFormat("dd MMMM yyyy"),
     );
+  }
+
+  void _startTimer() {
+    // Cancel existing timer if any
+    _timer?.cancel();
+
+    // Update immediately
+    _updateRemainingTime();
+
+    // Set timer to update every minute
+    _timer = Timer.periodic(Duration(minutes: 1), (timer) {
+      _updateRemainingTime();
+    });
+  }
+
+  void _updateRemainingTime() {
+    if (currentUiState.prayerTimes == null) return;
+
+    DateTime now = DateTime.now();
+    DateTime? nextPrayerTime;
+    String? nextPrayerName;
+    double progressValue = 0.0;
+
+    // Check if we're in Ramadan mode (has Sehri and Iftar times)
+    bool isRamadanMode =
+        currentUiState.prayerTimes!.containsKey('Sehri') &&
+        currentUiState.prayerTimes!.containsKey('Iftar');
+
+    if (isRamadanMode) {
+      // Get Iftar and Sehri times
+      DateTime? iftarTime = _parseTime(currentUiState.prayerTimes!['Iftar']);
+      DateTime? sehriTime = _parseTime(currentUiState.prayerTimes!['Sehri']);
+
+      if (iftarTime != null && sehriTime != null) {
+        // Create today's and tomorrow's times for comparison
+        DateTime todayIftar = iftarTime;
+        DateTime todaySehri = sehriTime;
+
+        // If Sehri is after Iftar in the same day, it means Sehri is for the next day
+        if (todaySehri.isBefore(todayIftar)) {
+          // Sehri is for today, Iftar is for today
+          // This is the normal case during Ramadan
+        } else {
+          // Sehri is for tomorrow, Iftar is for today
+          todaySehri = todaySehri.add(Duration(days: 1));
+        }
+
+        // If both times are in the past, move to tomorrow
+        if (now.isAfter(todayIftar) && now.isAfter(todaySehri)) {
+          todayIftar = todayIftar.add(Duration(days: 1));
+          todaySehri = todaySehri.add(Duration(days: 1));
+        }
+
+        // Determine which is next: Iftar or Sehri
+        if (now.isBefore(todayIftar) && now.isBefore(todaySehri)) {
+          // Both are in the future, pick the closest one
+          if (todayIftar.isBefore(todaySehri)) {
+            nextPrayerTime = todayIftar;
+            nextPrayerName = 'ইফতার';
+          } else {
+            nextPrayerTime = todaySehri;
+            nextPrayerName = 'সেহরি';
+          }
+        } else if (now.isBefore(todayIftar)) {
+          // Only Iftar is in the future
+          nextPrayerTime = todayIftar;
+          nextPrayerName = 'ইফতার';
+        } else if (now.isBefore(todaySehri)) {
+          // Only Sehri is in the future
+          nextPrayerTime = todaySehri;
+          nextPrayerName = 'সেহরি';
+        }
+
+        // Calculate progress
+        if (nextPrayerName == 'ইফতার') {
+          // We're waiting for Iftar, so we're between Sehri and Iftar
+          // Calculate how much time has passed since Sehri
+          DateTime previousSehri = todaySehri.subtract(Duration(days: 1));
+          if (now.isBefore(previousSehri)) {
+            previousSehri = previousSehri.subtract(Duration(days: 1));
+          }
+
+          Duration totalDuration = todayIftar.difference(previousSehri);
+          Duration elapsedDuration = now.difference(previousSehri);
+
+          progressValue = elapsedDuration.inMinutes / totalDuration.inMinutes;
+        } else if (nextPrayerName == 'সেহরি') {
+          // We're waiting for Sehri, so we're between Iftar and Sehri
+          // Calculate how much time has passed since Iftar
+          DateTime previousIftar = todayIftar.subtract(Duration(days: 1));
+          if (now.isBefore(previousIftar)) {
+            previousIftar = previousIftar.subtract(Duration(days: 1));
+          }
+
+          Duration totalDuration = todaySehri.difference(previousIftar);
+          Duration elapsedDuration = now.difference(previousIftar);
+
+          progressValue = elapsedDuration.inMinutes / totalDuration.inMinutes;
+        }
+
+        progressValue = progressValue.clamp(0.0, 1.0);
+      }
+    } else {
+      // Regular prayer time mode
+      // Find the next prayer time
+      List<MapEntry<String, String>> prayerEntries = [
+        MapEntry('ফজর', currentUiState.prayerTimes!['Fajr']),
+        MapEntry('যোহর', currentUiState.prayerTimes!['Dhuhr']),
+        MapEntry('আসর', currentUiState.prayerTimes!['Asr']),
+        MapEntry('মাগরিব', currentUiState.prayerTimes!['Maghrib']),
+        MapEntry('ঈশা', currentUiState.prayerTimes!['Isha']),
+      ];
+
+      // Parse all prayer times
+      List<MapEntry<String, DateTime>> parsedTimes = [];
+      for (var entry in prayerEntries) {
+        DateTime? time = _parseTime(entry.value);
+        if (time != null) {
+          // If time is before now, add a day
+          if (time.isBefore(now)) {
+            time = time.add(Duration(days: 1));
+          }
+          parsedTimes.add(MapEntry(entry.key, time));
+        }
+      }
+
+      // Sort by time
+      parsedTimes.sort((a, b) => a.value.compareTo(b.value));
+
+      // Find the next prayer
+      if (parsedTimes.isNotEmpty) {
+        nextPrayerName = parsedTimes.first.key;
+        nextPrayerTime = parsedTimes.first.value;
+
+        // Find the previous prayer time
+        DateTime previousPrayerTime;
+        if (parsedTimes.last.value.subtract(Duration(days: 1)).isAfter(now)) {
+          previousPrayerTime = parsedTimes.last.value.subtract(
+            Duration(days: 1),
+          );
+        } else {
+          // Find the last prayer time before now
+          var previousPrayers =
+              parsedTimes
+                  .where(
+                    (entry) =>
+                        entry.value.subtract(Duration(days: 1)).isBefore(now),
+                  )
+                  .toList();
+          previousPrayers.sort((a, b) => b.value.compareTo(a.value));
+          previousPrayerTime =
+              previousPrayers.isNotEmpty
+                  ? previousPrayers.first.value.subtract(Duration(days: 1))
+                  : now.subtract(Duration(hours: 1));
+        }
+
+        // Calculate progress
+        Duration totalDuration = nextPrayerTime.difference(previousPrayerTime);
+        Duration elapsedDuration = now.difference(previousPrayerTime);
+
+        progressValue = elapsedDuration.inMinutes / totalDuration.inMinutes;
+        progressValue = progressValue.clamp(0.0, 1.0);
+      }
+    }
+
+    // Update the UI state with the calculated values
+    if (nextPrayerTime != null) {
+      Duration remainingDuration = nextPrayerTime.difference(now);
+      String remainingTime = _formatDuration(remainingDuration);
+
+      uiState.value = uiState.value.copyWith(
+        nextPrayerName: nextPrayerName,
+        remainingTime: remainingTime,
+        progressValue: progressValue,
+      );
+    }
+  }
+
+  DateTime? _parseTime(String? timeString) {
+    if (timeString == null) return null;
+
+    try {
+      // Parse the time string (e.g., "5:30 AM")
+      DateTime now = DateTime.now();
+      DateTime parsedTime = DateFormat('h:mm a').parse(timeString);
+
+      // Combine with today's date
+      return DateTime(
+        now.year,
+        now.month,
+        now.day,
+        parsedTime.hour,
+        parsedTime.minute,
+      );
+    } catch (e) {
+      print('Error parsing time: $e');
+      return null;
+    }
+  }
+
+  String _formatDuration(Duration duration) {
+    int hours = duration.inHours;
+    int minutes = duration.inMinutes.remainder(60);
+
+    return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}';
   }
 
   Future<bool> _isLocationServiceEnabled() async {
@@ -220,6 +436,9 @@ class HomePresenter extends BasePresenter<HomeUiState> {
         loadingPrayerTimes: false,
         prayerTimesError: null,
       );
+
+      // Update the remaining time after loading prayer times
+      _updateRemainingTime();
     } catch (e) {
       print('Error loading prayer times: $e');
       uiState.value = uiState.value.copyWith(
