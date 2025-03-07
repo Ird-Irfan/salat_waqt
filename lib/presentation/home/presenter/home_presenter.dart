@@ -4,44 +4,29 @@ import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:hijri/hijri_calendar.dart';
+import 'package:salat_waqt/core/base/base_presenter.dart';
 import 'package:salat_waqt/domain/usecases/get_address_from_coordinates_usecase.dart';
 import 'package:salat_waqt/domain/usecases/get_current_location_usecase.dart';
 import 'package:salat_waqt/domain/usecases/get_prayer_times_usecase.dart';
 import 'package:salat_waqt/domain/usecases/get_coordinates_from_address_usecase.dart';
+import 'package:salat_waqt/presentation/home/presenter/home_ui_state.dart';
 
-class LocationController extends GetxController {
+class HomePresenter extends BasePresenter<HomeUiState> {
+  final Obs<HomeUiState> uiState = Obs(HomeUiState.empty());
+
+  HomeUiState get currentUiState => uiState.value;
+
   final GetCurrentLocationUseCase getCurrentLocationUseCase;
   final GetAddressFromCoordinatesUseCase getAddressFromCoordinatesUseCase;
   final GetPrayerTimesUseCase getPrayerTimesUseCase;
   final GetCoordinatesFromAddressUseCase getCoordinatesFromAddressUseCase;
 
-  LocationController({
+  HomePresenter({
     required this.getCurrentLocationUseCase,
     required this.getAddressFromCoordinatesUseCase,
     required this.getPrayerTimesUseCase,
     required this.getCoordinatesFromAddressUseCase,
   });
-
-  final _currentAddress = 'ঢাকা'.obs; // ডিফল্ট লোকেশন
-
-  // Default coordinates for Dhaka, Bangladesh
-  final double _defaultLatitude = 23.8103;
-  final double _defaultLongitude = 90.4125;
-
-  final _prayerTimes = Rx<Map<String, dynamic>?>(null);
-  final _isLoading = false.obs;
-  final _locationPermissionGranted = false.obs;
-
-  // New date variables
-  final _englishDate = ''.obs;
-  final _arabicDate = ''.obs;
-
-  String get currentAddress => _currentAddress.value;
-  Map<String, dynamic>? get prayerTimes => _prayerTimes.value;
-  bool get isLoading => _isLoading.value;
-  bool get locationPermissionGranted => _locationPermissionGranted.value;
-  String get englishDate => _englishDate.value;
-  String get arabicDate => _arabicDate.value;
 
   @override
   void onInit() {
@@ -54,16 +39,20 @@ class LocationController extends GetxController {
   void _updateDates() {
     // English date
     DateTime now = DateTime.now();
-    _englishDate.value = DateFormat('EEEE, d MMMM yyyy').format(now);
+    uiState.value = uiState.value.copyWith(
+      englishDate: DateFormat('EEEE, d MMMM yyyy').format(now),
+    );
 
     // Arabic/Hijri date
     HijriCalendar hijri = HijriCalendar.now();
-    _arabicDate.value = hijri.toFormat("dd MMMM yyyy");
+    uiState.value = uiState.value.copyWith(
+      arabicDate: hijri.toFormat("dd MMMM yyyy"),
+    );
   }
 
   // Check location service status and request permission
   Future<void> checkAndRequestLocationPermission() async {
-    _isLoading.value = true;
+    toggleLoading(loading: true);
     try {
       // Check if location services are enabled
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
@@ -106,13 +95,13 @@ class LocationController extends GetxController {
       }
 
       // If we got here, permission is granted
-      _locationPermissionGranted.value = true;
+      uiState.value = uiState.value.copyWith(locationPermissionGranted: true);
       await _loadCurrentLocation();
     } catch (e) {
       // Use default location for any errors
       _useDefaultLocation('একটি সমস্যা হয়েছে: ${e.toString()}');
     } finally {
-      _isLoading.value = false;
+      toggleLoading(loading: false);
     }
   }
 
@@ -180,8 +169,11 @@ class LocationController extends GetxController {
 
   // Use default location with explanation message
   Future<void> _useDefaultLocation(String message) async {
-    _currentAddress.value = 'ঢাকা';
-    await _loadPrayerTimes(_defaultLatitude, _defaultLongitude);
+    uiState.value = uiState.value.copyWith(currentAddress: 'ঢাকা');
+    await _loadPrayerTimes(
+      currentUiState.defaultLatitude!,
+      currentUiState.defaultLongitude!,
+    );
     Get.snackbar(
       'সতর্কতা',
       message,
@@ -191,12 +183,14 @@ class LocationController extends GetxController {
   }
 
   Future<void> _loadCurrentLocation() async {
-    _isLoading.value = true;
+    toggleLoading(loading: true);
     try {
       Position position = await getCurrentLocationUseCase.execute();
-      _currentAddress.value = await getAddressFromCoordinatesUseCase.execute(
-        position.latitude,
-        position.longitude,
+      uiState.value = uiState.value.copyWith(
+        currentAddress: await getAddressFromCoordinatesUseCase.execute(
+          position.latitude,
+          position.longitude,
+        ),
       );
       await _loadPrayerTimes(position.latitude, position.longitude);
     } catch (e) {
@@ -205,8 +199,11 @@ class LocationController extends GetxController {
           e.toString().contains('denied') ||
           e.toString().contains('disabled')) {
         // Use default Dhaka location when permission is denied
-        _currentAddress.value = 'ঢাকা';
-        await _loadPrayerTimes(_defaultLatitude, _defaultLongitude);
+        uiState.value = uiState.value.copyWith(currentAddress: 'ঢাকা');
+        await _loadPrayerTimes(
+          currentUiState.defaultLatitude!,
+          currentUiState.defaultLongitude!,
+        );
         Get.snackbar(
           'Notice',
           'Using default location (Dhaka) for prayer times.',
@@ -217,15 +214,23 @@ class LocationController extends GetxController {
         Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
 
         // Fall back to default location if any error occurs
-        _currentAddress.value = 'ঢাকা';
-        await _loadPrayerTimes(_defaultLatitude, _defaultLongitude);
+        uiState.value = uiState.value.copyWith(currentAddress: 'ঢাকা');
+        await _loadPrayerTimes(
+          currentUiState.defaultLatitude!,
+          currentUiState.defaultLongitude!,
+        );
       }
     } finally {
-      _isLoading.value = false;
+      toggleLoading(loading: false);
     }
   }
 
   Future<void> _loadPrayerTimes(double latitude, double longitude) async {
+    uiState.value = uiState.value.copyWith(
+      loadingPrayerTimes: true,
+      prayerTimesError: null,
+    );
+
     String date = DateFormat('yyyy-MM-dd').format(DateTime.now());
     try {
       var times = await getPrayerTimesUseCase.execute(
@@ -234,12 +239,23 @@ class LocationController extends GetxController {
         date,
       );
 
+      if (times.isEmpty) {
+        throw Exception('নামাজের সময় লোড করা যায়নি');
+      }
+
       // Convert each time to 12-hour format with AM/PM
       Map<String, String> formattedTimes = {};
       times.forEach((prayer, time) {
-        DateTime prayerTime = DateFormat('HH:mm').parse(time);
-        String formatted = DateFormat('h:mm a').format(prayerTime);
-        formattedTimes[prayer] = formatted;
+        try {
+          // Parse the 24-hour time
+          DateTime prayerTime = DateFormat('HH:mm').parse(time);
+          // Format to 12-hour time with AM/PM
+          String formatted = DateFormat('h:mm a').format(prayerTime);
+          formattedTimes[prayer] = formatted;
+        } catch (e) {
+          print('Error formatting time for $prayer: $e');
+          throw Exception('সময় ফরম্যাট করতে সমস্যা হয়েছে: $prayer');
+        }
       });
 
       // Add Iftar time (same as Maghrib)
@@ -249,29 +265,42 @@ class LocationController extends GetxController {
 
       // Calculate Sehri time (20 minutes before Fajr)
       if (formattedTimes.containsKey('Fajr')) {
-        DateTime fajrTime = DateFormat('h:mm a').parse(formattedTimes['Fajr']!);
-        DateTime sehriTime = fajrTime.subtract(Duration(minutes: 20));
-        formattedTimes['Sehri'] = DateFormat('h:mm a').format(sehriTime);
+        try {
+          DateTime fajrTime = DateFormat(
+            'h:mm a',
+          ).parse(formattedTimes['Fajr']!);
+          DateTime sehriTime = fajrTime.subtract(Duration(minutes: 20));
+          formattedTimes['Sehri'] = DateFormat('h:mm a').format(sehriTime);
+        } catch (e) {
+          print('Error calculating Sehri time: $e');
+          // Don't throw here, just skip Sehri time if there's an error
+        }
       }
 
-      _prayerTimes.value = formattedTimes;
+      uiState.value = uiState.value.copyWith(
+        prayerTimes: formattedTimes,
+        loadingPrayerTimes: false,
+        prayerTimesError: null,
+      );
     } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Failed to load prayer times.',
-        backgroundColor: Colors.red,
+      print('Error loading prayer times: $e');
+      uiState.value = uiState.value.copyWith(
+        loadingPrayerTimes: false,
+        prayerTimesError:
+            'নামাজের সময় লোড করা যায়নি। দয়া করে আবার চেষ্টা করুন।\nError: ${e.toString()}',
+        prayerTimes: null,
       );
     }
   }
 
   Future<void> changeLocation(String address) async {
-    _isLoading.value = true;
+    toggleLoading(loading: true);
     try {
       List<Location> locations = await getCoordinatesFromAddressUseCase.execute(
         address,
       );
       Location location = locations[0];
-      _currentAddress.value = address;
+      uiState.value = uiState.value.copyWith(currentAddress: address);
       await _loadPrayerTimes(location.latitude, location.longitude);
     } catch (e) {
       Get.snackbar(
@@ -281,10 +310,23 @@ class LocationController extends GetxController {
       );
 
       // Fall back to default location if changing location fails
-      _currentAddress.value = 'ঢাকা';
-      await _loadPrayerTimes(_defaultLatitude, _defaultLongitude);
+      uiState.value = uiState.value.copyWith(currentAddress: 'ঢাকা');
+      await _loadPrayerTimes(
+        currentUiState.defaultLatitude!,
+        currentUiState.defaultLongitude!,
+      );
     } finally {
-      _isLoading.value = false;
+      toggleLoading(loading: false);
     }
+  }
+
+  @override
+  Future<void> addUserMessage(String message) async {
+    uiState.value = uiState.value.copyWith(userMessage: message);
+  }
+
+  @override
+  Future<void> toggleLoading({required bool loading}) async {
+    uiState.value = uiState.value.copyWith(isLoading: loading);
   }
 }

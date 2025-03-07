@@ -32,14 +32,6 @@ class ServiceLocator {
 
   Future<void> _setUpService() async {
     // _serviceLocator.registerLazySingleton(() => QuranDatabase());
-    _serviceLocator.registerLazySingleton<LocationController>(
-      () => LocationController(
-        getCurrentLocationUseCase: locator(),
-        getAddressFromCoordinatesUseCase: locator(),
-        getCoordinatesFromAddressUseCase: locator(),
-        getPrayerTimesUseCase: locator(),
-      ),
-    );
   }
 
   Future<void> _setUpDataSources() async {
@@ -78,5 +70,14 @@ class ServiceLocator {
     );
   }
 
-  Future<void> _setUpPresenters() async {}
+  Future<void> _setUpPresenters() async {
+    _serviceLocator.registerLazySingleton<HomePresenter>(
+      () => HomePresenter(
+        getCurrentLocationUseCase: locator(),
+        getAddressFromCoordinatesUseCase: locator(),
+        getCoordinatesFromAddressUseCase: locator(),
+        getPrayerTimesUseCase: locator(),
+      ),
+    );
+  }
 }

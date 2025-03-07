@@ -1,5 +1,5 @@
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:adhan/adhan.dart';
+import 'package:intl/intl.dart';
 
 abstract class PrayerTimeDataSource {
   Future<Map<String, dynamic>> getPrayerTimes(
@@ -16,16 +16,43 @@ class PrayerTimeDataSourceImpl implements PrayerTimeDataSource {
     double longitude,
     String date,
   ) async {
-    // ... (আপনার পূর্বের _loadPrayerTimes ফাংশনের লজিক এখানে থাকবে)
-    var url = Uri.parse(
-      'http://api.aladhan.com/v1/timings/$date?latitude=$latitude&longitude=$longitude&method=2',
-    );
-    var response = await http.get(url);
+    try {
+      final coordinates = Coordinates(latitude, longitude);
 
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body)['data']['timings'];
-    } else {
-      throw Exception('Failed to load prayer times');
+      // Set calculation parameters for Bangladesh
+      final params = CalculationMethod.karachi.getParameters();
+      params.madhab = Madhab.hanafi; // Set Hanafi method for Asr
+
+      // Create DateComponents from the provided date
+      DateTime dateTime = DateTime.parse(date);
+      final prayerTimes = PrayerTimes(
+        coordinates,
+        DateComponents(dateTime.year, dateTime.month, dateTime.day),
+        params,
+      );
+
+      // Format times in 24-hour format
+      final timeFormat = DateFormat('HH:mm');
+
+      final Map<String, String> formattedTimes = {
+        'Fajr': timeFormat.format(prayerTimes.fajr),
+        'Dhuhr': timeFormat.format(prayerTimes.dhuhr),
+        'Asr': timeFormat.format(prayerTimes.asr),
+        'Maghrib': timeFormat.format(prayerTimes.maghrib),
+        'Isha': timeFormat.format(prayerTimes.isha),
+      };
+
+      // Validate times
+      for (var entry in formattedTimes.entries) {
+        if (entry.value.isEmpty) {
+          throw Exception('Invalid prayer time for ${entry.key}');
+        }
+      }
+
+      return formattedTimes;
+    } catch (e) {
+      print('Error calculating prayer times: $e');
+      throw Exception('নামাজের সময় গণনা করতে সমস্যা হয়েছে: $e');
     }
   }
 }
