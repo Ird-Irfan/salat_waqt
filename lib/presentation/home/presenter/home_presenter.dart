@@ -12,15 +12,17 @@ import 'package:salat_waqt/domain/usecases/get_coordinates_from_address_usecase.
 import 'package:salat_waqt/presentation/home/presenter/home_ui_state.dart';
 
 class HomePresenter extends BasePresenter<HomeUiState> {
+  // State management
   final Obs<HomeUiState> uiState = Obs(HomeUiState.empty());
-
   HomeUiState get currentUiState => uiState.value;
 
+  // Use cases
   final GetCurrentLocationUseCase getCurrentLocationUseCase;
   final GetAddressFromCoordinatesUseCase getAddressFromCoordinatesUseCase;
   final GetPrayerTimesUseCase getPrayerTimesUseCase;
   final GetCoordinatesFromAddressUseCase getCoordinatesFromAddressUseCase;
 
+  // Constructor
   HomePresenter({
     required this.getCurrentLocationUseCase,
     required this.getAddressFromCoordinatesUseCase,
@@ -28,6 +30,7 @@ class HomePresenter extends BasePresenter<HomeUiState> {
     required this.getCoordinatesFromAddressUseCase,
   });
 
+  // Lifecycle methods
   @override
   void onInit() {
     super.onInit();
@@ -35,7 +38,63 @@ class HomePresenter extends BasePresenter<HomeUiState> {
     checkAndRequestLocationPermission();
   }
 
-  // Update both English and Arabic dates
+  // Public methods
+  Future<void> checkAndRequestLocationPermission() async {
+    toggleLoading(loading: true);
+    try {
+      if (!await _isLocationServiceEnabled()) {
+        return;
+      }
+
+      final permission = await _checkAndRequestPermission();
+      if (permission != LocationPermission.whileInUse &&
+          permission != LocationPermission.always) {
+        return;
+      }
+
+      // If we got here, permission is granted
+      uiState.value = uiState.value.copyWith(locationPermissionGranted: true);
+      await _loadCurrentLocation();
+    } catch (e) {
+      _useDefaultLocation('একটি সমস্যা হয়েছে: ${e.toString()}');
+    } finally {
+      toggleLoading(loading: false);
+    }
+  }
+
+  Future<void> changeLocation(String address) async {
+    toggleLoading(loading: true);
+    try {
+      List<Location> locations = await getCoordinatesFromAddressUseCase.execute(
+        address,
+      );
+      Location location = locations[0];
+      uiState.value = uiState.value.copyWith(currentAddress: address);
+      await _loadPrayerTimes(location.latitude, location.longitude);
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Failed to change location.',
+        backgroundColor: Colors.red,
+      );
+      _fallbackToDefaultLocation();
+    } finally {
+      toggleLoading(loading: false);
+    }
+  }
+
+  // BasePresenter overrides
+  @override
+  Future<void> addUserMessage(String message) async {
+    uiState.value = uiState.value.copyWith(userMessage: message);
+  }
+
+  @override
+  Future<void> toggleLoading({required bool loading}) async {
+    uiState.value = uiState.value.copyWith(isLoading: loading);
+  }
+
+  // Private helper methods
   void _updateDates() {
     // English date
     DateTime now = DateTime.now();
@@ -50,62 +109,177 @@ class HomePresenter extends BasePresenter<HomeUiState> {
     );
   }
 
-  // Check location service status and request permission
-  Future<void> checkAndRequestLocationPermission() async {
+  Future<bool> _isLocationServiceEnabled() async {
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      await _showLocationServiceDialog();
+      serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        _useDefaultLocation(
+          'লোকেশন সার্ভিস বন্ধ আছে। ডিফল্ট লোকেশন (ঢাকা) ব্যবহার করা হচ্ছে।',
+        );
+        return false;
+      }
+    }
+    return true;
+  }
+
+  Future<LocationPermission> _checkAndRequestPermission() async {
+    LocationPermission permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.denied) {
+      await _showPermissionExplanationDialog();
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        _useDefaultLocation(
+          'লোকেশন পারমিশন দেওয়া হয়নি। ডিফল্ট লোকেশন (ঢাকা) ব্যবহার করা হচ্ছে।',
+        );
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      await _showOpenSettingsDialog();
+      _useDefaultLocation(
+        'লোকেশন পারমিশন স্থায়ীভাবে বন্ধ করা আছে। ডিফল্ট লোকেশন (ঢাকা) ব্যবহার করা হচ্ছে।',
+      );
+    }
+
+    return permission;
+  }
+
+  Future<void> _loadCurrentLocation() async {
     toggleLoading(loading: true);
     try {
-      // Check if location services are enabled
-      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!serviceEnabled) {
-        // Show dialog to enable location service
-        await _showLocationServiceDialog();
-        serviceEnabled = await Geolocator.isLocationServiceEnabled();
-        if (!serviceEnabled) {
-          // If still not enabled, use default location
-          _useDefaultLocation(
-            'লোকেশন সার্ভিস বন্ধ আছে। ডিফল্ট লোকেশন (ঢাকা) ব্যবহার করা হচ্ছে।',
-          );
-          return;
-        }
-      }
+      Position position = await getCurrentLocationUseCase.execute();
+      String address = await getAddressFromCoordinatesUseCase.execute(
+        position.latitude,
+        position.longitude,
+      );
 
-      // Check location permission
-      LocationPermission permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        // Show dialog explaining why we need location permission
-        await _showPermissionExplanationDialog();
-        // Request permission
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) {
-          // If permission still denied, use default location
-          _useDefaultLocation(
-            'লোকেশন পারমিশন দেওয়া হয়নি। ডিফল্ট লোকেশন (ঢাকা) ব্যবহার করা হচ্ছে।',
-          );
-          return;
-        }
-      }
-
-      if (permission == LocationPermission.deniedForever) {
-        // If permission permanently denied, show settings dialog
-        await _showOpenSettingsDialog();
-        _useDefaultLocation(
-          'লোকেশন পারমিশন স্থায়ীভাবে বন্ধ করা আছে। ডিফল্ট লোকেশন (ঢাকা) ব্যবহার করা হচ্ছে।',
-        );
-        return;
-      }
-
-      // If we got here, permission is granted
-      uiState.value = uiState.value.copyWith(locationPermissionGranted: true);
-      await _loadCurrentLocation();
+      uiState.value = uiState.value.copyWith(currentAddress: address);
+      await _loadPrayerTimes(position.latitude, position.longitude);
     } catch (e) {
-      // Use default location for any errors
-      _useDefaultLocation('একটি সমস্যা হয়েছে: ${e.toString()}');
+      _handleLocationError(e);
     } finally {
       toggleLoading(loading: false);
     }
   }
 
-  // Show dialog to enable location service
+  void _handleLocationError(dynamic error) {
+    if (_isLocationPermissionError(error)) {
+      _fallbackToDefaultLocation();
+      Get.snackbar(
+        'Notice',
+        'Using default location (Dhaka) for prayer times.',
+        backgroundColor: Colors.amber,
+        duration: Duration(seconds: 3),
+      );
+    } else {
+      Get.snackbar('Error', error.toString(), backgroundColor: Colors.red);
+      _fallbackToDefaultLocation();
+    }
+  }
+
+  bool _isLocationPermissionError(dynamic error) {
+    final errorString = error.toString().toLowerCase();
+    return errorString.contains('permission') ||
+        errorString.contains('denied') ||
+        errorString.contains('disabled');
+  }
+
+  void _fallbackToDefaultLocation() {
+    uiState.value = uiState.value.copyWith(currentAddress: 'ঢাকা');
+    _loadPrayerTimes(
+      currentUiState.defaultLatitude!,
+      currentUiState.defaultLongitude!,
+    );
+  }
+
+  Future<void> _loadPrayerTimes(double latitude, double longitude) async {
+    uiState.value = uiState.value.copyWith(
+      loadingPrayerTimes: true,
+      prayerTimesError: null,
+    );
+
+    String date = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    try {
+      var times = await getPrayerTimesUseCase.execute(
+        latitude,
+        longitude,
+        date,
+      );
+      if (times.isEmpty) {
+        throw Exception('নামাজের সময় লোড করা যায়নি');
+      }
+
+      Map<String, String> formattedTimes = _formatPrayerTimes(times);
+      _addSpecialTimes(formattedTimes);
+
+      uiState.value = uiState.value.copyWith(
+        prayerTimes: formattedTimes,
+        loadingPrayerTimes: false,
+        prayerTimesError: null,
+      );
+    } catch (e) {
+      print('Error loading prayer times: $e');
+      uiState.value = uiState.value.copyWith(
+        loadingPrayerTimes: false,
+        prayerTimesError:
+            'নামাজের সময় লোড করা যায়নি। দয়া করে আবার চেষ্টা করুন।\nError: ${e.toString()}',
+        prayerTimes: null,
+      );
+    }
+  }
+
+  Map<String, String> _formatPrayerTimes(Map<String, dynamic> times) {
+    Map<String, String> formattedTimes = {};
+    times.forEach((prayer, time) {
+      try {
+        DateTime prayerTime = DateFormat('HH:mm').parse(time);
+        String formatted = DateFormat('h:mm a').format(prayerTime);
+        formattedTimes[prayer] = formatted;
+      } catch (e) {
+        print('Error formatting time for $prayer: $e');
+        throw Exception('সময় ফরম্যাট করতে সমস্যা হয়েছে: $prayer');
+      }
+    });
+    return formattedTimes;
+  }
+
+  void _addSpecialTimes(Map<String, String> formattedTimes) {
+    // Add Iftar time (same as Maghrib)
+    if (formattedTimes.containsKey('Maghrib')) {
+      formattedTimes['Iftar'] = formattedTimes['Maghrib']!;
+    }
+
+    // Calculate Sehri time (20 minutes before Fajr)
+    if (formattedTimes.containsKey('Fajr')) {
+      try {
+        DateTime fajrTime = DateFormat('h:mm a').parse(formattedTimes['Fajr']!);
+        DateTime sehriTime = fajrTime.subtract(Duration(minutes: 20));
+        formattedTimes['Sehri'] = DateFormat('h:mm a').format(sehriTime);
+      } catch (e) {
+        print('Error calculating Sehri time: $e');
+        // Don't throw here, just skip Sehri time if there's an error
+      }
+    }
+  }
+
+  Future<void> _useDefaultLocation(String message) async {
+    uiState.value = uiState.value.copyWith(currentAddress: 'ঢাকা');
+    await _loadPrayerTimes(
+      currentUiState.defaultLatitude!,
+      currentUiState.defaultLongitude!,
+    );
+    Get.snackbar(
+      'সতর্কতা',
+      message,
+      backgroundColor: Colors.amber,
+      duration: Duration(seconds: 5),
+    );
+  }
+
+  // Dialog methods
   Future<void> _showLocationServiceDialog() async {
     return Get.dialog(
       AlertDialog(
@@ -128,7 +302,6 @@ class HomePresenter extends BasePresenter<HomeUiState> {
     );
   }
 
-  // Show dialog explaining why we need location permission
   Future<void> _showPermissionExplanationDialog() async {
     return Get.dialog(
       AlertDialog(
@@ -144,7 +317,6 @@ class HomePresenter extends BasePresenter<HomeUiState> {
     );
   }
 
-  // Show dialog to open settings when permission permanently denied
   Future<void> _showOpenSettingsDialog() async {
     return Get.dialog(
       AlertDialog(
@@ -165,168 +337,5 @@ class HomePresenter extends BasePresenter<HomeUiState> {
       ),
       barrierDismissible: false,
     );
-  }
-
-  // Use default location with explanation message
-  Future<void> _useDefaultLocation(String message) async {
-    uiState.value = uiState.value.copyWith(currentAddress: 'ঢাকা');
-    await _loadPrayerTimes(
-      currentUiState.defaultLatitude!,
-      currentUiState.defaultLongitude!,
-    );
-    Get.snackbar(
-      'সতর্কতা',
-      message,
-      backgroundColor: Colors.amber,
-      duration: Duration(seconds: 5),
-    );
-  }
-
-  Future<void> _loadCurrentLocation() async {
-    toggleLoading(loading: true);
-    try {
-      Position position = await getCurrentLocationUseCase.execute();
-      uiState.value = uiState.value.copyWith(
-        currentAddress: await getAddressFromCoordinatesUseCase.execute(
-          position.latitude,
-          position.longitude,
-        ),
-      );
-      await _loadPrayerTimes(position.latitude, position.longitude);
-    } catch (e) {
-      // Check if the error is related to location permission
-      if (e.toString().contains('permission') ||
-          e.toString().contains('denied') ||
-          e.toString().contains('disabled')) {
-        // Use default Dhaka location when permission is denied
-        uiState.value = uiState.value.copyWith(currentAddress: 'ঢাকা');
-        await _loadPrayerTimes(
-          currentUiState.defaultLatitude!,
-          currentUiState.defaultLongitude!,
-        );
-        Get.snackbar(
-          'Notice',
-          'Using default location (Dhaka) for prayer times.',
-          backgroundColor: Colors.amber,
-          duration: Duration(seconds: 3),
-        );
-      } else {
-        Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
-
-        // Fall back to default location if any error occurs
-        uiState.value = uiState.value.copyWith(currentAddress: 'ঢাকা');
-        await _loadPrayerTimes(
-          currentUiState.defaultLatitude!,
-          currentUiState.defaultLongitude!,
-        );
-      }
-    } finally {
-      toggleLoading(loading: false);
-    }
-  }
-
-  Future<void> _loadPrayerTimes(double latitude, double longitude) async {
-    uiState.value = uiState.value.copyWith(
-      loadingPrayerTimes: true,
-      prayerTimesError: null,
-    );
-
-    String date = DateFormat('yyyy-MM-dd').format(DateTime.now());
-    try {
-      var times = await getPrayerTimesUseCase.execute(
-        latitude,
-        longitude,
-        date,
-      );
-
-      if (times.isEmpty) {
-        throw Exception('নামাজের সময় লোড করা যায়নি');
-      }
-
-      // Convert each time to 12-hour format with AM/PM
-      Map<String, String> formattedTimes = {};
-      times.forEach((prayer, time) {
-        try {
-          // Parse the 24-hour time
-          DateTime prayerTime = DateFormat('HH:mm').parse(time);
-          // Format to 12-hour time with AM/PM
-          String formatted = DateFormat('h:mm a').format(prayerTime);
-          formattedTimes[prayer] = formatted;
-        } catch (e) {
-          print('Error formatting time for $prayer: $e');
-          throw Exception('সময় ফরম্যাট করতে সমস্যা হয়েছে: $prayer');
-        }
-      });
-
-      // Add Iftar time (same as Maghrib)
-      if (formattedTimes.containsKey('Maghrib')) {
-        formattedTimes['Iftar'] = formattedTimes['Maghrib']!;
-      }
-
-      // Calculate Sehri time (20 minutes before Fajr)
-      if (formattedTimes.containsKey('Fajr')) {
-        try {
-          DateTime fajrTime = DateFormat(
-            'h:mm a',
-          ).parse(formattedTimes['Fajr']!);
-          DateTime sehriTime = fajrTime.subtract(Duration(minutes: 20));
-          formattedTimes['Sehri'] = DateFormat('h:mm a').format(sehriTime);
-        } catch (e) {
-          print('Error calculating Sehri time: $e');
-          // Don't throw here, just skip Sehri time if there's an error
-        }
-      }
-
-      uiState.value = uiState.value.copyWith(
-        prayerTimes: formattedTimes,
-        loadingPrayerTimes: false,
-        prayerTimesError: null,
-      );
-    } catch (e) {
-      print('Error loading prayer times: $e');
-      uiState.value = uiState.value.copyWith(
-        loadingPrayerTimes: false,
-        prayerTimesError:
-            'নামাজের সময় লোড করা যায়নি। দয়া করে আবার চেষ্টা করুন।\nError: ${e.toString()}',
-        prayerTimes: null,
-      );
-    }
-  }
-
-  Future<void> changeLocation(String address) async {
-    toggleLoading(loading: true);
-    try {
-      List<Location> locations = await getCoordinatesFromAddressUseCase.execute(
-        address,
-      );
-      Location location = locations[0];
-      uiState.value = uiState.value.copyWith(currentAddress: address);
-      await _loadPrayerTimes(location.latitude, location.longitude);
-    } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Failed to change location.',
-        backgroundColor: Colors.red,
-      );
-
-      // Fall back to default location if changing location fails
-      uiState.value = uiState.value.copyWith(currentAddress: 'ঢাকা');
-      await _loadPrayerTimes(
-        currentUiState.defaultLatitude!,
-        currentUiState.defaultLongitude!,
-      );
-    } finally {
-      toggleLoading(loading: false);
-    }
-  }
-
-  @override
-  Future<void> addUserMessage(String message) async {
-    uiState.value = uiState.value.copyWith(userMessage: message);
-  }
-
-  @override
-  Future<void> toggleLoading({required bool loading}) async {
-    uiState.value = uiState.value.copyWith(isLoading: loading);
   }
 }
