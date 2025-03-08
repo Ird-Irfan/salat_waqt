@@ -103,7 +103,7 @@ class CustomToastState extends State<CustomToast>
                 ),
                 child: Text(
                   widget.message,
-                  style: TextStyle(color: context.color.primaryColor),
+                  style: TextStyle(color: context.color.primaryColor100),
                 ),
               ),
             ),

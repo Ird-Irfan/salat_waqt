@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:salat_waqt/core/config/salat_waqt_screen.dart';
 import 'package:salat_waqt/core/constant/app_contant.dart';
 import 'package:salat_waqt/presentation/home/ui/appber/appber_section.dart';
 import 'package:salat_waqt/presentation/home/ui/current_prayer_time/current_prayer_time.dart';
@@ -13,6 +14,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -34,29 +36,24 @@ class HomePage extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Column(
+                  spacing: 20,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Date Display
-                    const DateDisplay(),
-                    const SizedBox(height: 20),
+                    DateDisplay(theme: theme),
+                    SizedBox(height: 12.px),
                     // Iftar Time Counter
                     const IftarTimeCounter(),
-                    const SizedBox(height: 20),
                     // Sahri & Iftar Times
-                    const SahriIftarTimesSection(),
-                    const SizedBox(height: 16),
+                    SahriIftarTimesSection(theme: theme),
                     // Current Prayer Time
-                    const CurrentPrayerTime(),
-                    const SizedBox(height: 20),
+                    CurrentPrayerTime(theme: theme),
                     // Sadaqa App Banner
                     const SadaqaAppBanner(),
-                    const SizedBox(height: 20),
                     // Forbidden Times Section
                     const ForbiddenTime(),
-                    const SizedBox(height: 20),
                     // About Us Footer
                     const AboutUsFooter(),
-                    const SizedBox(height: 20),
                   ],
                 ),
               ),
