@@ -127,8 +127,9 @@ class HomePresenter extends BasePresenter<HomeUiState> {
     // Update immediately
     _updateRemainingTime();
 
-    // Set timer to update every minute
-    _timer = Timer.periodic(Duration(minutes: 1), (timer) {
+    // Set timer to update less frequently - every 60 seconds instead of every minute
+    // this helps reduce UI rebuilds while still keeping the display accurate
+    _timer = Timer.periodic(const Duration(seconds: 60), (timer) {
       _updateRemainingTime();
     });
   }

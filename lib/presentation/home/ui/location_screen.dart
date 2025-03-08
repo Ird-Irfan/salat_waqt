@@ -5,6 +5,60 @@ import 'package:salat_waqt/core/di/service_locator.dart';
 import 'package:salat_waqt/core/external_libs/presentable_widget_builder.dart';
 import 'package:salat_waqt/presentation/home/presenter/home_presenter.dart';
 
+// Custom painter for circular progress
+class CircularProgressPainter extends CustomPainter {
+  final double progressValue;
+  final Color progressColor;
+  final Color backgroundColor;
+  final double strokeWidth;
+
+  CircularProgressPainter({
+    required this.progressValue,
+    required this.progressColor,
+    required this.backgroundColor,
+    required this.strokeWidth,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+    final radius = (size.width - strokeWidth) / 2;
+
+    // Draw background circle
+    final backgroundPaint =
+        Paint()
+          ..color = backgroundColor
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = strokeWidth;
+
+    canvas.drawCircle(center, radius, backgroundPaint);
+
+    // Draw progress arc
+    final progressPaint =
+        Paint()
+          ..color = progressColor
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = strokeWidth
+          ..strokeCap = StrokeCap.round;
+
+    canvas.drawArc(
+      Rect.fromCircle(center: center, radius: radius),
+      -1.5708, // Start from top (pi/2)
+      progressValue * 6.2832, // Full circle is 2*pi
+      false,
+      progressPaint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(CircularProgressPainter oldDelegate) {
+    return oldDelegate.progressValue != progressValue ||
+        oldDelegate.progressColor != progressColor ||
+        oldDelegate.backgroundColor != backgroundColor ||
+        oldDelegate.strokeWidth != strokeWidth;
+  }
+}
+
 class LocationScreen extends StatelessWidget {
   final HomePresenter presenter = loadPresenter(
     HomePresenter(
@@ -188,85 +242,97 @@ class LocationScreen extends StatelessWidget {
                                           .containsKey('Sehri') &&
                                       presenter.currentUiState.prayerTimes!
                                           .containsKey('Iftar'))
-                                    Container(
-                                      padding: EdgeInsets.all(12),
-                                      margin: EdgeInsets.only(bottom: 16),
-                                      decoration: BoxDecoration(
-                                        color: Colors.green.shade50,
-                                        borderRadius: BorderRadius.circular(12),
-                                        border: Border.all(
-                                          color: Colors.green.shade200,
+                                    // Wrap with RepaintBoundary to isolate painting operations
+                                    RepaintBoundary(
+                                      child: Container(
+                                        padding: EdgeInsets.all(12),
+                                        margin: EdgeInsets.only(bottom: 16),
+                                        decoration: BoxDecoration(
+                                          color: Colors.green.shade50,
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                          border: Border.all(
+                                            color: Colors.green.shade200,
+                                          ),
                                         ),
-                                      ),
-                                      child: Column(
-                                        children: [
-                                          Text(
-                                            'রমজানের সময়সূচী',
-                                            style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.green.shade700,
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                              'রমজানের সময়সূচী',
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.green.shade700,
+                                              ),
                                             ),
-                                          ),
-                                          SizedBox(height: 10),
-                                          _buildPrayerTimeRow(
-                                            'সেহরি',
-                                            presenter
-                                                .currentUiState
-                                                .prayerTimes!['Sehri'],
-                                            Colors.blue.shade700,
-                                          ),
-                                          Divider(),
-                                          _buildPrayerTimeRow(
-                                            'ইফতার',
-                                            presenter
-                                                .currentUiState
-                                                .prayerTimes!['Iftar'],
-                                            Colors.orange.shade700,
-                                          ),
-                                        ],
+                                            SizedBox(height: 10),
+                                            _buildPrayerTimeRow(
+                                              'সেহরি',
+                                              presenter
+                                                  .currentUiState
+                                                  .prayerTimes!['Sehri'],
+                                              Colors.blue.shade700,
+                                            ),
+                                            Divider(),
+                                            _buildPrayerTimeRow(
+                                              'ইফতার',
+                                              presenter
+                                                  .currentUiState
+                                                  .prayerTimes!['Iftar'],
+                                              Colors.orange.shade700,
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
 
                                   // Regular Prayer Times
-                                  _buildPrayerTimeRow(
-                                    'ফজর',
-                                    presenter
-                                        .currentUiState
-                                        .prayerTimes!['Fajr'],
-                                    Colors.indigo,
-                                  ),
-                                  Divider(),
-                                  _buildPrayerTimeRow(
-                                    'যোহর',
-                                    presenter
-                                        .currentUiState
-                                        .prayerTimes!['Dhuhr'],
-                                    Colors.indigo,
-                                  ),
-                                  Divider(),
-                                  _buildPrayerTimeRow(
-                                    'আসর',
-                                    presenter
-                                        .currentUiState
-                                        .prayerTimes!['Asr'],
-                                    Colors.indigo,
-                                  ),
-                                  Divider(),
-                                  _buildPrayerTimeRow(
-                                    'মাগরিব',
-                                    presenter
-                                        .currentUiState
-                                        .prayerTimes!['Maghrib'],
-                                    Colors.indigo,
-                                  ),
-                                  Divider(),
-                                  _buildPrayerTimeRow(
-                                    'ঈশা',
-                                    presenter
-                                        .currentUiState
-                                        .prayerTimes!['Isha'],
-                                    Colors.indigo,
+                                  // Wrap prayer times in a RepaintBoundary to optimize rendering
+                                  RepaintBoundary(
+                                    child: Column(
+                                      children: [
+                                        _buildPrayerTimeRow(
+                                          'ফজর',
+                                          presenter
+                                              .currentUiState
+                                              .prayerTimes!['Fajr'],
+                                          Colors.indigo,
+                                        ),
+                                        Divider(),
+                                        _buildPrayerTimeRow(
+                                          'যোহর',
+                                          presenter
+                                              .currentUiState
+                                              .prayerTimes!['Dhuhr'],
+                                          Colors.indigo,
+                                        ),
+                                        Divider(),
+                                        _buildPrayerTimeRow(
+                                          'আসর',
+                                          presenter
+                                              .currentUiState
+                                              .prayerTimes!['Asr'],
+                                          Colors.indigo,
+                                        ),
+                                        Divider(),
+                                        _buildPrayerTimeRow(
+                                          'মাগরিব',
+                                          presenter
+                                              .currentUiState
+                                              .prayerTimes!['Maghrib'],
+                                          Colors.indigo,
+                                        ),
+                                        Divider(),
+                                        _buildPrayerTimeRow(
+                                          'ঈশা',
+                                          presenter
+                                              .currentUiState
+                                              .prayerTimes!['Isha'],
+                                          Colors.indigo,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ],
                               ),
@@ -300,7 +366,7 @@ class LocationScreen extends StatelessWidget {
 
     return Card(
       elevation: 4,
-      margin: EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: 16),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -308,40 +374,50 @@ class LocationScreen extends StatelessWidget {
           children: [
             Text(
               'পরবর্তী $nextPrayerName',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 16),
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                SizedBox(
-                  height: 180,
-                  width: 180,
-                  child: CircularProgressIndicator(
-                    value: progressValue,
-                    strokeWidth: 12,
-                    backgroundColor: Colors.grey.shade200,
-                    valueColor: AlwaysStoppedAnimation<Color>(progressColor),
-                  ),
-                ),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
+            const SizedBox(height: 16),
+            // Use repaint boundary to isolate the animation and reduce redraw of parent widgets
+            RepaintBoundary(
+              child: SizedBox(
+                height: 180,
+                width: 180,
+                child: Stack(
+                  alignment: Alignment.center,
                   children: [
-                    Text(
-                      remainingTime!,
-                      style: TextStyle(
-                        fontSize: 36,
-                        fontWeight: FontWeight.bold,
-                        color: progressColor,
+                    // Use a simpler custom paint instead of CircularProgressIndicator for better performance
+                    CustomPaint(
+                      size: const Size(180, 180),
+                      painter: CircularProgressPainter(
+                        progressValue: progressValue,
+                        progressColor: progressColor,
+                        backgroundColor: Colors.grey.shade200,
+                        strokeWidth: 12,
                       ),
                     ),
-                    Text(
-                      'ঘন্টা বাকি',
-                      style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          remainingTime!,
+                          style: TextStyle(
+                            fontSize: 36,
+                            fontWeight: FontWeight.bold,
+                            color: progressColor,
+                          ),
+                        ),
+                        Text(
+                          'ঘন্টা বাকি',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
+              ),
             ),
           ],
         ),
