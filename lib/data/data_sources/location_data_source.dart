@@ -45,7 +45,7 @@ class LocationDataSourceImpl implements LocationDataSource {
         longitude,
       );
       Placemark place = placemarks[0];
-      return "${place.locality}, ${place.administrativeArea}, ${place.country}";
+      return "${place.locality}, ${place.country}";
     } catch (e) {
       throw Exception("Failed to get address: $e");
     }
