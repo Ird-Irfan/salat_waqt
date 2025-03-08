@@ -8,4 +8,10 @@ class AppConstant {
   static const String icGps = 'assets/svgs/ic_gps.svg';
 
   static const String appBg = 'assets/images/bg_screen.png';
+  static const String bgflashScreen = 'assets/images/bg_flash_screen.png';
+  static const String flashScreenlogo = 'assets/images/flash_screen_logo.png';
+  static const String locationicon = 'assets/images/location_icon.png';
+  static const String moslemmosque = 'assets/images/moslem_mosque.png';
+  static const String splashScreenlogo = 'assets/images/splash_screen_logo.png';
+  static const String bellring = 'assets/images/bell_ring.png';
 }

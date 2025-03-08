@@ -14,6 +14,8 @@ class SalatColor {
   static const Color primaryColorDark750 = Color(0xFF1C4D87);
   static const Color primaryColorDark800 = Color(0xFF101B45);
   static const Color primaryColorDark900 = Color(0xFF0D0D0D);
+  static const Color bgSurfaceColorDark = Color(0xFF0D0D0D);
+  static const Color cardSubTitleColorDark = Color.fromRGBO(193, 219, 250, 0.6);
   // Gradient Colors dark mode
   static final List<Color> dateDisplayGradient = [
     primaryColorDark400.withOpacityInt(15),
