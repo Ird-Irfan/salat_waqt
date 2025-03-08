@@ -7,6 +7,7 @@ import 'package:salat_waqt/core/constant/app_text_styles.dart';
 import 'package:salat_waqt/core/services/preferences_service.dart';
 import 'package:salat_waqt/presentation/Onboarding/widgets/reusable_flash_screen.dart';
 import 'package:salat_waqt/presentation/home/ui/location_screen.dart';
+import 'package:salat_waqt/core/services/logger_service.dart';
 
 class LocationPermission extends StatelessWidget {
   const LocationPermission({super.key});
@@ -14,6 +15,9 @@ class LocationPermission extends StatelessWidget {
   // Get the preferences service from the service locator
   PreferencesService get _preferencesService =>
       GetIt.instance<PreferencesService>();
+
+  // Static logger to maintain const constructor
+  static final LoggerService _logger = LoggerService();
 
   // Function to handle the location permission
   Future<void> _handleLocationPermission(BuildContext context) async {
@@ -87,9 +91,9 @@ class LocationPermission extends StatelessWidget {
         position.longitude,
       );
 
-      print('Location: ${position.latitude}, ${position.longitude}');
+      _logger.i('Location: ${position.latitude}, ${position.longitude}');
     } catch (e) {
-      print('Error getting location: $e');
+      _logger.e('Error getting location', e);
       // Save that there was an error getting location
       await _preferencesService.setLocationEnabled(false);
       // Set default location

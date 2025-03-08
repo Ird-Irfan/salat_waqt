@@ -1,10 +1,13 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:salat_waqt/core/services/logger_service.dart';
 import 'package:salat_waqt/domain/service/error_message_handler.dart';
 
 abstract class BaseUseCase<T> {
   final ErrorMessageHandler _errorMessageHandler;
+  final LoggerService _logger = LoggerService();
+
   BaseUseCase(this._errorMessageHandler);
 
   @protected
@@ -15,8 +18,7 @@ abstract class BaseUseCase<T> {
       final T result = await function();
       return right(result);
     } catch (error, stack) {
-      debugPrint("Error: $error");
-      debugPrint("Stack Trace: $stack");
+      _logger.e("Error in use case", error, stack);
       final String errorMessage = _errorMessageHandler.generateErrorMessage(
         error,
       );

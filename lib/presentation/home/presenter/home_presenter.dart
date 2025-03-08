@@ -7,6 +7,7 @@ import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:salat_waqt/core/base/base_presenter.dart';
+import 'package:salat_waqt/core/services/logger_service.dart';
 import 'package:salat_waqt/core/services/preferences_service.dart';
 import 'package:salat_waqt/domain/usecases/get_address_from_coordinates_usecase.dart';
 import 'package:salat_waqt/domain/usecases/get_current_location_usecase.dart';
@@ -25,6 +26,7 @@ class HomePresenter extends BasePresenter<HomeUiState> {
   // Services and Use cases
   final PreferencesService _preferencesService =
       GetIt.instance<PreferencesService>();
+  final LoggerService _logger = LoggerService();
   final GetCurrentLocationUseCase getCurrentLocationUseCase;
   final GetAddressFromCoordinatesUseCase getAddressFromCoordinatesUseCase;
   final GetPrayerTimesUseCase getPrayerTimesUseCase;
@@ -345,7 +347,7 @@ class HomePresenter extends BasePresenter<HomeUiState> {
         parsedTime.minute,
       );
     } catch (e) {
-      print('Error parsing time: $e');
+      _logger.e('Error parsing time', e);
       return null;
     }
   }
@@ -481,7 +483,7 @@ class HomePresenter extends BasePresenter<HomeUiState> {
       // Update the remaining time after loading prayer times
       _updateRemainingTime();
     } catch (e) {
-      print('Error loading prayer times: $e');
+      _logger.e('Error loading prayer times', e);
       uiState.value = uiState.value.copyWith(
         loadingPrayerTimes: false,
         prayerTimesError:
@@ -499,7 +501,7 @@ class HomePresenter extends BasePresenter<HomeUiState> {
         String formatted = DateFormat('h:mm a').format(prayerTime);
         formattedTimes[prayer] = formatted;
       } catch (e) {
-        print('Error formatting time for $prayer: $e');
+        _logger.e('Error formatting time for $prayer', e);
         throw Exception('সময় ফরম্যাট করতে সমস্যা হয়েছে: $prayer');
       }
     });
@@ -519,7 +521,7 @@ class HomePresenter extends BasePresenter<HomeUiState> {
         DateTime sehriTime = fajrTime.subtract(Duration(minutes: 20));
         formattedTimes['Sehri'] = DateFormat('h:mm a').format(sehriTime);
       } catch (e) {
-        print('Error calculating Sehri time: $e');
+        _logger.e('Error calculating Sehri time', e);
         // Don't throw here, just skip Sehri time if there's an error
       }
     }
@@ -650,7 +652,7 @@ class HomePresenter extends BasePresenter<HomeUiState> {
       // Just load default location (Dhaka)
       _fallbackToDefaultLocation();
     } catch (e) {
-      print('Error loading saved location: $e');
+      _logger.e('Error loading saved location', e);
       _fallbackToDefaultLocation();
     } finally {
       toggleLoading(loading: false);
