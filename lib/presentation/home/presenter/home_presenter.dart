@@ -5,6 +5,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:hijri/hijri_calendar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:salat_waqt/core/base/base_presenter.dart';
 import 'package:salat_waqt/domain/usecases/get_address_from_coordinates_usecase.dart';
 import 'package:salat_waqt/domain/usecases/get_current_location_usecase.dart';
@@ -39,7 +40,7 @@ class HomePresenter extends BasePresenter<HomeUiState> {
   void onInit() {
     super.onInit();
     _updateDates();
-    checkAndRequestLocationPermission();
+    _loadSavedLocation();
     _startTimer();
   }
 
@@ -53,6 +54,34 @@ class HomePresenter extends BasePresenter<HomeUiState> {
   Future<void> checkAndRequestLocationPermission() async {
     toggleLoading(loading: true);
     try {
+      // First check if we already have location data saved
+      final prefs = await SharedPreferences.getInstance();
+      final bool locationEnabled = prefs.getBool('location_enabled') ?? false;
+
+      if (locationEnabled) {
+        // User has previously granted location permission, use saved coordinates
+        final double? latitude = prefs.getDouble('latitude');
+        final double? longitude = prefs.getDouble('longitude');
+
+        if (latitude != null && longitude != null) {
+          // Get address from coordinates
+          String address = await getAddressFromCoordinatesUseCase.execute(
+            latitude,
+            longitude,
+          );
+
+          uiState.value = uiState.value.copyWith(
+            currentAddress: address,
+            locationPermissionGranted: true,
+          );
+
+          // Load prayer times with saved coordinates
+          await _loadPrayerTimes(latitude, longitude);
+          return;
+        }
+      }
+
+      // If no saved location data, proceed with location checks
       if (!await _isLocationServiceEnabled()) {
         return;
       }
@@ -373,6 +402,12 @@ class HomePresenter extends BasePresenter<HomeUiState> {
         position.longitude,
       );
 
+      // Save to SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('location_enabled', true);
+      await prefs.setDouble('latitude', position.latitude);
+      await prefs.setDouble('longitude', position.longitude);
+
       uiState.value = uiState.value.copyWith(currentAddress: address);
       await _loadPrayerTimes(position.latitude, position.longitude);
     } catch (e) {
@@ -404,7 +439,16 @@ class HomePresenter extends BasePresenter<HomeUiState> {
         errorString.contains('disabled');
   }
 
-  void _fallbackToDefaultLocation() {
+  void _fallbackToDefaultLocation() async {
+    // Save to SharedPreferences
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('location_enabled', false);
+      await prefs.setString('default_location', 'ঢাকা');
+    } catch (e) {
+      print('Error saving default location: $e');
+    }
+
     uiState.value = uiState.value.copyWith(currentAddress: 'ঢাকা');
     _loadPrayerTimes(
       currentUiState.defaultLatitude!,
@@ -557,5 +601,63 @@ class HomePresenter extends BasePresenter<HomeUiState> {
       ),
       barrierDismissible: false,
     );
+  }
+
+  // Load saved location from SharedPreferences
+  Future<void> _loadSavedLocation() async {
+    toggleLoading(loading: true);
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final bool locationEnabled = prefs.getBool('location_enabled') ?? false;
+
+      if (locationEnabled) {
+        // User has previously granted location permission, use saved coordinates
+        final double? latitude = prefs.getDouble('latitude');
+        final double? longitude = prefs.getDouble('longitude');
+
+        if (latitude != null && longitude != null) {
+          // Get address from coordinates
+          String address = await getAddressFromCoordinatesUseCase.execute(
+            latitude,
+            longitude,
+          );
+
+          uiState.value = uiState.value.copyWith(
+            currentAddress: address,
+            locationPermissionGranted: true,
+          );
+
+          // Load prayer times with saved coordinates
+          await _loadPrayerTimes(latitude, longitude);
+          return;
+        }
+      } else {
+        // User denied location permission, check if we have a default location
+        final String? defaultLocation = prefs.getString('default_location');
+
+        if (defaultLocation != null && defaultLocation.isNotEmpty) {
+          uiState.value = uiState.value.copyWith(
+            currentAddress: defaultLocation,
+            locationPermissionGranted: false,
+          );
+
+          // Use default location coordinates (Dhaka)
+          await _loadPrayerTimes(
+            currentUiState.defaultLatitude!,
+            currentUiState.defaultLongitude!,
+          );
+          return;
+        }
+      }
+
+      // If we get here, either first time use or something went wrong with saved data
+      // Just load default location (Dhaka)
+      _fallbackToDefaultLocation();
+    } catch (e) {
+      print('Error loading saved location: $e');
+      _fallbackToDefaultLocation();
+    } finally {
+      toggleLoading(loading: false);
+    }
   }
 }

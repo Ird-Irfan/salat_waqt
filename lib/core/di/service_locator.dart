@@ -10,6 +10,7 @@ import 'package:salat_waqt/domain/usecases/get_address_from_coordinates_usecase.
 import 'package:salat_waqt/domain/usecases/get_coordinates_from_address_usecase.dart';
 import 'package:salat_waqt/domain/usecases/get_current_location_usecase.dart';
 import 'package:salat_waqt/domain/usecases/get_prayer_times_usecase.dart';
+import 'package:salat_waqt/presentation/Onboarding/presenter/flash_screen_presenter.dart';
 import 'package:salat_waqt/presentation/home/presenter/home_presenter.dart';
 
 final GetIt _serviceLocator = GetIt.instance;
@@ -78,6 +79,9 @@ class ServiceLocator {
         getCoordinatesFromAddressUseCase: locator(),
         getPrayerTimesUseCase: locator(),
       ),
+    );
+    _serviceLocator.registerLazySingleton<FlashScreenPresenter>(
+      () => FlashScreenPresenter(),
     );
   }
 }

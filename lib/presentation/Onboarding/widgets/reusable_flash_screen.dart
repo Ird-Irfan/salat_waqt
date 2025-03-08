@@ -1,51 +1,100 @@
 import 'package:flutter/material.dart';
 import 'package:salat_waqt/core/config/salat_color.dart';
+import 'package:salat_waqt/core/constant/app_contant.dart';
+import 'package:salat_waqt/core/constant/app_text_styles.dart';
+import 'package:salat_waqt/presentation/Onboarding/widgets/gradient_button.dart';
 
 /// A reusable flash/splash screen widget that can be customized with
 /// different backgrounds, logos, titles, and subtitles.
 class ReusableFlashScreen extends StatelessWidget {
-  /// Background image asset path
-  final String backgroundImagePath;
+  // Background
+  final String? backgroundImagePath;
+  final BoxFit backgroundFit;
 
-  /// Logo image asset path
+  // Primary Logo
   final String? logoImagePath;
-
-  /// Logo width
   final double logoWidth;
-
-  /// Logo height
   final double logoHeight;
 
-  /// Title text
+  // Title
   final String? title;
-
-  /// Title text style
   final TextStyle? titleStyle;
 
-  /// Subtitle text
+  // Subtitle
   final String? subtitle;
-
-  /// Subtitle text style
   final TextStyle? subtitleStyle;
 
-  /// Space between title and subtitle
-  final double spaceBetween;
+  // Secondary Logo
+  final String? secondLogoImagePath;
+  final double secondLogoWidth;
+  final double secondLogoHeight;
 
-  /// Additional widgets to display below the subtitle
+  // Secondary Subtitle
+  final String? secondSubtitle;
+  final TextStyle? secondSubtitleStyle;
+
+  // Spacing
+  final double spaceBetween;
+  final double primaryToSecondarySpacing;
+  final double secondaryLogoToSubtitleSpacing;
+  final double subtitleToButtonSpacing;
+
+  // Button
+  final String? buttonText;
+  final VoidCallback? onButtonPressed;
+  final ButtonStyle? buttonStyle;
+  final List<Color>? buttonGradientColors;
+  final double buttonWidth;
+  final double buttonHeight;
+  final double buttonBorderRadius;
+  final TextStyle? buttonTextStyle;
+  final EdgeInsetsGeometry buttonPadding;
+
+  // Additional content
   final List<Widget>? additionalWidgets;
+  final MainAxisAlignment contentAlignment;
+  final EdgeInsetsGeometry contentPadding;
 
   const ReusableFlashScreen({
     super.key,
     required this.backgroundImagePath,
+    this.backgroundFit = BoxFit.cover,
+    // Primary logo
     this.logoImagePath,
     this.logoWidth = 160,
     this.logoHeight = 160,
+    // Title
     this.title,
     this.titleStyle,
+    // Subtitle
     this.subtitle,
     this.subtitleStyle,
+    // Secondary logo
+    this.secondLogoImagePath,
+    this.secondLogoWidth = 160,
+    this.secondLogoHeight = 160,
+    // Secondary subtitle
+    this.secondSubtitle,
+    this.secondSubtitleStyle,
+    // Spacing
     this.spaceBetween = 16,
+    this.primaryToSecondarySpacing = 100,
+    this.secondaryLogoToSubtitleSpacing = 32,
+    this.subtitleToButtonSpacing = 32,
+    // Button
+    this.buttonText,
+    this.onButtonPressed,
+    this.buttonStyle,
+    this.buttonGradientColors,
+    this.buttonWidth = double.infinity,
+    this.buttonHeight = 50,
+    this.buttonBorderRadius = 10,
+    this.buttonTextStyle,
+    this.buttonPadding = const EdgeInsets.symmetric(horizontal: 20),
+    // Additional
     this.additionalWidgets,
+    this.contentAlignment = MainAxisAlignment.center,
+    this.contentPadding = EdgeInsets.zero,
   });
 
   @override
@@ -54,14 +103,19 @@ class ReusableFlashScreen extends StatelessWidget {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage(backgroundImagePath),
-            fit: BoxFit.cover,
+            image: AssetImage(backgroundImagePath ?? AppConstant.bgflashScreen),
+            fit: backgroundFit,
           ),
         ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: _buildFlashScreenContent(),
+        child: SafeArea(
+          child: Padding(
+            padding: contentPadding,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: contentAlignment,
+                children: _buildFlashScreenContent(),
+              ),
+            ),
           ),
         ),
       ),
@@ -71,6 +125,30 @@ class ReusableFlashScreen extends StatelessWidget {
   List<Widget> _buildFlashScreenContent() {
     final List<Widget> widgets = [];
 
+    // Primary section (logo, title, subtitle)
+    _buildPrimarySection(widgets);
+
+    // Add spacing between primary and secondary sections if both exist
+    if ((title != null || subtitle != null) &&
+        (secondLogoImagePath != null || secondSubtitle != null)) {
+      widgets.add(SizedBox(height: primaryToSecondarySpacing));
+    }
+
+    // Secondary section (second logo, second subtitle)
+    _buildSecondarySection(widgets);
+
+    // Button section
+    _buildButtonSection(widgets);
+
+    // Add additional widgets if provided
+    if (additionalWidgets != null && additionalWidgets!.isNotEmpty) {
+      widgets.addAll(additionalWidgets!);
+    }
+
+    return widgets;
+  }
+
+  void _buildPrimarySection(List<Widget> widgets) {
     // Add logo if provided
     if (logoImagePath != null) {
       widgets.add(
@@ -116,45 +194,90 @@ class ReusableFlashScreen extends StatelessWidget {
         ),
       );
     }
+  }
 
-    // Add additional widgets if provided
-    if (additionalWidgets != null && additionalWidgets!.isNotEmpty) {
-      widgets.addAll(additionalWidgets!);
+  void _buildSecondarySection(List<Widget> widgets) {
+    // Add second logo if provided
+    if (secondLogoImagePath != null) {
+      widgets.add(
+        Image.asset(
+          secondLogoImagePath!,
+          width: secondLogoWidth,
+          height: secondLogoHeight,
+        ),
+      );
     }
 
-    return widgets;
+    // Add space between second logo and second subtitle
+    if (secondLogoImagePath != null && secondSubtitle != null) {
+      widgets.add(SizedBox(height: secondaryLogoToSubtitleSpacing));
+    }
+
+    // Add second subtitle if provided
+    if (secondSubtitle != null) {
+      widgets.add(
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Text(
+            secondSubtitle!,
+            style:
+                secondSubtitleStyle ??
+                const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                  color: SalatColor.cardSubTitleColorDark,
+                  fontFamily: AppTextStyles.inter,
+                ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
   }
-}
 
-/// A simplified version of the flash screen with predefined styles
-class SimpleFlashScreen extends StatelessWidget {
-  /// Background image asset path
-  final String backgroundImagePath;
+  void _buildButtonSection(List<Widget> widgets) {
+    // Add space before button if needed
+    if ((secondSubtitle != null || subtitle != null) &&
+        buttonText != null &&
+        onButtonPressed != null) {
+      widgets.add(SizedBox(height: subtitleToButtonSpacing));
+    }
 
-  /// Logo image asset path
-  final String logoImagePath;
-
-  /// Title text
-  final String title;
-
-  /// Subtitle text
-  final String subtitle;
-
-  const SimpleFlashScreen({
-    super.key,
-    required this.backgroundImagePath,
-    required this.logoImagePath,
-    required this.title,
-    required this.subtitle,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ReusableFlashScreen(
-      backgroundImagePath: backgroundImagePath,
-      logoImagePath: logoImagePath,
-      title: title,
-      subtitle: subtitle,
-    );
+    // Add button if text and callback are provided
+    if (buttonText != null && onButtonPressed != null) {
+      // If gradient colors are provided, use GradientButton
+      if (buttonGradientColors != null && buttonGradientColors!.isNotEmpty) {
+        widgets.add(
+          Padding(
+            padding: buttonPadding,
+            child: GradientButton(
+              text: buttonText!,
+              onPressed: onButtonPressed!,
+              gradientColors: buttonGradientColors!,
+              width: buttonWidth,
+              height: buttonHeight,
+              borderRadius: buttonBorderRadius,
+              textStyle: buttonTextStyle,
+            ),
+          ),
+        );
+      } else {
+        // Use regular ElevatedButton
+        widgets.add(
+          Padding(
+            padding: buttonPadding,
+            child: SizedBox(
+              width: buttonWidth,
+              height: buttonHeight,
+              child: ElevatedButton(
+                onPressed: onButtonPressed,
+                style: buttonStyle,
+                child: Text(buttonText!, style: buttonTextStyle),
+              ),
+            ),
+          ),
+        );
+      }
+    }
   }
 }
