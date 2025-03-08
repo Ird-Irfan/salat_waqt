@@ -139,7 +139,7 @@ class HomePresenter extends BasePresenter<HomeUiState> {
     // English date
     DateTime now = DateTime.now();
     uiState.value = uiState.value.copyWith(
-      englishDate: DateFormat('EEEE, d MMMM yyyy').format(now),
+      englishDate: DateFormat('d MMMM yyyy').format(now),
     );
 
     // Arabic/Hijri date

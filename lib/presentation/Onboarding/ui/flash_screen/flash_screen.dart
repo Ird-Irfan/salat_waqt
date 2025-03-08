@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:salat_waqt/core/base/base_presenter.dart';
@@ -19,11 +21,13 @@ class FlashScreen extends StatelessWidget {
     ever(presenter.uiState, (state) {
       if (state.shouldNavigate) {
         if (state.skipToHome) {
-          // Navigate directly to home screen if not first run
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => LocationScreen()),
-          );
+          Timer(const Duration(seconds: 1), () {
+            // Navigate directly to home screen if not first run
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => LocationScreen()),
+            );
+          });
         } else {
           // Normal flow - go to location permission
           Navigator.pushReplacement(

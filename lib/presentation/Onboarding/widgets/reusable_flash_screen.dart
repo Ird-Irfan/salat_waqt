@@ -100,6 +100,7 @@ class ReusableFlashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: SalatColor.bgSurfaceColorDark,
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
