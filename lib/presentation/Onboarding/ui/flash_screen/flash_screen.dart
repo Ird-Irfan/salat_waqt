@@ -21,7 +21,7 @@ class FlashScreen extends StatelessWidget {
     ever(presenter.uiState, (state) {
       if (state.shouldNavigate) {
         if (state.skipToHome) {
-          Timer(const Duration(seconds: 1), () {
+          Timer(const Duration(milliseconds: 500), () {
             // Navigate directly to home screen if not first run
             Navigator.pushReplacement(
               context,
