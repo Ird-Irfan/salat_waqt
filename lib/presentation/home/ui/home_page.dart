@@ -21,7 +21,7 @@ class HomePage extends StatelessWidget {
       child: Scaffold(
         extendBodyBehindAppBar: true,
         backgroundColor: Colors.transparent,
-        appBar: AppBarSection(),
+        appBar: AppBarSection(location: 'Dhaka, Bangladesh'),
         body: Container(
           decoration: const BoxDecoration(
             image: DecorationImage(
