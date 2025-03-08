@@ -1,13 +1,17 @@
 import 'dart:async';
 
+import 'package:get_it/get_it.dart';
 import 'package:salat_waqt/core/base/base_presenter.dart';
+import 'package:salat_waqt/core/services/preferences_service.dart';
 import 'package:salat_waqt/presentation/Onboarding/presenter/flash_screen_ui_state.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class FlashScreenPresenter extends BasePresenter<FlashScreenUiState> {
   final Obs<FlashScreenUiState> uiState = Obs(FlashScreenUiState.empty());
   Timer? _navigationTimer;
-  static const String _firstRunKey = 'is_first_run';
+
+  // Get the preferences service from the service locator
+  final PreferencesService _preferencesService =
+      GetIt.instance<PreferencesService>();
 
   FlashScreenUiState get currentUiState => uiState.value;
 
@@ -28,21 +32,15 @@ class FlashScreenPresenter extends BasePresenter<FlashScreenUiState> {
   // Check if this is the first time running the app
   Future<void> checkIfFirstRun() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final isFirstRun = prefs.getBool(_firstRunKey) ?? true;
+      final isFirstRun = await _preferencesService.isFirstRun();
 
       if (isFirstRun) {
-        // First time - show splash screen and set flag for next time
-        await prefs.setBool(_firstRunKey, false);
-        startNavigationTimer();
-      } else {
-        // Not first time - skip splash and go directly to home
-        uiState.value = uiState.value.copyWith(
-          shouldNavigate: true,
-          skipToHome:
-              true, // New flag to indicate we should go to home directly
-        );
+        // First time - set flag for next time
+        await _preferencesService.setFirstRunCompleted();
       }
+
+      // Always show splash screen for 5 seconds, regardless of first run status
+      startNavigationTimer();
     } catch (e) {
       // Fall back to showing splash screen if there's an error
       startNavigationTimer();
@@ -58,13 +56,29 @@ class FlashScreenPresenter extends BasePresenter<FlashScreenUiState> {
 
   // Check login status and prepare for navigation
   Future<void> checkLoginStatusAndNavigate() async {
-    bool isLoggedIn = await isUserLoggedIn();
+    try {
+      bool isLoggedIn = await _preferencesService.isLoggedIn();
+      bool isFirstTimeDone = !(await _preferencesService.isFirstRun());
 
-    // Update UI state to trigger navigation
-    uiState.value = uiState.value.copyWith(
-      shouldNavigate: true,
-      isLoggedIn: isLoggedIn,
-    );
+      // Check if location has already been configured
+      bool locationConfigured =
+          await _preferencesService.hasLocationConfigured();
+
+      // Update UI state to trigger navigation
+      uiState.value = uiState.value.copyWith(
+        shouldNavigate: true,
+        isLoggedIn: isLoggedIn,
+        // Skip to home if location has already been configured (not first run)
+        skipToHome: isFirstTimeDone && locationConfigured,
+      );
+    } catch (e) {
+      // In case of error, still navigate but don't skip
+      uiState.value = uiState.value.copyWith(
+        shouldNavigate: true,
+        isLoggedIn: false,
+        skipToHome: false,
+      );
+    }
   }
 
   @override
@@ -79,19 +93,13 @@ class FlashScreenPresenter extends BasePresenter<FlashScreenUiState> {
 
   // Check if user is already logged in
   Future<bool> isUserLoggedIn() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      return prefs.getBool('isLoggedIn') ?? false;
-    } catch (e) {
-      return false;
-    }
+    return await _preferencesService.isLoggedIn();
   }
 
   // Save login state
   Future<void> saveLoginState(bool isLoggedIn) async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('isLoggedIn', isLoggedIn);
+      await _preferencesService.setLoggedIn(isLoggedIn);
     } catch (e) {
       addUserMessage(e.toString());
     }
@@ -100,9 +108,7 @@ class FlashScreenPresenter extends BasePresenter<FlashScreenUiState> {
   // Save user credentials
   Future<void> saveUserCredentials(String userId, String username) async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('userId', userId);
-      await prefs.setString('username', username);
+      await _preferencesService.saveUserCredentials(userId, username);
     } catch (e) {
       addUserMessage(e.toString());
     }
@@ -111,10 +117,7 @@ class FlashScreenPresenter extends BasePresenter<FlashScreenUiState> {
   // Clear user data on logout
   Future<void> logout() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.remove('isLoggedIn');
-      await prefs.remove('userId');
-      await prefs.remove('username');
+      await _preferencesService.clearUserCredentials();
     } catch (e) {
       addUserMessage(e.toString());
     }
@@ -123,8 +126,8 @@ class FlashScreenPresenter extends BasePresenter<FlashScreenUiState> {
   // For testing - reset the first run flag
   Future<void> resetFirstRunFlag() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool(_firstRunKey, true);
+      await _preferencesService.setFirstRunCompleted(); // Set to false
+      await _preferencesService.init(); // Reinitialize with new values
     } catch (e) {
       addUserMessage(e.toString());
     }

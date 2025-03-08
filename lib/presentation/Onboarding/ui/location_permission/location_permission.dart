@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart' as geo;
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:get_it/get_it.dart';
 import 'package:salat_waqt/core/config/salat_color.dart';
 import 'package:salat_waqt/core/constant/app_contant.dart';
 import 'package:salat_waqt/core/constant/app_text_styles.dart';
+import 'package:salat_waqt/core/services/preferences_service.dart';
 import 'package:salat_waqt/presentation/Onboarding/widgets/reusable_flash_screen.dart';
 import 'package:salat_waqt/presentation/home/ui/location_screen.dart';
 
 class LocationPermission extends StatelessWidget {
   const LocationPermission({super.key});
 
+  // Get the preferences service from the service locator
+  PreferencesService get _preferencesService =>
+      GetIt.instance<PreferencesService>();
+
   // Function to handle the location permission
   Future<void> _handleLocationPermission(BuildContext context) async {
     bool serviceEnabled;
     geo.LocationPermission permission;
-    SharedPreferences prefs = await SharedPreferences.getInstance();
 
     // Check if location services are enabled
     serviceEnabled = await geo.Geolocator.isLocationServiceEnabled();
@@ -29,7 +33,7 @@ class LocationPermission extends StatelessWidget {
         );
       }
       // Save that user didn't enable location services
-      await prefs.setBool('location_enabled', false);
+      await _preferencesService.setLocationEnabled(false);
       _navigateToNextScreen(context);
       return;
     }
@@ -45,9 +49,9 @@ class LocationPermission extends StatelessWidget {
           );
         }
         // Save that user denied location permission
-        await prefs.setBool('location_enabled', false);
+        await _preferencesService.setLocationEnabled(false);
         // Set default location
-        await prefs.setString('default_location', 'Dhaka'); // Default location
+        await _preferencesService.setDefaultLocation('Dhaka');
         _navigateToNextScreen(context);
         return;
       }
@@ -64,9 +68,9 @@ class LocationPermission extends StatelessWidget {
         );
       }
       // Save that user permanently denied location permission
-      await prefs.setBool('location_enabled', false);
+      await _preferencesService.setLocationEnabled(false);
       // Set default location
-      await prefs.setString('default_location', 'Dhaka'); // Default location
+      await _preferencesService.setDefaultLocation('Dhaka');
       _navigateToNextScreen(context);
       return;
     }
@@ -78,17 +82,18 @@ class LocationPermission extends StatelessWidget {
       );
 
       // Save location data
-      await prefs.setBool('location_enabled', true);
-      await prefs.setDouble('latitude', position.latitude);
-      await prefs.setDouble('longitude', position.longitude);
+      await _preferencesService.saveLocationCoordinates(
+        position.latitude,
+        position.longitude,
+      );
 
       print('Location: ${position.latitude}, ${position.longitude}');
     } catch (e) {
       print('Error getting location: $e');
       // Save that there was an error getting location
-      await prefs.setBool('location_enabled', false);
+      await _preferencesService.setLocationEnabled(false);
       // Set default location
-      await prefs.setString('default_location', 'Dhaka'); // Default location
+      await _preferencesService.setDefaultLocation('Dhaka');
     }
 
     // Navigate to next screen

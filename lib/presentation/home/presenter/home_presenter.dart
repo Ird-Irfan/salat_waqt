@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
+import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:hijri/hijri_calendar.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:salat_waqt/core/base/base_presenter.dart';
+import 'package:salat_waqt/core/services/preferences_service.dart';
 import 'package:salat_waqt/domain/usecases/get_address_from_coordinates_usecase.dart';
 import 'package:salat_waqt/domain/usecases/get_current_location_usecase.dart';
 import 'package:salat_waqt/domain/usecases/get_prayer_times_usecase.dart';
@@ -21,7 +22,9 @@ class HomePresenter extends BasePresenter<HomeUiState> {
   // Timer for updating remaining time
   Timer? _timer;
 
-  // Use cases
+  // Services and Use cases
+  final PreferencesService _preferencesService =
+      GetIt.instance<PreferencesService>();
   final GetCurrentLocationUseCase getCurrentLocationUseCase;
   final GetAddressFromCoordinatesUseCase getAddressFromCoordinatesUseCase;
   final GetPrayerTimesUseCase getPrayerTimesUseCase;
@@ -55,13 +58,12 @@ class HomePresenter extends BasePresenter<HomeUiState> {
     toggleLoading(loading: true);
     try {
       // First check if we already have location data saved
-      final prefs = await SharedPreferences.getInstance();
-      final bool locationEnabled = prefs.getBool('location_enabled') ?? false;
+      final locationEnabled = await _preferencesService.isLocationEnabled();
 
       if (locationEnabled) {
         // User has previously granted location permission, use saved coordinates
-        final double? latitude = prefs.getDouble('latitude');
-        final double? longitude = prefs.getDouble('longitude');
+        final latitude = await _preferencesService.getLatitude();
+        final longitude = await _preferencesService.getLongitude();
 
         if (latitude != null && longitude != null) {
           // Get address from coordinates
@@ -403,10 +405,9 @@ class HomePresenter extends BasePresenter<HomeUiState> {
       );
 
       // Save to SharedPreferences
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('location_enabled', true);
-      await prefs.setDouble('latitude', position.latitude);
-      await prefs.setDouble('longitude', position.longitude);
+      await _preferencesService.setLocationEnabled(true);
+      await _preferencesService.setLatitude(position.latitude);
+      await _preferencesService.setLongitude(position.longitude);
 
       uiState.value = uiState.value.copyWith(currentAddress: address);
       await _loadPrayerTimes(position.latitude, position.longitude);
@@ -441,13 +442,8 @@ class HomePresenter extends BasePresenter<HomeUiState> {
 
   void _fallbackToDefaultLocation() async {
     // Save to SharedPreferences
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('location_enabled', false);
-      await prefs.setString('default_location', 'ঢাকা');
-    } catch (e) {
-      print('Error saving default location: $e');
-    }
+    await _preferencesService.setLocationEnabled(false);
+    await _preferencesService.setDefaultLocation('ঢাকা');
 
     uiState.value = uiState.value.copyWith(currentAddress: 'ঢাকা');
     _loadPrayerTimes(
@@ -607,13 +603,12 @@ class HomePresenter extends BasePresenter<HomeUiState> {
   Future<void> _loadSavedLocation() async {
     toggleLoading(loading: true);
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final bool locationEnabled = prefs.getBool('location_enabled') ?? false;
+      final locationEnabled = await _preferencesService.isLocationEnabled();
 
       if (locationEnabled) {
         // User has previously granted location permission, use saved coordinates
-        final double? latitude = prefs.getDouble('latitude');
-        final double? longitude = prefs.getDouble('longitude');
+        final latitude = await _preferencesService.getLatitude();
+        final longitude = await _preferencesService.getLongitude();
 
         if (latitude != null && longitude != null) {
           // Get address from coordinates
@@ -633,7 +628,8 @@ class HomePresenter extends BasePresenter<HomeUiState> {
         }
       } else {
         // User denied location permission, check if we have a default location
-        final String? defaultLocation = prefs.getString('default_location');
+        final String? defaultLocation =
+            await _preferencesService.getDefaultLocation();
 
         if (defaultLocation != null && defaultLocation.isNotEmpty) {
           uiState.value = uiState.value.copyWith(

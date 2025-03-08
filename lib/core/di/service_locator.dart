@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:salat_waqt/core/base/base_presenter.dart';
+import 'package:salat_waqt/core/services/preferences_service.dart';
 import 'package:salat_waqt/data/data_sources/location_data_source.dart';
 import 'package:salat_waqt/data/data_sources/prayer_time_data_source.dart';
 import 'package:salat_waqt/data/repositories/location_repository_impl.dart';
@@ -32,6 +33,11 @@ class ServiceLocator {
   }
 
   Future<void> _setUpService() async {
+    // Register PreferencesService as a singleton and initialize it
+    final preferencesService = PreferencesService.instance;
+    await preferencesService.init();
+    _serviceLocator.registerSingleton<PreferencesService>(preferencesService);
+
     // _serviceLocator.registerLazySingleton(() => QuranDatabase());
   }
 
