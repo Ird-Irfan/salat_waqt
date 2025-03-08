@@ -51,7 +51,6 @@ class PrayerTimeDataSourceImpl implements PrayerTimeDataSource {
 
       return formattedTimes;
     } catch (e) {
-      print('Error calculating prayer times: $e');
       throw Exception('নামাজের সময় গণনা করতে সমস্যা হয়েছে: $e');
     }
   }

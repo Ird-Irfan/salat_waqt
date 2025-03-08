@@ -7,6 +7,7 @@ import 'package:salat_waqt/presentation/home/ui/current_prayer_time/current_pray
 import 'package:salat_waqt/presentation/home/ui/date_display/date_display.dart';
 import 'package:salat_waqt/presentation/home/ui/forbidden_time/forbidden_time.dart';
 import 'package:salat_waqt/presentation/home/ui/iftaar_timer/iftaar_time_counter.dart';
+import 'package:salat_waqt/presentation/home/ui/sadaka_app_banner/sadaka_app_banner.dart';
 import 'package:salat_waqt/presentation/home/ui/sahri_Iftaar_time_section/sahri_iftar_times_section.dart';
 
 class HomePage extends StatelessWidget {
@@ -36,12 +37,11 @@ class HomePage extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Column(
-                  spacing: 20,
+                  spacing: 32.px,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Date Display
                     DateDisplay(theme: theme),
-                    SizedBox(height: 12.px),
                     // Iftar Time Counter
                     const IftarTimeCounter(),
                     // Sahri & Iftar Times
@@ -49,81 +49,17 @@ class HomePage extends StatelessWidget {
                     // Current Prayer Time
                     CurrentPrayerTime(theme: theme),
                     // Sadaqa App Banner
-                    const SadaqaAppBanner(),
+                    SadaqaAppBanner(theme: theme),
                     // Forbidden Times Section
-                    const ForbiddenTime(),
+                    ForbiddenTime(theme: theme),
                     // About Us Footer
-                    const AboutUsFooter(),
+                    AboutUsFooter(),
                   ],
                 ),
               ),
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class SadaqaAppBanner extends StatelessWidget {
-  const SadaqaAppBanner({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFF1A2234),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          Container(
-            height: 40,
-            width: 40,
-            decoration: BoxDecoration(
-              color: const Color(0xFF006A4E),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: const Center(
-              child: Text(
-                'সা',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Looking "Need a trusted spot for your sadaqa?"',
-                  style: TextStyle(fontSize: 12, color: Colors.grey),
-                ),
-                const SizedBox(height: 4),
-                Row(
-                  children: const [
-                    Text(
-                      'Explore Sadaqa App',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.teal,
-                      ),
-                    ),
-                    SizedBox(width: 4),
-                    Icon(Icons.arrow_forward, size: 16, color: Colors.teal),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }

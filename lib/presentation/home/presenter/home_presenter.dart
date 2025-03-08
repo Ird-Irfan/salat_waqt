@@ -313,7 +313,6 @@ class HomePresenter extends BasePresenter<HomeUiState> {
         parsedTime.minute,
       );
     } catch (e) {
-      print('Error parsing time: $e');
       return null;
     }
   }
@@ -440,7 +439,6 @@ class HomePresenter extends BasePresenter<HomeUiState> {
       // Update the remaining time after loading prayer times
       _updateRemainingTime();
     } catch (e) {
-      print('Error loading prayer times: $e');
       uiState.value = uiState.value.copyWith(
         loadingPrayerTimes: false,
         prayerTimesError:
@@ -458,7 +456,6 @@ class HomePresenter extends BasePresenter<HomeUiState> {
         String formatted = DateFormat('h:mm a').format(prayerTime);
         formattedTimes[prayer] = formatted;
       } catch (e) {
-        print('Error formatting time for $prayer: $e');
         throw Exception('সময় ফরম্যাট করতে সমস্যা হয়েছে: $prayer');
       }
     });
@@ -478,7 +475,6 @@ class HomePresenter extends BasePresenter<HomeUiState> {
         DateTime sehriTime = fajrTime.subtract(Duration(minutes: 20));
         formattedTimes['Sehri'] = DateFormat('h:mm a').format(sehriTime);
       } catch (e) {
-        print('Error calculating Sehri time: $e');
         // Don't throw here, just skip Sehri time if there's an error
       }
     }
