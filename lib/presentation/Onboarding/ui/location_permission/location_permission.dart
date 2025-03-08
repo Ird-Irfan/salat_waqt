@@ -38,7 +38,9 @@ class LocationPermission extends StatelessWidget {
       }
       // Save that user didn't enable location services
       await _preferencesService.setLocationEnabled(false);
-      _navigateToNextScreen(context);
+      if (context.mounted) {
+        _navigateToNextScreen(context);
+      }
       return;
     }
 
@@ -56,7 +58,9 @@ class LocationPermission extends StatelessWidget {
         await _preferencesService.setLocationEnabled(false);
         // Set default location
         await _preferencesService.setDefaultLocation('Dhaka');
-        _navigateToNextScreen(context);
+        if (context.mounted) {
+          _navigateToNextScreen(context);
+        }
         return;
       }
     }
@@ -75,13 +79,16 @@ class LocationPermission extends StatelessWidget {
       await _preferencesService.setLocationEnabled(false);
       // Set default location
       await _preferencesService.setDefaultLocation('Dhaka');
-      _navigateToNextScreen(context);
+      if (context.mounted) {
+        _navigateToNextScreen(context);
+      }
       return;
     }
 
     // Permission granted, try to get current position
     try {
       final position = await geo.Geolocator.getCurrentPosition(
+        // ignore: deprecated_member_use
         desiredAccuracy: geo.LocationAccuracy.high,
       );
 
@@ -101,7 +108,9 @@ class LocationPermission extends StatelessWidget {
     }
 
     // Navigate to next screen
-    _navigateToNextScreen(context);
+    if (context.mounted) {
+      _navigateToNextScreen(context);
+    }
   }
 
   // Navigate to the next screen
