@@ -12,6 +12,7 @@ class AppConstant {
 
   static const String icNotificationOn = 'assets/svgs/ic_notification_on.svg';
   static const String icNotificationOff = 'assets/svgs/ic_notification_off.svg';
+  static const String icSupport = 'assets/svgs/ic_support.svg';
 
   static const String icFajr = 'assets/svgs/ic_fajr.svg';
   static const String icDuhur = 'assets/svgs/ic_duhur.svg';
