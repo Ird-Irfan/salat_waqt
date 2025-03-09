@@ -20,14 +20,14 @@ class LoggerService {
         lineLength: 120, // Width of the output
         colors: true, // Colorful log messages
         printEmojis: true, // Print an emoji for each log message
-        printTime: true, // Should each log print contain a timestamp
+        dateTimeFormat: DateTimeFormat.onlyTime, // Format for timestamps
       ),
       // In production, only show warnings and errors
       level:
           bool.fromEnvironment('dart.vm.product')
               ? Level
                   .warning // Production: only warnings and errors
-              : Level.verbose, // Development: all logs
+              : Level.trace, // Development: all logs
     );
   }
 
@@ -51,8 +51,8 @@ class LoggerService {
     _logger.e(message, error: error, stackTrace: stackTrace);
   }
 
-  /// Log a critical error message
-  void wtf(String message, [dynamic error, StackTrace? stackTrace]) {
-    _logger.wtf(message, error: error, stackTrace: stackTrace);
+  /// Log a fatal error message
+  void f(String message, [dynamic error, StackTrace? stackTrace]) {
+    _logger.f(message, error: error, stackTrace: stackTrace);
   }
 }
