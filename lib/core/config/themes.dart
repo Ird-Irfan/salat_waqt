@@ -6,6 +6,7 @@ import 'package:salat_waqt/core/config/salat_custom_text_theme.dart';
 import 'package:salat_waqt/core/constant/app_text_styles.dart';
 import 'package:salat_waqt/core/utility/utility.dart';
 import 'package:salat_waqt/presentation/salat_waqt.dart';
+import 'package:salat_waqt/core/services/logger_service.dart';
 
 /// Extension to help with opacity values similar to the withOpacityInt method used in the original code
 
@@ -431,6 +432,7 @@ Future<SystemUiOverlayStyle?> getSystemUiOverlayStyle({
   bool? isDark,
   BuildContext? context,
 }) async {
+  final LoggerService logger = LoggerService();
   try {
     final ThemeData theme = Theme.of(context ?? SalatWaqt.globalContext);
     final Color statusBarColor =
@@ -447,7 +449,7 @@ Future<SystemUiOverlayStyle?> getSystemUiOverlayStyle({
           isDark != null && isDark ? Brightness.light : Brightness.dark,
     );
   } catch (e) {
-    debugPrint('Error in getSystemUiOverlayStyle: $e');
+    logger.e('Error in getSystemUiOverlayStyle', e);
     return null;
   }
 }

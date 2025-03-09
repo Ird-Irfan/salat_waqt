@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:salat_waqt/core/base/base_presenter.dart';
+import 'package:salat_waqt/core/services/preferences_service.dart';
 import 'package:salat_waqt/data/data_sources/location_data_source.dart';
 import 'package:salat_waqt/data/data_sources/prayer_time_data_source.dart';
 import 'package:salat_waqt/data/repositories/location_repository_impl.dart';
@@ -10,6 +11,7 @@ import 'package:salat_waqt/domain/usecases/get_address_from_coordinates_usecase.
 import 'package:salat_waqt/domain/usecases/get_coordinates_from_address_usecase.dart';
 import 'package:salat_waqt/domain/usecases/get_current_location_usecase.dart';
 import 'package:salat_waqt/domain/usecases/get_prayer_times_usecase.dart';
+import 'package:salat_waqt/presentation/Onboarding/presenter/flash_screen_presenter.dart';
 import 'package:salat_waqt/presentation/home/presenter/home_presenter.dart';
 
 final GetIt _serviceLocator = GetIt.instance;
@@ -31,6 +33,11 @@ class ServiceLocator {
   }
 
   Future<void> _setUpService() async {
+    // Register PreferencesService as a singleton and initialize it
+    final preferencesService = PreferencesService.instance;
+    await preferencesService.init();
+    _serviceLocator.registerSingleton<PreferencesService>(preferencesService);
+
     // _serviceLocator.registerLazySingleton(() => QuranDatabase());
   }
 
@@ -78,6 +85,9 @@ class ServiceLocator {
         getCoordinatesFromAddressUseCase: locator(),
         getPrayerTimesUseCase: locator(),
       ),
+    );
+    _serviceLocator.registerLazySingleton<FlashScreenPresenter>(
+      () => FlashScreenPresenter(),
     );
   }
 }

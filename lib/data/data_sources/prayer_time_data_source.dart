@@ -1,5 +1,6 @@
 import 'package:adhan/adhan.dart';
 import 'package:intl/intl.dart';
+import 'package:salat_waqt/core/services/logger_service.dart';
 
 abstract class PrayerTimeDataSource {
   Future<Map<String, dynamic>> getPrayerTimes(
@@ -10,6 +11,8 @@ abstract class PrayerTimeDataSource {
 }
 
 class PrayerTimeDataSourceImpl implements PrayerTimeDataSource {
+  final LoggerService _logger = LoggerService();
+
   @override
   Future<Map<String, dynamic>> getPrayerTimes(
     double latitude,
@@ -51,6 +54,7 @@ class PrayerTimeDataSourceImpl implements PrayerTimeDataSource {
 
       return formattedTimes;
     } catch (e) {
+      _logger.e('Error calculating prayer times', e);
       throw Exception('নামাজের সময় গণনা করতে সমস্যা হয়েছে: $e');
     }
   }

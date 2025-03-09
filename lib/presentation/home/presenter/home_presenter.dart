@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
+import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:salat_waqt/core/base/base_presenter.dart';
+import 'package:salat_waqt/core/services/logger_service.dart';
+import 'package:salat_waqt/core/services/preferences_service.dart';
 import 'package:salat_waqt/domain/usecases/get_address_from_coordinates_usecase.dart';
 import 'package:salat_waqt/domain/usecases/get_current_location_usecase.dart';
 import 'package:salat_waqt/domain/usecases/get_prayer_times_usecase.dart';
@@ -20,7 +23,10 @@ class HomePresenter extends BasePresenter<HomeUiState> {
   // Timer for updating remaining time
   Timer? _timer;
 
-  // Use cases
+  // Services and Use cases
+  final PreferencesService _preferencesService =
+      GetIt.instance<PreferencesService>();
+  final LoggerService _logger = LoggerService();
   final GetCurrentLocationUseCase getCurrentLocationUseCase;
   final GetAddressFromCoordinatesUseCase getAddressFromCoordinatesUseCase;
   final GetPrayerTimesUseCase getPrayerTimesUseCase;
@@ -39,7 +45,7 @@ class HomePresenter extends BasePresenter<HomeUiState> {
   void onInit() {
     super.onInit();
     _updateDates();
-    checkAndRequestLocationPermission();
+    _loadSavedLocation();
     _startTimer();
   }
 
@@ -53,6 +59,33 @@ class HomePresenter extends BasePresenter<HomeUiState> {
   Future<void> checkAndRequestLocationPermission() async {
     toggleLoading(loading: true);
     try {
+      // First check if we already have location data saved
+      final locationEnabled = await _preferencesService.isLocationEnabled();
+
+      if (locationEnabled) {
+        // User has previously granted location permission, use saved coordinates
+        final latitude = await _preferencesService.getLatitude();
+        final longitude = await _preferencesService.getLongitude();
+
+        if (latitude != null && longitude != null) {
+          // Get address from coordinates
+          String address = await getAddressFromCoordinatesUseCase.execute(
+            latitude,
+            longitude,
+          );
+
+          uiState.value = uiState.value.copyWith(
+            currentAddress: address,
+            locationPermissionGranted: true,
+          );
+
+          // Load prayer times with saved coordinates
+          await _loadPrayerTimes(latitude, longitude);
+          return;
+        }
+      }
+
+      // If no saved location data, proceed with location checks
       if (!await _isLocationServiceEnabled()) {
         return;
       }
@@ -110,7 +143,7 @@ class HomePresenter extends BasePresenter<HomeUiState> {
     // English date
     DateTime now = DateTime.now();
     uiState.value = uiState.value.copyWith(
-      englishDate: DateFormat('EEEE, d MMMM yyyy').format(now),
+      englishDate: DateFormat('d MMMM yyyy').format(now),
     );
 
     // Arabic/Hijri date
@@ -127,8 +160,9 @@ class HomePresenter extends BasePresenter<HomeUiState> {
     // Update immediately
     _updateRemainingTime();
 
-    // Set timer to update every minute
-    _timer = Timer.periodic(Duration(minutes: 1), (timer) {
+    // Set timer to update less frequently - every 60 seconds instead of every minute
+    // this helps reduce UI rebuilds while still keeping the display accurate
+    _timer = Timer.periodic(const Duration(seconds: 60), (timer) {
       _updateRemainingTime();
     });
   }
@@ -313,6 +347,7 @@ class HomePresenter extends BasePresenter<HomeUiState> {
         parsedTime.minute,
       );
     } catch (e) {
+      _logger.e('Error parsing time', e);
       return null;
     }
   }
@@ -371,6 +406,11 @@ class HomePresenter extends BasePresenter<HomeUiState> {
         position.longitude,
       );
 
+      // Save to SharedPreferences
+      await _preferencesService.setLocationEnabled(true);
+      await _preferencesService.setLatitude(position.latitude);
+      await _preferencesService.setLongitude(position.longitude);
+
       uiState.value = uiState.value.copyWith(currentAddress: address);
       await _loadPrayerTimes(position.latitude, position.longitude);
     } catch (e) {
@@ -402,7 +442,11 @@ class HomePresenter extends BasePresenter<HomeUiState> {
         errorString.contains('disabled');
   }
 
-  void _fallbackToDefaultLocation() {
+  void _fallbackToDefaultLocation() async {
+    // Save to SharedPreferences
+    await _preferencesService.setLocationEnabled(false);
+    await _preferencesService.setDefaultLocation('ঢাকা');
+
     uiState.value = uiState.value.copyWith(currentAddress: 'ঢাকা');
     _loadPrayerTimes(
       currentUiState.defaultLatitude!,
@@ -439,6 +483,7 @@ class HomePresenter extends BasePresenter<HomeUiState> {
       // Update the remaining time after loading prayer times
       _updateRemainingTime();
     } catch (e) {
+      _logger.e('Error loading prayer times', e);
       uiState.value = uiState.value.copyWith(
         loadingPrayerTimes: false,
         prayerTimesError:
@@ -456,6 +501,7 @@ class HomePresenter extends BasePresenter<HomeUiState> {
         String formatted = DateFormat('h:mm a').format(prayerTime);
         formattedTimes[prayer] = formatted;
       } catch (e) {
+        _logger.e('Error formatting time for $prayer', e);
         throw Exception('সময় ফরম্যাট করতে সমস্যা হয়েছে: $prayer');
       }
     });
@@ -475,6 +521,7 @@ class HomePresenter extends BasePresenter<HomeUiState> {
         DateTime sehriTime = fajrTime.subtract(Duration(minutes: 20));
         formattedTimes['Sehri'] = DateFormat('h:mm a').format(sehriTime);
       } catch (e) {
+        _logger.e('Error calculating Sehri time', e);
         // Don't throw here, just skip Sehri time if there's an error
       }
     }
@@ -552,5 +599,63 @@ class HomePresenter extends BasePresenter<HomeUiState> {
       ),
       barrierDismissible: false,
     );
+  }
+
+  // Load saved location from SharedPreferences
+  Future<void> _loadSavedLocation() async {
+    toggleLoading(loading: true);
+    try {
+      final locationEnabled = await _preferencesService.isLocationEnabled();
+
+      if (locationEnabled) {
+        // User has previously granted location permission, use saved coordinates
+        final latitude = await _preferencesService.getLatitude();
+        final longitude = await _preferencesService.getLongitude();
+
+        if (latitude != null && longitude != null) {
+          // Get address from coordinates
+          String address = await getAddressFromCoordinatesUseCase.execute(
+            latitude,
+            longitude,
+          );
+
+          uiState.value = uiState.value.copyWith(
+            currentAddress: address,
+            locationPermissionGranted: true,
+          );
+
+          // Load prayer times with saved coordinates
+          await _loadPrayerTimes(latitude, longitude);
+          return;
+        }
+      } else {
+        // User denied location permission, check if we have a default location
+        final String? defaultLocation =
+            await _preferencesService.getDefaultLocation();
+
+        if (defaultLocation != null && defaultLocation.isNotEmpty) {
+          uiState.value = uiState.value.copyWith(
+            currentAddress: defaultLocation,
+            locationPermissionGranted: false,
+          );
+
+          // Use default location coordinates (Dhaka)
+          await _loadPrayerTimes(
+            currentUiState.defaultLatitude!,
+            currentUiState.defaultLongitude!,
+          );
+          return;
+        }
+      }
+
+      // If we get here, either first time use or something went wrong with saved data
+      // Just load default location (Dhaka)
+      _fallbackToDefaultLocation();
+    } catch (e) {
+      _logger.e('Error loading saved location', e);
+      _fallbackToDefaultLocation();
+    } finally {
+      toggleLoading(loading: false);
+    }
   }
 }
