@@ -20,6 +20,11 @@ class AppConstant {
   static const String icMaghrib = 'assets/svgs/ic_maghrib.svg';
   static const String icIsha = 'assets/svgs/ic_isha.svg';
 
+  static const String icIslamicCalender  =
+      'assets/svgs/ic_islamic_calender.svg';
+  static const String icTheme = 'assets/svgs/ic_theme.svg';
+  static const String icWeather = 'assets/svgs/ic_weat.svg';
+
   static const String appBg = 'assets/images/bg_screen.png';
   static const String bgflashScreen = 'assets/images/bg_flash_screen.png';
   static const String flashScreenlogo = 'assets/images/flash_screen_logo.png';

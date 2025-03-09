@@ -134,10 +134,10 @@ class LocationPermission extends StatelessWidget {
       ),
       spaceBetween: 12,
       subtitle: 'Enable location permission',
-      subtitleStyle: const TextStyle(
+      subtitleStyle: TextStyle(
         fontSize: 16,
         fontWeight: FontWeight.w400,
-        color: SalatColor.cardSubTitleColorDark,
+        color: SalatColor.primaryColorDarkSubtitle,
         fontFamily: AppTextStyles.inter,
       ),
 
@@ -153,7 +153,7 @@ class LocationPermission extends StatelessWidget {
       secondSubtitleStyle: const TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.w400,
-        color: SalatColor.cardSubTitleColorDark,
+        color: SalatColor.primaryColorDarkSubtitle,
         fontFamily: AppTextStyles.inter,
         height: 1.5,
       ),

@@ -100,7 +100,7 @@ class ReusableFlashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: SalatColor.bgSurfaceColorDark,
+      backgroundColor: SalatColor.primaryColorDark100,
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -189,7 +189,7 @@ class ReusableFlashScreen extends StatelessWidget {
               const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.normal,
-                color: SalatColor.cardSubTitleColorDark,
+                color: SalatColor.primaryColorDarkSubtitle,
               ),
           textAlign: TextAlign.center,
         ),
@@ -226,7 +226,7 @@ class ReusableFlashScreen extends StatelessWidget {
                 const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w400,
-                  color: SalatColor.cardSubTitleColorDark,
+                  color: SalatColor.primaryColorDarkSubtitle,
                   fontFamily: AppTextStyles.inter,
                 ),
             textAlign: TextAlign.center,

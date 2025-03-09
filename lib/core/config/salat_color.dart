@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:salat_waqt/core/utility/utility.dart';
 
 class SalatColor {
   // Dark Colors
@@ -13,14 +14,16 @@ class SalatColor {
   static const Color primaryColorDark800 = Color(0xFF101B45);
   static const Color primaryColorDark900 = Color(0xFF0D0D0D);
 
-
   static const Color primaryColorDarkSubtitle = Color(0xFF7B90A8);
 
   // Gradient Colors dark mode
   static final List<Color> dateDisplayGradientDark = [
     Color(0xFF121F2E),
     Color(0xFF202D3E),
-    
+  ];
+  static final List<Color> appBarGradientDark = [
+    Color(0xFF000000).withOpacityInt(0.06),
+    Color(0xFF666666).withOpacityInt(0.06),
   ];
 
   //----------------------Light Mode Colors----------------------//
