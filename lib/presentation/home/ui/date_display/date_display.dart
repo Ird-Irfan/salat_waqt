@@ -1,33 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:salat_waqt/core/config/salat_color.dart';
-import 'package:salat_waqt/presentation/home/ui/date_display/model.dart';
 
-class DateDisplay extends StatefulWidget {
-  const DateDisplay({super.key});
-
-  @override
-  State<DateDisplay> createState() => _DateDisplayState();
-}
-
-class _DateDisplayState extends State<DateDisplay> {
-  int currentIndex = 0;
-  final dates = DateModel.getDates();
-
-  void _onPrevious() {
-    if (currentIndex > 0) {
-      setState(() {
-        currentIndex--;
-      });
-    }
-  }
-
-  void _onNext() {
-    if (currentIndex < dates.length - 1) {
-      setState(() {
-        currentIndex++;
-      });
-    }
-  }
+class DateDisplay extends StatelessWidget {
+  final String englishDate;
+  final String arabicDate;
+  const DateDisplay({
+    super.key,
+    required this.englishDate,
+    required this.arabicDate,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -46,14 +27,11 @@ class _DateDisplayState extends State<DateDisplay> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          IconButton(
-            icon: const Icon(Icons.chevron_left),
-            onPressed: _onPrevious,
-          ),
+          IconButton(icon: const Icon(Icons.chevron_left), onPressed: () {}),
           Column(
             children: [
               Text(
-                dates[currentIndex].arabicDate,
+                arabicDate,
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -63,16 +41,13 @@ class _DateDisplayState extends State<DateDisplay> {
               const SizedBox(height: 4),
               Expanded(
                 child: Text(
-                  dates[currentIndex].englishDate,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Colors.white,
-                  ),
+                  englishDate,
+                  style: const TextStyle(fontSize: 12, color: Colors.white),
                 ),
               ),
             ],
           ),
-          IconButton(icon: const Icon(Icons.chevron_right), onPressed: _onNext),
+          IconButton(icon: const Icon(Icons.chevron_right), onPressed: () {}),
         ],
       ),
     );

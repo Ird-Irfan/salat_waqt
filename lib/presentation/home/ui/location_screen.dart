@@ -62,10 +62,12 @@ class CircularProgressPainter extends CustomPainter {
 class LocationScreen extends StatelessWidget {
   final HomePresenter presenter = loadPresenter(
     HomePresenter(
-      getCurrentLocationUseCase: locator(),
-      getAddressFromCoordinatesUseCase: locator(),
-      getCoordinatesFromAddressUseCase: locator(),
-      getPrayerTimesUseCase: locator(),
+      locationService: locator(),
+      prayerTimeService: locator(),
+      dateService: locator(),
+      timerService: locator(),
+      preferencesService: locator(),
+      logger: locator(),
     ),
   );
 

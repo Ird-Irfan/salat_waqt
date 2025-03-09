@@ -1,6 +1,11 @@
 import 'package:get_it/get_it.dart';
 import 'package:salat_waqt/core/base/base_presenter.dart';
+import 'package:salat_waqt/core/services/date_service.dart';
+import 'package:salat_waqt/core/services/location_service.dart';
+import 'package:salat_waqt/core/services/logger_service.dart';
+import 'package:salat_waqt/core/services/prayer_time_service.dart';
 import 'package:salat_waqt/core/services/preferences_service.dart';
+import 'package:salat_waqt/core/services/timer_service.dart';
 import 'package:salat_waqt/data/data_sources/location_data_source.dart';
 import 'package:salat_waqt/data/data_sources/prayer_time_data_source.dart';
 import 'package:salat_waqt/data/repositories/location_repository_impl.dart';
@@ -37,6 +42,34 @@ class ServiceLocator {
     final preferencesService = PreferencesService.instance;
     await preferencesService.init();
     _serviceLocator.registerSingleton<PreferencesService>(preferencesService);
+
+    // Register logger service
+    _serviceLocator.registerLazySingleton<LoggerService>(() => LoggerService());
+
+    // Register date service
+    _serviceLocator.registerLazySingleton<DateService>(() => DateService());
+
+    // Register timer service
+    _serviceLocator.registerLazySingleton<TimerService>(() => TimerService());
+
+    // Register location service
+    _serviceLocator.registerLazySingleton<LocationService>(
+      () => LocationService(
+        preferencesService: locator(),
+        logger: locator(),
+        getCurrentLocationUseCase: locator(),
+        getAddressFromCoordinatesUseCase: locator(),
+        getCoordinatesFromAddressUseCase: locator(),
+      ),
+    );
+
+    // Register prayer time service
+    _serviceLocator.registerLazySingleton<PrayerTimeService>(
+      () => PrayerTimeService(
+        getPrayerTimesUseCase: locator(),
+        logger: locator(),
+      ),
+    );
 
     // _serviceLocator.registerLazySingleton(() => QuranDatabase());
   }
@@ -80,10 +113,12 @@ class ServiceLocator {
   Future<void> _setUpPresenters() async {
     _serviceLocator.registerLazySingleton<HomePresenter>(
       () => HomePresenter(
-        getCurrentLocationUseCase: locator(),
-        getAddressFromCoordinatesUseCase: locator(),
-        getCoordinatesFromAddressUseCase: locator(),
-        getPrayerTimesUseCase: locator(),
+        locationService: locator(),
+        prayerTimeService: locator(),
+        dateService: locator(),
+        timerService: locator(),
+        preferencesService: locator(),
+        logger: locator(),
       ),
     );
     _serviceLocator.registerLazySingleton<FlashScreenPresenter>(

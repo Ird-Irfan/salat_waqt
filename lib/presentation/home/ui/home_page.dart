@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:salat_waqt/core/base/base_presenter.dart';
 import 'package:salat_waqt/core/constant/app_contant.dart';
+import 'package:salat_waqt/core/di/service_locator.dart';
+import 'package:salat_waqt/presentation/home/presenter/home_presenter.dart';
 import 'package:salat_waqt/presentation/home/ui/appber/appber_section.dart';
 import 'package:salat_waqt/presentation/home/ui/current_prayer_time/current_prayer_time.dart';
 import 'package:salat_waqt/presentation/home/ui/date_display/date_display.dart';
@@ -13,6 +16,16 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final HomePresenter presenter = loadPresenter(
+      HomePresenter(
+        locationService: locator(),
+        prayerTimeService: locator(),
+        dateService: locator(),
+        timerService: locator(),
+        preferencesService: locator(),
+        logger: locator(),
+      ),
+    );
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -37,7 +50,10 @@ class HomePage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Date Display
-                    const DateDisplay(),
+                    DateDisplay(
+                      englishDate: presenter.currentUiState.englishDate ?? '',
+                      arabicDate: presenter.currentUiState.arabicDate ?? '',
+                    ),
                     const SizedBox(height: 20),
                     // Iftar Time Counter
                     const IftarTimeCounter(),

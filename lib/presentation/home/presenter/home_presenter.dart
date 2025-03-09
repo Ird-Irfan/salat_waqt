@@ -1,18 +1,14 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
-import 'package:get_it/get_it.dart';
-import 'package:intl/intl.dart';
-import 'package:hijri/hijri_calendar.dart';
 import 'package:salat_waqt/core/base/base_presenter.dart';
+import 'package:salat_waqt/core/services/date_service.dart';
+import 'package:salat_waqt/core/services/location_service.dart';
 import 'package:salat_waqt/core/services/logger_service.dart';
+import 'package:salat_waqt/core/services/prayer_time_service.dart';
 import 'package:salat_waqt/core/services/preferences_service.dart';
-import 'package:salat_waqt/domain/usecases/get_address_from_coordinates_usecase.dart';
-import 'package:salat_waqt/domain/usecases/get_current_location_usecase.dart';
-import 'package:salat_waqt/domain/usecases/get_prayer_times_usecase.dart';
-import 'package:salat_waqt/domain/usecases/get_coordinates_from_address_usecase.dart';
+import 'package:salat_waqt/core/services/timer_service.dart';
 import 'package:salat_waqt/presentation/home/presenter/home_ui_state.dart';
 
 class HomePresenter extends BasePresenter<HomeUiState> {
@@ -23,105 +19,133 @@ class HomePresenter extends BasePresenter<HomeUiState> {
   // Timer for updating remaining time
   Timer? _timer;
 
-  // Services and Use cases
-  final PreferencesService _preferencesService =
-      GetIt.instance<PreferencesService>();
-  final LoggerService _logger = LoggerService();
-  final GetCurrentLocationUseCase getCurrentLocationUseCase;
-  final GetAddressFromCoordinatesUseCase getAddressFromCoordinatesUseCase;
-  final GetPrayerTimesUseCase getPrayerTimesUseCase;
-  final GetCoordinatesFromAddressUseCase getCoordinatesFromAddressUseCase;
+  // Services
+  final LocationService _locationService;
+  final PrayerTimeService _prayerTimeService;
+  final DateService _dateService;
+  final TimerService _timerService;
+  final LoggerService _logger;
 
   // Constructor
   HomePresenter({
-    required this.getCurrentLocationUseCase,
-    required this.getAddressFromCoordinatesUseCase,
-    required this.getPrayerTimesUseCase,
-    required this.getCoordinatesFromAddressUseCase,
-  });
+    required LocationService locationService,
+    required PrayerTimeService prayerTimeService,
+    required DateService dateService,
+    required TimerService timerService,
+    required PreferencesService preferencesService,
+    required LoggerService logger,
+  }) : _locationService = locationService,
+       _prayerTimeService = prayerTimeService,
+       _dateService = dateService,
+       _timerService = timerService,
+       _logger = logger;
 
   // Lifecycle methods
   @override
   void onInit() {
     super.onInit();
-    _updateDates();
-    _loadSavedLocation();
-    _startTimer();
+    _initializeData();
   }
 
   @override
   void onClose() {
     _timer?.cancel();
+    _timerService.stopTimer();
     super.onClose();
   }
 
+  // Initialize data
+  Future<void> _initializeData() async {
+    _updateDates();
+    await _loadSavedLocation();
+    _startTimer();
+  }
+
+  // Update dates (English and Hijri)
+  void _updateDates() {
+    uiState.value = uiState.value.copyWith(
+      englishDate: _dateService.getEnglishDate(),
+      arabicDate: _dateService.getArabicDate(),
+    );
+  }
+
+  // Start timer to update remaining time
+  void _startTimer() {
+    _timerService.startPeriodicTimer(_updateRemainingTime);
+  }
+
+  // Update the remaining time until next prayer
+  void _updateRemainingTime() {
+    if (currentUiState.prayerTimes == null) return;
+
+    try {
+      var (nextPrayerName, remainingTime, progressValue) = _prayerTimeService
+          .calculateNextPrayer(
+            Map<String, String>.from(currentUiState.prayerTimes!),
+          );
+
+      uiState.value = uiState.value.copyWith(
+        nextPrayerName: nextPrayerName,
+        remainingTime: remainingTime,
+        progressValue: progressValue,
+      );
+    } catch (e) {
+      _logger.e('Error updating remaining time', e);
+    }
+  }
+
   // Public methods
+  // Check and request location permission if needed
   Future<void> checkAndRequestLocationPermission() async {
     toggleLoading(loading: true);
     try {
-      // First check if we already have location data saved
-      final locationEnabled = await _preferencesService.isLocationEnabled();
-
-      if (locationEnabled) {
-        // User has previously granted location permission, use saved coordinates
-        final latitude = await _preferencesService.getLatitude();
-        final longitude = await _preferencesService.getLongitude();
-
-        if (latitude != null && longitude != null) {
-          // Get address from coordinates
-          String address = await getAddressFromCoordinatesUseCase.execute(
-            latitude,
-            longitude,
-          );
-
-          uiState.value = uiState.value.copyWith(
-            currentAddress: address,
-            locationPermissionGranted: true,
-          );
-
-          // Load prayer times with saved coordinates
-          await _loadPrayerTimes(latitude, longitude);
-          return;
-        }
-      }
-
-      // If no saved location data, proceed with location checks
-      if (!await _isLocationServiceEnabled()) {
+      // Check if location service is enabled
+      if (!await _locationService.isLocationServiceEnabled()) {
+        _loadDefaultLocation('Location service is turned off');
         return;
       }
 
-      final permission = await _checkAndRequestPermission();
+      // Check location permission
+      final permission = await _locationService.checkAndRequestPermission();
       if (permission != LocationPermission.whileInUse &&
           permission != LocationPermission.always) {
+        _loadDefaultLocation('Location permission was not granted');
         return;
       }
 
-      // If we got here, permission is granted
+      // Permission granted, load current location
       uiState.value = uiState.value.copyWith(locationPermissionGranted: true);
       await _loadCurrentLocation();
     } catch (e) {
-      _useDefaultLocation('A problem occurred: ${e.toString()}');
+      _logger.e('Error during location permission check', e);
+      _loadDefaultLocation('A problem occurred: ${e.toString()}');
     } finally {
       toggleLoading(loading: false);
     }
   }
 
+  // Change location based on address
   Future<void> changeLocation(String address) async {
     toggleLoading(loading: true);
     try {
-      List<Location> locations = await getCoordinatesFromAddressUseCase.execute(
+      final coordinates = await _locationService.getCoordinatesFromAddress(
         address,
       );
-      Location location = locations[0];
-      uiState.value = uiState.value.copyWith(currentAddress: address);
-      await _loadPrayerTimes(location.latitude, location.longitude);
+      if (coordinates != null) {
+        final (latitude, longitude) = coordinates;
+        uiState.value = uiState.value.copyWith(currentAddress: address);
+        await _loadPrayerTimes(latitude, longitude);
+      } else {
+        throw Exception('Could not find coordinates for address');
+      }
     } catch (e) {
+      _logger.e('Error changing location', e);
       Get.snackbar(
         'Error',
         'Failed to change location.',
         backgroundColor: Colors.red,
       );
-      _fallbackToDefaultLocation();
+      _loadDefaultLocation('Failed to change location');
     } finally {
       toggleLoading(loading: false);
     }
@@ -138,344 +162,82 @@ class HomePresenter extends BasePresenter<HomeUiState> {
     uiState.value = uiState.value.copyWith(isLoading: loading);
   }
 
-  // Private helper methods
-  void _updateDates() {
-    // English date
-    DateTime now = DateTime.now();
-    uiState.value = uiState.value.copyWith(
-      englishDate: DateFormat('d MMMM yyyy').format(now),
-    );
-
-    // Arabic/Hijri date
-    HijriCalendar hijri = HijriCalendar.now();
-    uiState.value = uiState.value.copyWith(
-      arabicDate: hijri.toFormat("dd MMMM yyyy"),
-    );
-  }
-
-  void _startTimer() {
-    // Cancel existing timer if any
-    _timer?.cancel();
-
-    // Update immediately
-    _updateRemainingTime();
-
-    // Set timer to update less frequently - every 60 seconds instead of every minute
-    // this helps reduce UI rebuilds while still keeping the display accurate
-    _timer = Timer.periodic(const Duration(seconds: 60), (timer) {
-      _updateRemainingTime();
-    });
-  }
-
-  void _updateRemainingTime() {
-    if (currentUiState.prayerTimes == null) return;
-
-    DateTime now = DateTime.now();
-    DateTime? nextPrayerTime;
-    String? nextPrayerName;
-    double progressValue = 0.0;
-
-    // Check if we're in Ramadan mode (has Sehri and Iftar times)
-    bool isRamadanMode =
-        currentUiState.prayerTimes!.containsKey('Sehri') &&
-        currentUiState.prayerTimes!.containsKey('Iftar');
-
-    if (isRamadanMode) {
-      // Get Iftar and Sehri times
-      DateTime? iftarTime = _parseTime(currentUiState.prayerTimes!['Iftar']);
-      DateTime? sehriTime = _parseTime(currentUiState.prayerTimes!['Sehri']);
-
-      if (iftarTime != null && sehriTime != null) {
-        // Create today's and tomorrow's times for comparison
-        DateTime todayIftar = iftarTime;
-        DateTime todaySehri = sehriTime;
-
-        // If Sehri is after Iftar in the same day, it means Sehri is for the next day
-        if (todaySehri.isBefore(todayIftar)) {
-          // Sehri is for today, Iftar is for today
-          // This is the normal case during Ramadan
-        } else {
-          // Sehri is for tomorrow, Iftar is for today
-          todaySehri = todaySehri.add(Duration(days: 1));
-        }
-
-        // If both times are in the past, move to tomorrow
-        if (now.isAfter(todayIftar) && now.isAfter(todaySehri)) {
-          todayIftar = todayIftar.add(Duration(days: 1));
-          todaySehri = todaySehri.add(Duration(days: 1));
-        }
-
-        // Determine which is next: Iftar or Sehri
-        if (now.isBefore(todayIftar) && now.isBefore(todaySehri)) {
-          // Both are in the future, pick the closest one
-          if (todayIftar.isBefore(todaySehri)) {
-            nextPrayerTime = todayIftar;
-            nextPrayerName = 'Iftar';
-          } else {
-            nextPrayerTime = todaySehri;
-            nextPrayerName = 'Sehri';
-          }
-        } else if (now.isBefore(todayIftar)) {
-          // Only Iftar is in the future
-          nextPrayerTime = todayIftar;
-          nextPrayerName = 'Iftar';
-        } else if (now.isBefore(todaySehri)) {
-          // Only Sehri is in the future
-          nextPrayerTime = todaySehri;
-          nextPrayerName = 'Sehri';
-        }
-
-        // Calculate progress
-        if (nextPrayerName == 'Iftar') {
-          // We're waiting for Iftar, so we're between Sehri and Iftar
-          // Calculate how much time has passed since Sehri
-          DateTime previousSehri = todaySehri.subtract(Duration(days: 1));
-          if (now.isBefore(previousSehri)) {
-            previousSehri = previousSehri.subtract(Duration(days: 1));
-          }
-
-          Duration totalDuration = todayIftar.difference(previousSehri);
-          Duration elapsedDuration = now.difference(previousSehri);
-
-          progressValue = elapsedDuration.inMinutes / totalDuration.inMinutes;
-        } else if (nextPrayerName == 'Sehri') {
-          // We're waiting for Sehri, so we're between Iftar and Sehri
-          // Calculate how much time has passed since Iftar
-          DateTime previousIftar = todayIftar.subtract(Duration(days: 1));
-          if (now.isBefore(previousIftar)) {
-            previousIftar = previousIftar.subtract(Duration(days: 1));
-          }
-
-          Duration totalDuration = todaySehri.difference(previousIftar);
-          Duration elapsedDuration = now.difference(previousIftar);
-
-          progressValue = elapsedDuration.inMinutes / totalDuration.inMinutes;
-        }
-
-        progressValue = progressValue.clamp(0.0, 1.0);
-      }
-    } else {
-      // Regular prayer time mode
-      // Find the next prayer time
-      List<MapEntry<String, String>> prayerEntries = [
-        MapEntry('Fajr', currentUiState.prayerTimes!['Fajr']),
-        MapEntry('Dhuhr', currentUiState.prayerTimes!['Dhuhr']),
-        MapEntry('Asr', currentUiState.prayerTimes!['Asr']),
-        MapEntry('Maghrib', currentUiState.prayerTimes!['Maghrib']),
-        MapEntry('Isha', currentUiState.prayerTimes!['Isha']),
-      ];
-
-      // Parse all prayer times
-      List<MapEntry<String, DateTime>> parsedTimes = [];
-      for (var entry in prayerEntries) {
-        DateTime? time = _parseTime(entry.value);
-        if (time != null) {
-          // If time is before now, add a day
-          if (time.isBefore(now)) {
-            time = time.add(Duration(days: 1));
-          }
-          parsedTimes.add(MapEntry(entry.key, time));
-        }
-      }
-
-      // Sort by time
-      parsedTimes.sort((a, b) => a.value.compareTo(b.value));
-
-      // Find the next prayer
-      if (parsedTimes.isNotEmpty) {
-        nextPrayerName = parsedTimes.first.key;
-        nextPrayerTime = parsedTimes.first.value;
-
-        // Find the previous prayer time
-        DateTime previousPrayerTime;
-        if (parsedTimes.last.value.subtract(Duration(days: 1)).isAfter(now)) {
-          previousPrayerTime = parsedTimes.last.value.subtract(
-            Duration(days: 1),
-          );
-        } else {
-          // Find the last prayer time before now
-          var previousPrayers =
-              parsedTimes
-                  .where(
-                    (entry) =>
-                        entry.value.subtract(Duration(days: 1)).isBefore(now),
-                  )
-                  .toList();
-          previousPrayers.sort((a, b) => b.value.compareTo(a.value));
-          previousPrayerTime =
-              previousPrayers.isNotEmpty
-                  ? previousPrayers.first.value.subtract(Duration(days: 1))
-                  : now.subtract(Duration(hours: 1));
-        }
-
-        // Calculate progress
-        Duration totalDuration = nextPrayerTime.difference(previousPrayerTime);
-        Duration elapsedDuration = now.difference(previousPrayerTime);
-
-        progressValue = elapsedDuration.inMinutes / totalDuration.inMinutes;
-        progressValue = progressValue.clamp(0.0, 1.0);
-      }
-    }
-
-    // Update the UI state with the calculated values
-    if (nextPrayerTime != null) {
-      Duration remainingDuration = nextPrayerTime.difference(now);
-      String remainingTime = _formatDuration(remainingDuration);
-
-      uiState.value = uiState.value.copyWith(
-        nextPrayerName: nextPrayerName,
-        remainingTime: remainingTime,
-        progressValue: progressValue,
-      );
-    }
-  }
-
-  DateTime? _parseTime(String? timeString) {
-    if (timeString == null) return null;
-
-    try {
-      // Parse the time string (e.g., "5:30 AM")
-      DateTime now = DateTime.now();
-      DateTime parsedTime = DateFormat('h:mm a').parse(timeString);
-
-      // Combine with today's date
-      return DateTime(
-        now.year,
-        now.month,
-        now.day,
-        parsedTime.hour,
-        parsedTime.minute,
-      );
-    } catch (e) {
-      _logger.e('Error parsing time', e);
-      return null;
-    }
-  }
-
-  String _formatDuration(Duration duration) {
-    int hours = duration.inHours;
-    int minutes = duration.inMinutes.remainder(60);
-
-    return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}';
-  }
-
-  Future<bool> _isLocationServiceEnabled() async {
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      await _showLocationServiceDialog();
-      serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!serviceEnabled) {
-        _useDefaultLocation(
-          'Location service is turned off. Using default location (Dhaka).',
-        );
-        return false;
-      }
-    }
-    return true;
-  }
-
-  Future<LocationPermission> _checkAndRequestPermission() async {
-    LocationPermission permission = await Geolocator.checkPermission();
-
-    if (permission == LocationPermission.denied) {
-      await _showPermissionExplanationDialog();
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        _useDefaultLocation(
-          'Location permission was not granted. Using default location (Dhaka).',
-        );
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      await _showOpenSettingsDialog();
-      _useDefaultLocation(
-        'Location permission is permanently disabled. Using default location (Dhaka).',
-      );
-    }
-
-    return permission;
-  }
-
-  Future<void> _loadCurrentLocation() async {
+  // Private methods
+  // Load saved location from preferences
+  Future<void> _loadSavedLocation() async {
     toggleLoading(loading: true);
     try {
-      Position position = await getCurrentLocationUseCase.execute();
-      String address = await getAddressFromCoordinatesUseCase.execute(
-        position.latitude,
-        position.longitude,
-      );
+      final (latitude, longitude, address, locationPermissionGranted) =
+          await _locationService.loadSavedLocation();
 
-      // Save to SharedPreferences
-      await _preferencesService.setLocationEnabled(true);
-      await _preferencesService.setLatitude(position.latitude);
-      await _preferencesService.setLongitude(position.longitude);
+      if (latitude != null && longitude != null) {
+        uiState.value = uiState.value.copyWith(
+          currentAddress: address,
+          locationPermissionGranted: locationPermissionGranted,
+        );
 
-      uiState.value = uiState.value.copyWith(currentAddress: address);
-      await _loadPrayerTimes(position.latitude, position.longitude);
+        await _loadPrayerTimes(latitude, longitude);
+      } else {
+        _loadDefaultLocation('No saved location found');
+      }
     } catch (e) {
-      _handleLocationError(e);
+      _logger.e('Error loading saved location', e);
+      _loadDefaultLocation('Error loading saved location');
     } finally {
       toggleLoading(loading: false);
     }
   }
 
-  void _handleLocationError(dynamic error) {
-    if (_isLocationPermissionError(error)) {
-      _fallbackToDefaultLocation();
-      Get.snackbar(
-        'Notice',
-        'Using default location (Dhaka) for prayer times.',
-        backgroundColor: Colors.amber,
-        duration: Duration(seconds: 3),
+  // Load current location using GPS
+  Future<void> _loadCurrentLocation() async {
+    toggleLoading(loading: true);
+    try {
+      final position = await _locationService.getCurrentLocation();
+      if (position == null) {
+        throw Exception('Could not get current location');
+      }
+
+      final address = await _locationService.getAddressFromCoordinates(
+        position.latitude,
+        position.longitude,
       );
-    } else {
-      Get.snackbar('Error', error.toString(), backgroundColor: Colors.red);
-      _fallbackToDefaultLocation();
+
+      // Save to preferences
+      await _locationService.saveLocation(
+        position.latitude,
+        position.longitude,
+      );
+
+      uiState.value = uiState.value.copyWith(currentAddress: address);
+      await _loadPrayerTimes(position.latitude, position.longitude);
+    } catch (e) {
+      _logger.e('Error loading current location', e);
+      if (_locationService.isLocationPermissionError(e)) {
+        _loadDefaultLocation('Location permission error');
+      } else {
+        Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+        _loadDefaultLocation('Error getting location');
+      }
+    } finally {
+      toggleLoading(loading: false);
     }
   }
 
-  bool _isLocationPermissionError(dynamic error) {
-    final errorString = error.toString().toLowerCase();
-    return errorString.contains('permission') ||
-        errorString.contains('denied') ||
-        errorString.contains('disabled');
-  }
-
-  void _fallbackToDefaultLocation() async {
-    // Save to SharedPreferences
-    await _preferencesService.setLocationEnabled(false);
-    await _preferencesService.setDefaultLocation('Dhaka');
-
-    uiState.value = uiState.value.copyWith(currentAddress: 'Dhaka');
-    _loadPrayerTimes(
-      currentUiState.defaultLatitude!,
-      currentUiState.defaultLongitude!,
-    );
-  }
-
+  // Load prayer times for specific coordinates
   Future<void> _loadPrayerTimes(double latitude, double longitude) async {
     uiState.value = uiState.value.copyWith(
       loadingPrayerTimes: true,
       prayerTimesError: null,
     );
 
-    String date = DateFormat('yyyy-MM-dd').format(DateTime.now());
     try {
-      var times = await getPrayerTimesUseCase.execute(
-        latitude,
-        longitude,
-        date,
-      );
-      if (times.isEmpty) {
+      var times = await _prayerTimeService.loadPrayerTimes(latitude, longitude);
+      if (times == null) {
         throw Exception('Failed to load prayer times');
       }
 
-      Map<String, String> formattedTimes = _formatPrayerTimes(times);
-      _addSpecialTimes(formattedTimes);
-
       uiState.value = uiState.value.copyWith(
-        prayerTimes: formattedTimes,
+        prayerTimes: times,
         loadingPrayerTimes: false,
         prayerTimesError: null,
       );
@@ -486,176 +248,37 @@ class HomePresenter extends BasePresenter<HomeUiState> {
       _logger.e('Error loading prayer times', e);
       uiState.value = uiState.value.copyWith(
         loadingPrayerTimes: false,
-        prayerTimesError:
-            'Could not load prayer times. Please try again.\nError: ${e.toString()}',
+        prayerTimesError: 'Could not load prayer times. Error: ${e.toString()}',
         prayerTimes: null,
       );
     }
   }
 
-  Map<String, String> _formatPrayerTimes(Map<String, dynamic> times) {
-    Map<String, String> formattedTimes = {};
-    times.forEach((prayer, time) {
-      try {
-        DateTime prayerTime = DateFormat('HH:mm').parse(time);
-        String formatted = DateFormat('h:mm a').format(prayerTime);
-        formattedTimes[prayer] = formatted;
-      } catch (e) {
-        _logger.e('Error formatting time for $prayer', e);
-        throw Exception('Problem formatting time: $prayer');
-      }
-    });
-    return formattedTimes;
-  }
-
-  void _addSpecialTimes(Map<String, String> formattedTimes) {
-    // Add Iftar time (same as Maghrib)
-    if (formattedTimes.containsKey('Maghrib')) {
-      formattedTimes['Iftar'] = formattedTimes['Maghrib']!;
-    }
-
-    // Calculate Sehri time (20 minutes before Fajr)
-    if (formattedTimes.containsKey('Fajr')) {
-      try {
-        DateTime fajrTime = DateFormat('h:mm a').parse(formattedTimes['Fajr']!);
-        DateTime sehriTime = fajrTime.subtract(Duration(minutes: 20));
-        formattedTimes['Sehri'] = DateFormat('h:mm a').format(sehriTime);
-      } catch (e) {
-        _logger.e('Error calculating Sehri time', e);
-        // Don't throw here, just skip Sehri time if there's an error
-      }
-    }
-  }
-
-  Future<void> _useDefaultLocation(String message) async {
-    uiState.value = uiState.value.copyWith(currentAddress: 'Dhaka');
-    await _loadPrayerTimes(
-      currentUiState.defaultLatitude!,
-      currentUiState.defaultLongitude!,
-    );
-    Get.snackbar(
-      'Warning',
-      message,
-      backgroundColor: Colors.amber,
-      duration: Duration(seconds: 5),
-    );
-  }
-
-  // Dialog methods
-  Future<void> _showLocationServiceDialog() async {
-    return Get.dialog(
-      AlertDialog(
-        title: Text('Location Service is Off'),
-        content: Text(
-          'Please enable location services to get accurate prayer times for your current location.',
-        ),
-        actions: [
-          TextButton(onPressed: () => Get.back(), child: Text('Later')),
-          TextButton(
-            onPressed: () async {
-              Get.back();
-              await Geolocator.openLocationSettings();
-            },
-            child: Text('Open Settings'),
-          ),
-        ],
-      ),
-      barrierDismissible: false,
-    );
-  }
-
-  Future<void> _showPermissionExplanationDialog() async {
-    return Get.dialog(
-      AlertDialog(
-        title: Text('Location Permission Required'),
-        content: Text(
-          'This app needs to use your location to provide accurate prayer times for your current location.',
-        ),
-        actions: [
-          TextButton(onPressed: () => Get.back(), child: Text('Understood')),
-        ],
-      ),
-      barrierDismissible: false,
-    );
-  }
-
-  Future<void> _showOpenSettingsDialog() async {
-    return Get.dialog(
-      AlertDialog(
-        title: Text('Location Access is Disabled'),
-        content: Text(
-          'You need to give location permission from app settings. Otherwise, default location (Dhaka) will be used.',
-        ),
-        actions: [
-          TextButton(onPressed: () => Get.back(), child: Text('Later')),
-          TextButton(
-            onPressed: () async {
-              Get.back();
-              await Geolocator.openAppSettings();
-            },
-            child: Text('Open Settings'),
-          ),
-        ],
-      ),
-      barrierDismissible: false,
-    );
-  }
-
-  // Load saved location from SharedPreferences
-  Future<void> _loadSavedLocation() async {
-    toggleLoading(loading: true);
+  // Load default location (Dhaka)
+  Future<void> _loadDefaultLocation(String reason) async {
     try {
-      final locationEnabled = await _preferencesService.isLocationEnabled();
+      // Save default location to preferences
+      await _locationService.saveDefaultLocation('Dhaka');
 
-      if (locationEnabled) {
-        // User has previously granted location permission, use saved coordinates
-        final latitude = await _preferencesService.getLatitude();
-        final longitude = await _preferencesService.getLongitude();
+      uiState.value = uiState.value.copyWith(
+        currentAddress: 'Dhaka',
+        locationPermissionGranted: false,
+      );
 
-        if (latitude != null && longitude != null) {
-          // Get address from coordinates
-          String address = await getAddressFromCoordinatesUseCase.execute(
-            latitude,
-            longitude,
-          );
+      // Load prayer times for default location
+      await _loadPrayerTimes(
+        currentUiState.defaultLatitude!,
+        currentUiState.defaultLongitude!,
+      );
 
-          uiState.value = uiState.value.copyWith(
-            currentAddress: address,
-            locationPermissionGranted: true,
-          );
-
-          // Load prayer times with saved coordinates
-          await _loadPrayerTimes(latitude, longitude);
-          return;
-        }
-      } else {
-        // User denied location permission, check if we have a default location
-        final String? defaultLocation =
-            await _preferencesService.getDefaultLocation();
-
-        if (defaultLocation != null && defaultLocation.isNotEmpty) {
-          uiState.value = uiState.value.copyWith(
-            currentAddress: defaultLocation,
-            locationPermissionGranted: false,
-          );
-
-          // Use default location coordinates (Dhaka)
-          await _loadPrayerTimes(
-            currentUiState.defaultLatitude!,
-            currentUiState.defaultLongitude!,
-          );
-          return;
-        }
-      }
-
-      // If we get here, either first time use or something went wrong with saved data
-      // Just load default location (Dhaka)
-      _fallbackToDefaultLocation();
+      Get.snackbar(
+        'Notice',
+        '$reason. Using default location (Dhaka).',
+        backgroundColor: Colors.amber,
+        duration: Duration(seconds: 3),
+      );
     } catch (e) {
-      _logger.e('Error loading saved location', e);
-      _fallbackToDefaultLocation();
-    } finally {
-      toggleLoading(loading: false);
+      _logger.e('Error loading default location', e);
     }
   }
 }

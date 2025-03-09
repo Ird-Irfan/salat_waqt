@@ -34,7 +34,7 @@ class HomeUiState extends BaseUiState {
   factory HomeUiState.empty() {
     return HomeUiState(
       isLoading: false,
-      currentAddress: 'ঢাকা',
+      currentAddress: 'Dhaka',
       prayerTimes: null,
       locationPermissionGranted: false,
       englishDate: '',
