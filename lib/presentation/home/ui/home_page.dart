@@ -80,13 +80,13 @@ class HomePage extends StatelessWidget {
                         CurrentPrayerTime(theme: theme),
                         const SizedBox(height: 20),
                         // Sadaqa App Banner
-                        const SadaqaAppBanner(),
+                        SadaqaAppBanner(presenter: presenter),
                         const SizedBox(height: 20),
                         // Forbidden Times Section
                         ForbiddenTime(theme: theme),
                         const SizedBox(height: 20),
                         // About Us Footer
-                        const AboutUsFooter(),
+                        AboutUsFooter(presenter: presenter),
                         const SizedBox(height: 20),
                       ],
                     ),
@@ -102,109 +102,120 @@ class HomePage extends StatelessWidget {
 }
 
 class SadaqaAppBanner extends StatelessWidget {
-  const SadaqaAppBanner({super.key});
+  final HomePresenter presenter;
+  const SadaqaAppBanner({super.key, required this.presenter});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFF1A2234),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          Container(
-            height: 40,
-            width: 40,
-            decoration: BoxDecoration(
-              color: const Color(0xFF006A4E),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: const Center(
-              child: Text(
-                'সা',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
+    return GestureDetector(
+      onTap:
+          () => presenter.launchUrls(
+            'https://play.google.com/store/apps/details?id=com.barakah.app',
+          ),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: const Color(0xFF1A2234),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          children: [
+            Container(
+              height: 40,
+              width: 40,
+              decoration: BoxDecoration(
+                color: const Color(0xFF006A4E),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Center(
+                child: Text(
+                  'সা',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
                 ),
               ),
             ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Looking "Need a trusted spot for your sadaqa?"',
-                  style: TextStyle(fontSize: 12, color: Colors.grey),
-                ),
-                const SizedBox(height: 4),
-                Row(
-                  children: const [
-                    Text(
-                      'Explore Sadaqa App',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.teal,
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Looking "Need a trusted spot for your sadaqa?"',
+                    style: TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: const [
+                      Text(
+                        'Explore Sadaqa App',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.teal,
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 4),
-                    Icon(Icons.arrow_forward, size: 16, color: Colors.teal),
-                  ],
-                ),
-              ],
+                      SizedBox(width: 4),
+                      Icon(Icons.arrow_forward, size: 16, color: Colors.teal),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
 
 class AboutUsFooter extends StatelessWidget {
-  const AboutUsFooter({super.key});
+  final HomePresenter presenter;
+  const AboutUsFooter({super.key, required this.presenter});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-      decoration: BoxDecoration(
-        color: const Color(0xFF1A2234),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: const BoxDecoration(
-              color: Colors.orange,
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(
-              Icons.info_outline,
-              color: Colors.white,
-              size: 16,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text(
-                'About Us',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+    return GestureDetector(
+      onTap: () {},
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        decoration: BoxDecoration(
+          color: const Color(0xFF1A2234),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: const BoxDecoration(
+                color: Colors.orange,
+                shape: BoxShape.circle,
               ),
-              Text(
-                'www.irfoundation.com',
-                style: TextStyle(fontSize: 12, color: Colors.grey),
+              child: const Icon(
+                Icons.info_outline,
+                color: Colors.white,
+                size: 16,
               ),
-            ],
-          ),
-        ],
+            ),
+            const SizedBox(width: 12),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                Text(
+                  'About Us',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  'www.irfoundation.com',
+                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

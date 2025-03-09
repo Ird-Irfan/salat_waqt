@@ -10,6 +10,7 @@ import 'package:salat_waqt/core/services/prayer_time_service.dart';
 import 'package:salat_waqt/core/services/preferences_service.dart';
 import 'package:salat_waqt/core/services/timer_service.dart';
 import 'package:salat_waqt/presentation/home/presenter/home_ui_state.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePresenter extends BasePresenter<HomeUiState> {
   // State management
@@ -417,6 +418,14 @@ class HomePresenter extends BasePresenter<HomeUiState> {
       );
     } catch (e) {
       _logger.e('Error loading default location', e);
+    }
+  }
+
+  Future<void> launchUrls(String url) async {
+    if (await launchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url));
+    } else {
+      throw Exception('Could not launch $url');
     }
   }
 }
