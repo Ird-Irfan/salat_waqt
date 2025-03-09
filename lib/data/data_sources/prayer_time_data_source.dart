@@ -39,6 +39,7 @@ class PrayerTimeDataSourceImpl implements PrayerTimeDataSource {
 
       final Map<String, String> formattedTimes = {
         'Fajr': timeFormat.format(prayerTimes.fajr),
+        'Sunrise': timeFormat.format(prayerTimes.sunrise),
         'Dhuhr': timeFormat.format(prayerTimes.dhuhr),
         'Asr': timeFormat.format(prayerTimes.asr),
         'Maghrib': timeFormat.format(prayerTimes.maghrib),

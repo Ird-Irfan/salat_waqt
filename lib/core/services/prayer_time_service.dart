@@ -196,6 +196,7 @@ class PrayerTimeService {
       // Find the next prayer time
       List<MapEntry<String, String>> prayerEntries = [
         MapEntry('Fajr', prayerTimes['Fajr']!),
+        MapEntry('Sunrise', prayerTimes['Sunrise']!),
         MapEntry('Dhuhr', prayerTimes['Dhuhr']!),
         MapEntry('Asr', prayerTimes['Asr']!),
         MapEntry('Maghrib', prayerTimes['Maghrib']!),
@@ -263,5 +264,141 @@ class PrayerTimeService {
     }
 
     return (nextPrayerName, remainingTime, progressValue);
+  }
+
+  // Calculate forbidden prayer times
+  List<Map<String, String>> calculateForbiddenTimes(
+    Map<String, String> prayerTimes,
+  ) {
+    try {
+      // The three forbidden times:
+      // 1. After Fajr until sunrise
+      // 2. When sun is at zenith (before Dhuhr)
+      // 3. After Asr until sunset
+
+      List<Map<String, String>> forbiddenTimes = [];
+
+      // 1. After Fajr until sunrise
+      if (prayerTimes.containsKey('Fajr')) {
+        DateTime? fajrTime = parseTime(prayerTimes['Fajr']);
+        DateTime? sunriseTime;
+
+        // Check if Sunrise is provided by the API
+        if (prayerTimes.containsKey('Sunrise')) {
+          sunriseTime = parseTime(prayerTimes['Sunrise']);
+        } else {
+          // If not, estimate sunrise as approximately 60-90 minutes after Fajr
+          // This is a rough estimate and may need adjustment based on location
+          if (fajrTime != null) {
+            sunriseTime = fajrTime.add(Duration(minutes: 75));
+          }
+        }
+
+        if (fajrTime != null && sunriseTime != null) {
+          String sunriseTimeStr = DateFormat('h:mm a').format(sunriseTime);
+
+          forbiddenTimes.add({
+            'name': 'Morning',
+            'startTime': prayerTimes['Fajr']!,
+            'endTime':
+                prayerTimes.containsKey('Sunrise')
+                    ? prayerTimes['Sunrise']!
+                    : sunriseTimeStr,
+            'icon': 'Fajr',
+          });
+        }
+      }
+
+      // 2. When sun is at zenith (before Dhuhr)
+      if (prayerTimes.containsKey('Dhuhr')) {
+        DateTime? dhuhrTime = parseTime(prayerTimes['Dhuhr']);
+
+        if (dhuhrTime != null) {
+          // Calculate zawal time (approximately 15 minutes before Dhuhr)
+          DateTime zawalTime = dhuhrTime.subtract(Duration(minutes: 15));
+          String formattedZawalTime = DateFormat('h:mm a').format(zawalTime);
+
+          forbiddenTimes.add({
+            'name': 'Noon',
+            'startTime': formattedZawalTime,
+            'endTime': prayerTimes['Dhuhr']!,
+            'icon': 'Dhuhr',
+          });
+        }
+      }
+
+      // 3. After Asr until sunset
+      if (prayerTimes.containsKey('Asr') &&
+          prayerTimes.containsKey('Maghrib')) {
+        DateTime? asrTime = parseTime(prayerTimes['Asr']);
+        DateTime? maghribTime = parseTime(prayerTimes['Maghrib']);
+
+        if (asrTime != null && maghribTime != null) {
+          forbiddenTimes.add({
+            'name': 'Evening',
+            'startTime': prayerTimes['Asr']!,
+            'endTime': prayerTimes['Maghrib']!,
+            'icon': 'Asr',
+          });
+        }
+      }
+
+      return forbiddenTimes;
+    } catch (e) {
+      _logger.e('Error calculating forbidden times', e);
+      return [];
+    }
+  }
+
+  // Check if current time is within any forbidden period
+  (bool, String?) isInForbiddenTime(List<Map<String, String>> forbiddenTimes) {
+    try {
+      DateTime now = DateTime.now();
+
+      for (var period in forbiddenTimes) {
+        DateTime? startTime = parseTime(period['startTime']);
+        DateTime? endTime = parseTime(period['endTime']);
+
+        if (startTime != null && endTime != null) {
+          // Check if current time is between start and end time
+          if ((now.isAfter(startTime) || now.isAtSameMomentAs(startTime)) &&
+              (now.isBefore(endTime) || now.isAtSameMomentAs(endTime))) {
+            return (true, period['name']);
+          }
+        }
+      }
+
+      return (false, null);
+    } catch (e) {
+      _logger.e('Error checking forbidden time', e);
+      return (false, null);
+    }
+  }
+
+  // Get current active forbidden time period with formatted time range
+  String? getCurrentForbiddenTimeRange(
+    List<Map<String, String>> forbiddenTimes,
+  ) {
+    try {
+      DateTime now = DateTime.now();
+
+      for (var period in forbiddenTimes) {
+        DateTime? startTime = parseTime(period['startTime']);
+        DateTime? endTime = parseTime(period['endTime']);
+
+        if (startTime != null && endTime != null) {
+          // Check if current time is between start and end time
+          if ((now.isAfter(startTime) || now.isAtSameMomentAs(startTime)) &&
+              (now.isBefore(endTime) || now.isAtSameMomentAs(endTime))) {
+            return '${period['startTime']} - ${period['endTime']}';
+          }
+        }
+      }
+
+      return null;
+    } catch (e) {
+      _logger.e('Error getting current forbidden time range', e);
+      return null;
+    }
   }
 }

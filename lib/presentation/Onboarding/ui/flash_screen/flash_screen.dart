@@ -7,7 +7,7 @@ import 'package:salat_waqt/core/constant/app_contant.dart';
 import 'package:salat_waqt/presentation/Onboarding/presenter/flash_screen_presenter.dart';
 import 'package:salat_waqt/presentation/Onboarding/ui/location_permission/location_permission.dart';
 import 'package:salat_waqt/presentation/Onboarding/widgets/reusable_flash_screen.dart';
-import 'package:salat_waqt/presentation/home/ui/location_screen.dart';
+import 'package:salat_waqt/presentation/home/ui/home_page.dart';
 
 class FlashScreen extends StatelessWidget {
   const FlashScreen({super.key});
@@ -25,7 +25,7 @@ class FlashScreen extends StatelessWidget {
             // Navigate directly to home screen if not first run
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => LocationScreen()),
+              MaterialPageRoute(builder: (context) => const HomePage()),
             );
           });
         } else {

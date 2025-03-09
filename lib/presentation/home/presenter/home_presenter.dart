@@ -59,6 +59,7 @@ class HomePresenter extends BasePresenter<HomeUiState> {
     _updateDates();
     await _loadSavedLocation();
     _startTimer();
+    updateCurrentWaqt();
   }
 
   // Update dates (English and Hijri)
@@ -71,7 +72,36 @@ class HomePresenter extends BasePresenter<HomeUiState> {
 
   // Start timer to update remaining time
   void _startTimer() {
-    _timerService.startPeriodicTimer(_updateRemainingTime);
+    _timerService.startPeriodicTimer(_updateRemainingTimeAndCheckNextPrayer);
+  }
+
+  // Update the remaining time until next prayer and check if we need to move to next prayer
+  void _updateRemainingTimeAndCheckNextPrayer() {
+    _updateRemainingTime();
+    _checkForPrayerTransition();
+  }
+
+  // Check if we've transitioned to the next prayer time
+  void _checkForPrayerTransition() {
+    if (currentUiState.prayerTimes == null ||
+        currentUiState.nextPrayerTime == null ||
+        currentUiState.nextPrayerName == null) {
+      return;
+    }
+
+    try {
+      final now = DateTime.now();
+      final nextPrayerDateTime = _prayerTimeService.parseTime(
+        currentUiState.nextPrayerTime!,
+      );
+
+      // If next prayer time has passed, update the current and next prayer times
+      if (nextPrayerDateTime != null && !nextPrayerDateTime.isAfter(now)) {
+        updateCurrentWaqt();
+      }
+    } catch (e) {
+      _logger.e('Error checking for prayer transition', e);
+    }
   }
 
   // Update the remaining time until next prayer
@@ -85,7 +115,7 @@ class HomePresenter extends BasePresenter<HomeUiState> {
           );
 
       uiState.value = uiState.value.copyWith(
-        nextPrayerName: nextPrayerName,
+        nextPrayerName: nextPrayerName ?? currentUiState.nextPrayerName,
         remainingTime: remainingTime,
         progressValue: progressValue,
       );
@@ -121,6 +151,111 @@ class HomePresenter extends BasePresenter<HomeUiState> {
       _loadDefaultLocation('A problem occurred: ${e.toString()}');
     } finally {
       toggleLoading(loading: false);
+    }
+  }
+
+  // Toggle current prayer time expansion state
+  void toggleCurrentPrayerTimeExpansion() {
+    final bool newExpandedState = !currentUiState.isCurrentPrayerTimeExpanded;
+    final double newHeight = newExpandedState ? 450.0 : 236.0;
+
+    uiState.value = uiState.value.copyWith(
+      isCurrentPrayerTimeExpanded: newExpandedState,
+      currentPrayerTimeHeight: newHeight,
+    );
+  }
+
+  // Get current prayer time
+  void updateCurrentWaqt() {
+    if (currentUiState.prayerTimes == null) return;
+
+    try {
+      final now = DateTime.now();
+      final currentTime =
+          "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}";
+      final prayerTimes = currentUiState.prayerTimes!;
+
+      // Convert prayer times to DateTime objects
+      Map<String, DateTime?> parsedTimes = {};
+      for (var entry in prayerTimes.entries) {
+        if (entry.key == 'Fajr' ||
+            entry.key == 'Dhuhr' ||
+            entry.key == 'Asr' ||
+            entry.key == 'Maghrib' ||
+            entry.key == 'Isha') {
+          parsedTimes[entry.key] = _prayerTimeService.parseTime(entry.value);
+        }
+      }
+
+      // Create a list of prayer times with their names
+      List<MapEntry<String, DateTime>> todayPrayerTimes = [];
+      List<MapEntry<String, DateTime>> tomorrowPrayerTimes = [];
+
+      for (var entry in parsedTimes.entries) {
+        if (entry.value != null) {
+          todayPrayerTimes.add(MapEntry(entry.key, entry.value!));
+          // Also add tomorrow's time for comparison
+          tomorrowPrayerTimes.add(
+            MapEntry(entry.key, entry.value!.add(Duration(days: 1))),
+          );
+        }
+      }
+
+      // Sort the prayer times
+      todayPrayerTimes.sort((a, b) => a.value.compareTo(b.value));
+      tomorrowPrayerTimes.sort((a, b) => a.value.compareTo(b.value));
+
+      // Find current prayer (the last prayer before now)
+      String currentWaqt = '';
+      MapEntry<String, DateTime>? currentPrayer;
+
+      for (var prayer in todayPrayerTimes) {
+        if (prayer.value.isBefore(now)) {
+          currentPrayer = prayer;
+        } else {
+          break;
+        }
+      }
+
+      // If no prayer is found, it means we're after Isha and before Fajr
+      currentPrayer ??= todayPrayerTimes.last;
+
+      // Determine the next prayer
+      MapEntry<String, DateTime>? nextPrayer;
+      String? nextPrayerTime;
+
+      // Find the next prayer after now
+      for (var prayer in todayPrayerTimes) {
+        if (prayer.value.isAfter(now)) {
+          nextPrayer = prayer;
+          nextPrayerTime = prayerTimes[prayer.key];
+          break;
+        }
+      }
+
+      // If no next prayer found today, use tomorrow's first prayer
+      if (nextPrayer == null) {
+        nextPrayer = tomorrowPrayerTimes.first;
+        nextPrayerTime = prayerTimes[nextPrayer.key];
+      }
+
+      // Set current waqt based on which prayer was found
+      currentWaqt = currentPrayer.key.toUpperCase();
+
+      // Get the next prayer name
+      String? nextPrayerName = nextPrayer.key;
+
+      uiState.value = uiState.value.copyWith(
+        currentWaqt: currentWaqt,
+        currentTime: currentTime,
+        nextPrayerWaqt: nextPrayerName,
+        nextPrayerTime: nextPrayerTime,
+      );
+
+      // Re-update remaining time with new info
+      _updateRemainingTime();
+    } catch (e) {
+      _logger.e('Error updating current waqt', e);
     }
   }
 
@@ -244,6 +379,9 @@ class HomePresenter extends BasePresenter<HomeUiState> {
 
       // Update the remaining time after loading prayer times
       _updateRemainingTime();
+
+      // Update current waqt after loading prayer times
+      updateCurrentWaqt();
     } catch (e) {
       _logger.e('Error loading prayer times', e);
       uiState.value = uiState.value.copyWith(

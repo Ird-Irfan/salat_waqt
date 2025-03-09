@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:salat_waqt/core/base/base_presenter.dart';
 import 'package:salat_waqt/core/constant/app_contant.dart';
 import 'package:salat_waqt/core/di/service_locator.dart';
+import 'package:salat_waqt/core/external_libs/presentable_widget_builder.dart';
 import 'package:salat_waqt/presentation/home/presenter/home_presenter.dart';
 import 'package:salat_waqt/presentation/home/ui/appber/appber_section.dart';
 import 'package:salat_waqt/presentation/home/ui/current_prayer_time/current_prayer_time.dart';
@@ -38,54 +39,62 @@ class HomePage extends StatelessWidget {
         appBar: AppBarSection(
           location: presenter.currentUiState.currentAddress ?? '',
         ),
-        body: Container(
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(AppConstant.appBg),
-              fit: BoxFit.cover,
-            ),
-          ),
-          child: SafeArea(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Date Display
-                    DateDisplay(
-                      englishDate: presenter.currentUiState.englishDate ?? '',
-                      arabicDate: presenter.currentUiState.arabicDate ?? '',
-                    ),
-                    const SizedBox(height: 20),
-                    // Iftar Time Counter
-                    const IftarTimeCounter(),
-                    const SizedBox(height: 20),
-                    // Sahri & Iftar Times
-                    SahriIftarTimesSection(
-                      sahriTime:
-                          presenter.currentUiState.prayerTimes?['Sehri'] ?? '',
-                      iftarTime:
-                          presenter.currentUiState.prayerTimes?['Iftar'] ?? '',
-                    ),
-                    const SizedBox(height: 16),
-                    // Current Prayer Time
-                    CurrentPrayerTime(theme: theme),
-                    const SizedBox(height: 20),
-                    // Sadaqa App Banner
-                    const SadaqaAppBanner(),
-                    const SizedBox(height: 20),
-                    // Forbidden Times Section
-                    ForbiddenTime(theme: theme),
-                    const SizedBox(height: 20),
-                    // About Us Footer
-                    const AboutUsFooter(),
-                    const SizedBox(height: 20),
-                  ],
+        body: PresentableWidgetBuilder(
+          presenter: presenter,
+          builder: () {
+            return Container(
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(AppConstant.appBg),
+                  fit: BoxFit.cover,
                 ),
               ),
-            ),
-          ),
+              child: SafeArea(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Date Display
+                        DateDisplay(
+                          englishDate:
+                              presenter.currentUiState.englishDate ?? '',
+                          arabicDate: presenter.currentUiState.arabicDate ?? '',
+                        ),
+                        const SizedBox(height: 20),
+                        // Iftar Time Counter
+                        const IftarTimeCounter(),
+                        const SizedBox(height: 20),
+                        // Sahri & Iftar Times
+                        SahriIftarTimesSection(
+                          sahriTime:
+                              presenter.currentUiState.prayerTimes?['Sehri'] ??
+                              '',
+                          iftarTime:
+                              presenter.currentUiState.prayerTimes?['Iftar'] ??
+                              '',
+                        ),
+                        const SizedBox(height: 16),
+                        // Current Prayer Time
+                        CurrentPrayerTime(theme: theme),
+                        const SizedBox(height: 20),
+                        // Sadaqa App Banner
+                        const SadaqaAppBanner(),
+                        const SizedBox(height: 20),
+                        // Forbidden Times Section
+                        ForbiddenTime(theme: theme),
+                        const SizedBox(height: 20),
+                        // About Us Footer
+                        const AboutUsFooter(),
+                        const SizedBox(height: 20),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
         ),
       ),
     );
