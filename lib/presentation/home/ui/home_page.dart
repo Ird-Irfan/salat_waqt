@@ -16,6 +16,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final HomePresenter presenter = loadPresenter(
       HomePresenter(
         locationService: locator(),
@@ -34,7 +35,9 @@ class HomePage extends StatelessWidget {
       child: Scaffold(
         extendBodyBehindAppBar: true,
         backgroundColor: Colors.transparent,
-        appBar: AppBarSection(),
+        appBar: AppBarSection(
+          location: presenter.currentUiState.currentAddress ?? '',
+        ),
         body: Container(
           decoration: const BoxDecoration(
             image: DecorationImage(
@@ -67,13 +70,13 @@ class HomePage extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     // Current Prayer Time
-                    const CurrentPrayerTime(),
+                    CurrentPrayerTime(theme: theme),
                     const SizedBox(height: 20),
                     // Sadaqa App Banner
                     const SadaqaAppBanner(),
                     const SizedBox(height: 20),
                     // Forbidden Times Section
-                    const ForbiddenTime(),
+                    ForbiddenTime(theme: theme),
                     const SizedBox(height: 20),
                     // About Us Footer
                     const AboutUsFooter(),

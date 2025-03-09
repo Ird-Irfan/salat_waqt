@@ -20,7 +20,10 @@ class DateDisplay extends StatelessWidget {
         gradient: RadialGradient(
           center: Alignment(0.93, 1.20),
           radius: 0.72,
-          colors: SalatColor.dateDisplayGradient,
+          colors: [
+            SalatColor.primaryColorDark300,
+            SalatColor.primaryColorDark300,
+          ],
         ),
         borderRadius: BorderRadius.all(Radius.circular(12)),
       ),
