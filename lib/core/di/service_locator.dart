@@ -13,6 +13,7 @@ import 'package:salat_waqt/domain/usecases/get_current_location_usecase.dart';
 import 'package:salat_waqt/domain/usecases/get_prayer_times_usecase.dart';
 import 'package:salat_waqt/presentation/Onboarding/presenter/flash_screen_presenter.dart';
 import 'package:salat_waqt/presentation/home/presenter/home_presenter.dart';
+import 'package:salat_waqt/presentation/settings/presenter/setting_presenter.dart';
 
 final GetIt _serviceLocator = GetIt.instance;
 T locator<T extends Object>() => _serviceLocator.get<T>();
@@ -89,5 +90,8 @@ class ServiceLocator {
     _serviceLocator.registerLazySingleton<FlashScreenPresenter>(
       () => FlashScreenPresenter(),
     );
+    _serviceLocator.registerLazySingleton<SettingsPresenter>(
+        () => SettingsPresenter(),
+      );
   }
 }

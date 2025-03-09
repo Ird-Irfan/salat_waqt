@@ -1,0 +1,11 @@
+<svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Do not disturb">
+<path id="Vector" d="M14 26C7.3724 26 2 20.6276 2 14C2 7.3724 7.3724 2 14 2C20.6276 2 26 7.3724 26 14C26 20.6276 20.6276 26 14 26ZM9.2 12.8C8.53726 12.8 8 13.3373 8 14C8 14.6627 8.53726 15.2 9.2 15.2H18.8C19.4627 15.2 20 14.6627 20 14C20 13.3373 19.4627 12.8 18.8 12.8H9.2Z" fill="url(#paint0_linear_288_7323)"/>
+</g>
+<defs>
+<linearGradient id="paint0_linear_288_7323" x1="14" y1="-0.4" x2="14" y2="28.4" gradientUnits="userSpaceOnUse">
+<stop stop-color="#D65252"/>
+<stop offset="0.979167" stop-color="#A93C32"/>
+</linearGradient>
+</defs>
+</svg>

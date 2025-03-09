@@ -20,6 +20,14 @@ class AppConstant {
   static const String icMaghrib = 'assets/svgs/ic_maghrib.svg';
   static const String icIsha = 'assets/svgs/ic_isha.svg';
 
+
+  static const String icMsg = 'assets/svgs/ic_msg.svg';
+  static const String icEye = 'assets/svgs/ic_eye.svg';
+  static const String icDnd = 'assets/svgs/ic_do_not_disturb.svg';
+  static const String icClock = 'assets/svgs/ic_clock.svg';
+  static const String icLocation = 'assets/svgs/ic_calculator.svg';
+
+
   static const String icIslamicCalender  =
       'assets/svgs/ic_islamic_calender.svg';
   static const String icTheme = 'assets/svgs/ic_theme.svg';
