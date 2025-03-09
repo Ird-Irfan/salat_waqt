@@ -100,7 +100,7 @@ class HomePresenter extends BasePresenter<HomeUiState> {
       uiState.value = uiState.value.copyWith(locationPermissionGranted: true);
       await _loadCurrentLocation();
     } catch (e) {
-      _useDefaultLocation('একটি সমস্যা হয়েছে: ${e.toString()}');
+      _useDefaultLocation('A problem occurred: ${e.toString()}');
     } finally {
       toggleLoading(loading: false);
     }
@@ -210,23 +210,23 @@ class HomePresenter extends BasePresenter<HomeUiState> {
           // Both are in the future, pick the closest one
           if (todayIftar.isBefore(todaySehri)) {
             nextPrayerTime = todayIftar;
-            nextPrayerName = 'ইফতার';
+            nextPrayerName = 'Iftar';
           } else {
             nextPrayerTime = todaySehri;
-            nextPrayerName = 'সেহরি';
+            nextPrayerName = 'Sehri';
           }
         } else if (now.isBefore(todayIftar)) {
           // Only Iftar is in the future
           nextPrayerTime = todayIftar;
-          nextPrayerName = 'ইফতার';
+          nextPrayerName = 'Iftar';
         } else if (now.isBefore(todaySehri)) {
           // Only Sehri is in the future
           nextPrayerTime = todaySehri;
-          nextPrayerName = 'সেহরি';
+          nextPrayerName = 'Sehri';
         }
 
         // Calculate progress
-        if (nextPrayerName == 'ইফতার') {
+        if (nextPrayerName == 'Iftar') {
           // We're waiting for Iftar, so we're between Sehri and Iftar
           // Calculate how much time has passed since Sehri
           DateTime previousSehri = todaySehri.subtract(Duration(days: 1));
@@ -238,7 +238,7 @@ class HomePresenter extends BasePresenter<HomeUiState> {
           Duration elapsedDuration = now.difference(previousSehri);
 
           progressValue = elapsedDuration.inMinutes / totalDuration.inMinutes;
-        } else if (nextPrayerName == 'সেহরি') {
+        } else if (nextPrayerName == 'Sehri') {
           // We're waiting for Sehri, so we're between Iftar and Sehri
           // Calculate how much time has passed since Iftar
           DateTime previousIftar = todayIftar.subtract(Duration(days: 1));
@@ -258,11 +258,11 @@ class HomePresenter extends BasePresenter<HomeUiState> {
       // Regular prayer time mode
       // Find the next prayer time
       List<MapEntry<String, String>> prayerEntries = [
-        MapEntry('ফজর', currentUiState.prayerTimes!['Fajr']),
-        MapEntry('যোহর', currentUiState.prayerTimes!['Dhuhr']),
-        MapEntry('আসর', currentUiState.prayerTimes!['Asr']),
-        MapEntry('মাগরিব', currentUiState.prayerTimes!['Maghrib']),
-        MapEntry('ঈশা', currentUiState.prayerTimes!['Isha']),
+        MapEntry('Fajr', currentUiState.prayerTimes!['Fajr']),
+        MapEntry('Dhuhr', currentUiState.prayerTimes!['Dhuhr']),
+        MapEntry('Asr', currentUiState.prayerTimes!['Asr']),
+        MapEntry('Maghrib', currentUiState.prayerTimes!['Maghrib']),
+        MapEntry('Isha', currentUiState.prayerTimes!['Isha']),
       ];
 
       // Parse all prayer times
@@ -366,7 +366,7 @@ class HomePresenter extends BasePresenter<HomeUiState> {
       serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
         _useDefaultLocation(
-          'লোকেশন সার্ভিস বন্ধ আছে। ডিফল্ট লোকেশন (ঢাকা) ব্যবহার করা হচ্ছে।',
+          'Location service is turned off. Using default location (Dhaka).',
         );
         return false;
       }
@@ -382,7 +382,7 @@ class HomePresenter extends BasePresenter<HomeUiState> {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
         _useDefaultLocation(
-          'লোকেশন পারমিশন দেওয়া হয়নি। ডিফল্ট লোকেশন (ঢাকা) ব্যবহার করা হচ্ছে।',
+          'Location permission was not granted. Using default location (Dhaka).',
         );
       }
     }
@@ -390,7 +390,7 @@ class HomePresenter extends BasePresenter<HomeUiState> {
     if (permission == LocationPermission.deniedForever) {
       await _showOpenSettingsDialog();
       _useDefaultLocation(
-        'লোকেশন পারমিশন স্থায়ীভাবে বন্ধ করা আছে। ডিফল্ট লোকেশন (ঢাকা) ব্যবহার করা হচ্ছে।',
+        'Location permission is permanently disabled. Using default location (Dhaka).',
       );
     }
 
@@ -445,9 +445,9 @@ class HomePresenter extends BasePresenter<HomeUiState> {
   void _fallbackToDefaultLocation() async {
     // Save to SharedPreferences
     await _preferencesService.setLocationEnabled(false);
-    await _preferencesService.setDefaultLocation('ঢাকা');
+    await _preferencesService.setDefaultLocation('Dhaka');
 
-    uiState.value = uiState.value.copyWith(currentAddress: 'ঢাকা');
+    uiState.value = uiState.value.copyWith(currentAddress: 'Dhaka');
     _loadPrayerTimes(
       currentUiState.defaultLatitude!,
       currentUiState.defaultLongitude!,
@@ -468,7 +468,7 @@ class HomePresenter extends BasePresenter<HomeUiState> {
         date,
       );
       if (times.isEmpty) {
-        throw Exception('নামাজের সময় লোড করা যায়নি');
+        throw Exception('Failed to load prayer times');
       }
 
       Map<String, String> formattedTimes = _formatPrayerTimes(times);
@@ -487,7 +487,7 @@ class HomePresenter extends BasePresenter<HomeUiState> {
       uiState.value = uiState.value.copyWith(
         loadingPrayerTimes: false,
         prayerTimesError:
-            'নামাজের সময় লোড করা যায়নি। দয়া করে আবার চেষ্টা করুন।\nError: ${e.toString()}',
+            'Could not load prayer times. Please try again.\nError: ${e.toString()}',
         prayerTimes: null,
       );
     }
@@ -502,7 +502,7 @@ class HomePresenter extends BasePresenter<HomeUiState> {
         formattedTimes[prayer] = formatted;
       } catch (e) {
         _logger.e('Error formatting time for $prayer', e);
-        throw Exception('সময় ফরম্যাট করতে সমস্যা হয়েছে: $prayer');
+        throw Exception('Problem formatting time: $prayer');
       }
     });
     return formattedTimes;
@@ -528,13 +528,13 @@ class HomePresenter extends BasePresenter<HomeUiState> {
   }
 
   Future<void> _useDefaultLocation(String message) async {
-    uiState.value = uiState.value.copyWith(currentAddress: 'ঢাকা');
+    uiState.value = uiState.value.copyWith(currentAddress: 'Dhaka');
     await _loadPrayerTimes(
       currentUiState.defaultLatitude!,
       currentUiState.defaultLongitude!,
     );
     Get.snackbar(
-      'সতর্কতা',
+      'Warning',
       message,
       backgroundColor: Colors.amber,
       duration: Duration(seconds: 5),
@@ -545,18 +545,18 @@ class HomePresenter extends BasePresenter<HomeUiState> {
   Future<void> _showLocationServiceDialog() async {
     return Get.dialog(
       AlertDialog(
-        title: Text('লোকেশন সার্ভিস বন্ধ আছে'),
+        title: Text('Location Service is Off'),
         content: Text(
-          'আপনার বর্তমান অবস্থান অনুযায়ী সঠিক নামাজের সময় পাওয়ার জন্য অনুগ্রহ করে লোকেশন সার্ভিস চালু করুন।',
+          'Please enable location services to get accurate prayer times for your current location.',
         ),
         actions: [
-          TextButton(onPressed: () => Get.back(), child: Text('পরে')),
+          TextButton(onPressed: () => Get.back(), child: Text('Later')),
           TextButton(
             onPressed: () async {
               Get.back();
               await Geolocator.openLocationSettings();
             },
-            child: Text('সেটিংস খুলুন'),
+            child: Text('Open Settings'),
           ),
         ],
       ),
@@ -567,12 +567,12 @@ class HomePresenter extends BasePresenter<HomeUiState> {
   Future<void> _showPermissionExplanationDialog() async {
     return Get.dialog(
       AlertDialog(
-        title: Text('লোকেশন পারমিশন প্রয়োজন'),
+        title: Text('Location Permission Required'),
         content: Text(
-          'আপনার বর্তমান অবস্থান অনুযায়ী সঠিক নামাজের সময় পাওয়ার জন্য অ্যাপটি আপনার লোকেশন ব্যবহার করতে চায়।',
+          'This app needs to use your location to provide accurate prayer times for your current location.',
         ),
         actions: [
-          TextButton(onPressed: () => Get.back(), child: Text('বুঝেছি')),
+          TextButton(onPressed: () => Get.back(), child: Text('Understood')),
         ],
       ),
       barrierDismissible: false,
@@ -582,18 +582,18 @@ class HomePresenter extends BasePresenter<HomeUiState> {
   Future<void> _showOpenSettingsDialog() async {
     return Get.dialog(
       AlertDialog(
-        title: Text('লোকেশন অ্যাক্সেস বন্ধ আছে'),
+        title: Text('Location Access is Disabled'),
         content: Text(
-          'অ্যাপ সেটিংস থেকে লোকেশন পারমিশন দিতে হবে। অন্যথায় ডিফল্ট লোকেশন (ঢাকা) ব্যবহার করা হবে।',
+          'You need to give location permission from app settings. Otherwise, default location (Dhaka) will be used.',
         ),
         actions: [
-          TextButton(onPressed: () => Get.back(), child: Text('পরে')),
+          TextButton(onPressed: () => Get.back(), child: Text('Later')),
           TextButton(
             onPressed: () async {
               Get.back();
               await Geolocator.openAppSettings();
             },
-            child: Text('সেটিংস খুলুন'),
+            child: Text('Open Settings'),
           ),
         ],
       ),
