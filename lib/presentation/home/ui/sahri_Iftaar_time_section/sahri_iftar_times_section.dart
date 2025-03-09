@@ -3,16 +3,22 @@ import 'package:salat_waqt/core/constant/app_contant.dart';
 import 'package:salat_waqt/presentation/common/widgets/svg_icons.dart';
 
 class SahriIftarTimesSection extends StatelessWidget {
-  const SahriIftarTimesSection({super.key});
+  final String sahriTime;
+  final String iftarTime;
+  const SahriIftarTimesSection({
+    super.key,
+    required this.sahriTime,
+    required this.iftarTime,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
+    return Row(
       children: [
         Expanded(
           child: TimeInfoCard(
             title: 'SAHRI LAST TIME',
-            time: '04:15 AM',
+            time: sahriTime,
             svgPath: AppConstant.icSahri,
           ),
         ),
@@ -20,7 +26,7 @@ class SahriIftarTimesSection extends StatelessWidget {
         Expanded(
           child: TimeInfoCard(
             title: 'IFTAAR LAST TIME',
-            time: '04:15 AM',
+            time: iftarTime,
             svgPath: AppConstant.icIftaar,
           ),
         ),

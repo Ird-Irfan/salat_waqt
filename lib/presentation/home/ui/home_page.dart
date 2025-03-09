@@ -59,7 +59,12 @@ class HomePage extends StatelessWidget {
                     const IftarTimeCounter(),
                     const SizedBox(height: 20),
                     // Sahri & Iftar Times
-                    const SahriIftarTimesSection(),
+                    SahriIftarTimesSection(
+                      sahriTime:
+                          presenter.currentUiState.prayerTimes?['Sehri'] ?? '',
+                      iftarTime:
+                          presenter.currentUiState.prayerTimes?['Iftar'] ?? '',
+                    ),
                     const SizedBox(height: 16),
                     // Current Prayer Time
                     const CurrentPrayerTime(),
