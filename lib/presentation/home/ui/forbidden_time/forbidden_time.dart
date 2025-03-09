@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:salat_waqt/core/config/salat_waqt_screen.dart';
 import 'package:salat_waqt/core/constant/app_contant.dart';
+import 'package:salat_waqt/core/constant/app_text_styles.dart';
 import 'package:salat_waqt/core/utility/utility.dart';
 import 'package:salat_waqt/presentation/common/widgets/svg_icons.dart';
 
 class ForbiddenTime extends StatefulWidget {
-  const ForbiddenTime({super.key});
+  final ThemeData theme;
+  const ForbiddenTime({super.key, required this.theme});
 
   @override
   State<ForbiddenTime> createState() => _ForbiddenTimeState();
@@ -21,7 +23,7 @@ class _ForbiddenTimeState extends State<ForbiddenTime>
   void initState() {
     super.initState();
     _animationController = AnimationController(
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 300),
       vsync: this,
     );
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
@@ -41,10 +43,10 @@ class _ForbiddenTimeState extends State<ForbiddenTime>
       animation: _animationController,
       builder: (context, child) {
         return Container(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(20.px),
           decoration: BoxDecoration(
             color: const Color(0xFF1A2234),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(16.px),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -72,10 +74,14 @@ class _ForbiddenTimeState extends State<ForbiddenTime>
                     SizedBox(width: 16.px),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
+                      children: [
                         Text(
-                          'CURRENT WAQT • DUHUR',
-                          style: TextStyle(fontSize: 12, color: Colors.white),
+                          'Forbidden Times',
+                          style: widget.theme.textTheme.labelMedium?.copyWith(
+                            fontSize: 18.px,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                         SizedBox(height: 4),
                         Text(
@@ -94,7 +100,7 @@ class _ForbiddenTimeState extends State<ForbiddenTime>
                       turns: isExpanded ? 0.5 : 0,
                       child: SvgIcon(
                         svgPath: AppConstant.icArrowDown,
-                        color: Colors.amber,
+                        color: Colors.white,
                         height: 24,
                         width: 24,
                       ),
@@ -109,7 +115,7 @@ class _ForbiddenTimeState extends State<ForbiddenTime>
                   axis: Axis.vertical,
                   child: FadeTransition(
                     opacity: _fadeAnimation,
-                    child: const ColumnItems(),
+                    child: ColumnItems(theme: widget.theme),
                   ),
                 ),
               ),
@@ -122,39 +128,41 @@ class _ForbiddenTimeState extends State<ForbiddenTime>
 }
 
 class ColumnItems extends StatelessWidget {
-  const ColumnItems({super.key});
+  final ThemeData theme;
+  const ColumnItems({super.key, required this.theme});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 16.0),
       child: Column(
+        spacing: 16.px,
         mainAxisSize: MainAxisSize.min,
         children: [
           Divider(color: Colors.grey.withOpacityInt(0.2)),
-          const SizedBox(height: 16),
           _buildForbiddenTimeItem(
             context,
-            AppConstant.icForbidden,
+            AppConstant.icFajr,
             'After Fajr',
             'Until sunrise',
             0,
+            theme,
           ),
-          const SizedBox(height: 16),
           _buildForbiddenTimeItem(
             context,
-            AppConstant.icForbidden,
+            AppConstant.icDuhur,
             'At Noon',
             'When sun at zenith',
             1,
+            theme,
           ),
-          const SizedBox(height: 16),
           _buildForbiddenTimeItem(
             context,
-            AppConstant.icForbidden,
+            AppConstant.icAsr,
             'After Asr',
             'Until sunset',
             2,
+            theme,
           ),
         ],
       ),
@@ -167,6 +175,7 @@ class ColumnItems extends StatelessWidget {
     String title,
     String subtitle,
     int index,
+    ThemeData theme,
   ) {
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0.0, end: 1.0),
@@ -179,29 +188,26 @@ class ColumnItems extends StatelessWidget {
             opacity: value,
             child: Row(
               children: [
-                SvgIcon(
-                  svgPath: svgPath,
-                  color: Colors.red,
-                  height: 24,
-                  width: 24,
-                ),
-                const SizedBox(width: 12),
+                SvgIcon(svgPath: svgPath, height: 27.px, width: 29.px),
+                SizedBox(width: 16.px),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       title,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        fontSize: 12.px,
+                        fontWeight: FontWeight.w400,
                         color: Colors.white,
                       ),
                     ),
                     Text(
                       subtitle,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.white60,
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        fontSize: 16.px,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: AppTextStyles.inter,
                       ),
                     ),
                   ],
