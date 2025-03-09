@@ -7,7 +7,7 @@ import 'package:salat_waqt/core/di/service_locator.dart';
 import 'package:salat_waqt/core/external_libs/presentable_widget_builder.dart';
 import 'package:salat_waqt/core/utility/utility.dart';
 import 'package:salat_waqt/presentation/common/widgets/svg_icons.dart';
-import 'package:salat_waqt/presentation/home/presenter/home_presenter.dart';
+import 'package:salat_waqt/presentation/home/presenter/current_prayer_time_presenter.dart';
 
 class CurrentPrayerTime extends StatelessWidget {
   final ThemeData theme;
@@ -15,13 +15,11 @@ class CurrentPrayerTime extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final HomePresenter presenter = loadPresenter(
-      HomePresenter(
+    final CurrentPrayerTimePresenter presenter = loadPresenter(
+      CurrentPrayerTimePresenter(
         locationService: locator(),
         prayerTimeService: locator(),
-        dateService: locator(),
         timerService: locator(),
-        preferencesService: locator(),
         logger: locator(),
       ),
     );
@@ -124,7 +122,7 @@ class CurrentPrayerTime extends StatelessWidget {
 
 class ColumnItem extends StatelessWidget {
   final ThemeData theme;
-  final HomePresenter presenter;
+  final CurrentPrayerTimePresenter presenter;
   const ColumnItem({super.key, required this.theme, required this.presenter});
 
   @override
@@ -230,7 +228,7 @@ class ColumnItem extends StatelessWidget {
 
 class RowItem extends StatelessWidget {
   final ThemeData theme;
-  final HomePresenter presenter;
+  final CurrentPrayerTimePresenter presenter;
   const RowItem({super.key, required this.theme, required this.presenter});
 
   @override

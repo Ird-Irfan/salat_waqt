@@ -17,6 +17,7 @@ import 'package:salat_waqt/domain/usecases/get_coordinates_from_address_usecase.
 import 'package:salat_waqt/domain/usecases/get_current_location_usecase.dart';
 import 'package:salat_waqt/domain/usecases/get_prayer_times_usecase.dart';
 import 'package:salat_waqt/presentation/Onboarding/presenter/flash_screen_presenter.dart';
+import 'package:salat_waqt/presentation/home/presenter/current_prayer_time_presenter.dart';
 import 'package:salat_waqt/presentation/home/presenter/forbidden_time_presenter.dart';
 import 'package:salat_waqt/presentation/home/presenter/home_presenter.dart';
 
@@ -127,6 +128,14 @@ class ServiceLocator {
     );
     _serviceLocator.registerLazySingleton<ForbiddenTimePresenter>(
       () => ForbiddenTimePresenter(),
+    );
+    _serviceLocator.registerLazySingleton<CurrentPrayerTimePresenter>(
+      () => CurrentPrayerTimePresenter(
+        locationService: locator(),
+        prayerTimeService: locator(),
+        timerService: locator(),
+        logger: locator(),
+      ),
     );
   }
 }
