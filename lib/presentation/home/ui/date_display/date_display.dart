@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:salat_waqt/core/config/salat_color.dart';
+import 'package:salat_waqt/core/utility/utility.dart';
 
 class DateDisplay extends StatelessWidget {
   final String englishDate;
@@ -20,17 +20,17 @@ class DateDisplay extends StatelessWidget {
         gradient: RadialGradient(
           center: Alignment(0.93, 1.20),
           radius: 0.72,
-          colors: [
-            SalatColor.primaryColorDark300,
-            SalatColor.primaryColorDark300,
-          ],
+          colors: [Color(0xFF1A2234), Color(0xFF1A2234).withOpacityInt(0.8)],
         ),
         borderRadius: BorderRadius.all(Radius.circular(12)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          IconButton(icon: const Icon(Icons.chevron_left), onPressed: () {}),
+          IconButton(
+            icon: const Icon(Icons.chevron_left, color: Colors.white),
+            onPressed: () {},
+          ),
           Column(
             children: [
               Text(
@@ -50,7 +50,10 @@ class DateDisplay extends StatelessWidget {
               ),
             ],
           ),
-          IconButton(icon: const Icon(Icons.chevron_right), onPressed: () {}),
+          IconButton(
+            icon: const Icon(Icons.chevron_right, color: Colors.white),
+            onPressed: () {},
+          ),
         ],
       ),
     );
