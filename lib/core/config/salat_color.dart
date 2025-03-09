@@ -12,7 +12,7 @@ class SalatColor {
   static const Color primaryColorDark750 = Color(0xFF1C4D87);
   static const Color primaryColorDark800 = Color(0xFF101B45);
   static const Color primaryColorDark900 = Color(0xFF0D0D0D);
-
+  static const Color opacityDonutBottomCircleColor = Color(0xFF273C53);
 
   static const Color primaryColorDarkSubtitle = Color(0xFF7B90A8);
 
@@ -20,7 +20,6 @@ class SalatColor {
   static final List<Color> dateDisplayGradientDark = [
     Color(0xFF121F2E),
     Color(0xFF202D3E),
-    
   ];
 
   //----------------------Light Mode Colors----------------------//

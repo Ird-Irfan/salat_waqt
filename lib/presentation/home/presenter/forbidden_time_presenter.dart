@@ -152,11 +152,6 @@ class ForbiddenTimePresenter extends BasePresenter
     Map<String, String> prayerTimes,
   ) {
     try {
-      // The three forbidden times:
-      // 1. From sunrise until 10 minutes after sunrise
-      // 2. When sun is at zenith (before Dhuhr) - 10 minutes before zenith until zenith
-      // 3. 10 minutes before sunset until sunset
-
       List<Map<String, String>> forbiddenTimes = [];
 
       // 1. From sunrise until 10 minutes after sunrise

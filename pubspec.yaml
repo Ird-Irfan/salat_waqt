@@ -112,6 +112,10 @@ flutter:
           weight: 600
         - asset: assets/fonts/inter/Inter_24pt-Bold.ttf
           weight: 700
+
+    - family: UnicaOne-Regular
+      fonts:
+        - asset: assets/fonts/unicaone/UnicaOne-Regular.ttf
     # - family: Trajan Pro
     #   fonts:
     #     - asset: fonts/TrajanPro.ttf

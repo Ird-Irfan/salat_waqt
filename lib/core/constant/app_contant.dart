@@ -27,4 +27,5 @@ class AppConstant {
   static const String moslemmosque = 'assets/images/moslem_mosque.png';
   static const String splashScreenlogo = 'assets/images/splash_screen_logo.png';
   static const String bellring = 'assets/images/bell_ring.png';
+  static const String circleBg = 'assets/images/circle_bg.png';
 }

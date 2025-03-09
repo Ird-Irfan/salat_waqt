@@ -11,6 +11,8 @@ class DateService {
   // Get formatted Arabic/Hijri date
   String getArabicDate() {
     HijriCalendar hijri = HijriCalendar.now();
+    // Subtract one day to adjust for local moon sighting in Dhaka
+    hijri = HijriCalendar.fromDate(DateTime.now().subtract(Duration(days: 1)));
     return hijri.toFormat("dd MMMM yyyy");
   }
 

@@ -4,7 +4,7 @@ class AppTextStyles {
   // Font families
 
   static const String inter = 'Inter';
-
+  static const String unicaOne = 'UnicaOne-Regular';
   // Common text sizes
   static const double smallSize = 12.0;
   static const double mediumSize = 14.0;
@@ -74,7 +74,7 @@ class AppTextStyles {
   static TextStyle body({Color? color, double? height}) => TextStyle(
     fontSize: fifteenSize,
     fontWeight: FontWeight.w400,
-    fontFamily: inter,  
+    fontFamily: inter,
     color: color,
     height: height,
   );
@@ -109,5 +109,4 @@ class AppTextStyles {
 
   static TextStyle customAppBarSubtitle({Color? color}) =>
       TextStyle(fontSize: smallSize, fontFamily: inter, color: color);
-
 }
