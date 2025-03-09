@@ -13,6 +13,18 @@ class HomeUiState extends BaseUiState {
   final String? nextPrayerName;
   final String? remainingTime;
   final double? progressValue;
+  final String? nextPrayerTime;
+  // Fields for CurrentPrayerTime widget
+  final bool isCurrentPrayerTimeExpanded;
+  final double currentPrayerTimeHeight;
+  final String? currentWaqt;
+  final String? currentTime;
+  final String? nextPrayerWaqt;
+  // Forbidden prayer times
+  final List<Map<String, String>>? forbiddenTimes;
+  final bool isInForbiddenTime;
+  final String? currentForbiddenPeriod;
+  final String? currentForbiddenTimeRange;
 
   const HomeUiState({
     required super.userMessage,
@@ -29,12 +41,22 @@ class HomeUiState extends BaseUiState {
     this.nextPrayerName,
     this.remainingTime,
     this.progressValue,
+    this.nextPrayerTime,
+    this.isCurrentPrayerTimeExpanded = false,
+    this.currentPrayerTimeHeight = 236,
+    this.currentWaqt,
+    this.currentTime,
+    this.nextPrayerWaqt,
+    this.forbiddenTimes,
+    this.isInForbiddenTime = false,
+    this.currentForbiddenPeriod,
+    this.currentForbiddenTimeRange,
   });
 
   factory HomeUiState.empty() {
     return HomeUiState(
       isLoading: false,
-      currentAddress: 'ঢাকা',
+      currentAddress: 'Dhaka',
       prayerTimes: null,
       locationPermissionGranted: false,
       englishDate: '',
@@ -47,6 +69,16 @@ class HomeUiState extends BaseUiState {
       nextPrayerName: null,
       remainingTime: null,
       progressValue: 0.0,
+      nextPrayerTime: null,
+      isCurrentPrayerTimeExpanded: false,
+      currentPrayerTimeHeight: 236,
+      currentWaqt: 'DUHUR',
+      currentTime: null,
+      nextPrayerWaqt: null,
+      forbiddenTimes: null,
+      isInForbiddenTime: false,
+      currentForbiddenPeriod: null,
+      currentForbiddenTimeRange: null,
     );
   }
 
@@ -65,6 +97,16 @@ class HomeUiState extends BaseUiState {
     nextPrayerName,
     remainingTime,
     progressValue,
+    nextPrayerTime,
+    isCurrentPrayerTimeExpanded,
+    currentPrayerTimeHeight,
+    currentWaqt,
+    currentTime,
+    nextPrayerWaqt,
+    forbiddenTimes,
+    isInForbiddenTime,
+    currentForbiddenPeriod,
+    currentForbiddenTimeRange,
   ];
 
   HomeUiState copyWith({
@@ -82,6 +124,16 @@ class HomeUiState extends BaseUiState {
     String? nextPrayerName,
     String? remainingTime,
     double? progressValue,
+    String? nextPrayerTime,
+    bool? isCurrentPrayerTimeExpanded,
+    double? currentPrayerTimeHeight,
+    String? currentWaqt,
+    String? nextPrayerWaqt,
+    String? currentTime,
+    List<Map<String, String>>? forbiddenTimes,
+    bool? isInForbiddenTime,
+    String? currentForbiddenPeriod,
+    String? currentForbiddenTimeRange,
   }) {
     return HomeUiState(
       currentAddress: currentAddress ?? this.currentAddress,
@@ -99,6 +151,20 @@ class HomeUiState extends BaseUiState {
       nextPrayerName: nextPrayerName ?? this.nextPrayerName,
       remainingTime: remainingTime ?? this.remainingTime,
       progressValue: progressValue ?? this.progressValue,
+      nextPrayerTime: nextPrayerTime ?? this.nextPrayerTime,
+      isCurrentPrayerTimeExpanded:
+          isCurrentPrayerTimeExpanded ?? this.isCurrentPrayerTimeExpanded,
+      currentPrayerTimeHeight:
+          currentPrayerTimeHeight ?? this.currentPrayerTimeHeight,
+      currentWaqt: currentWaqt ?? this.currentWaqt,
+      currentTime: currentTime ?? this.currentTime,
+      nextPrayerWaqt: nextPrayerWaqt ?? this.nextPrayerWaqt,
+      forbiddenTimes: forbiddenTimes ?? this.forbiddenTimes,
+      isInForbiddenTime: isInForbiddenTime ?? this.isInForbiddenTime,
+      currentForbiddenPeriod:
+          currentForbiddenPeriod ?? this.currentForbiddenPeriod,
+      currentForbiddenTimeRange:
+          currentForbiddenTimeRange ?? this.currentForbiddenTimeRange,
     );
   }
 }

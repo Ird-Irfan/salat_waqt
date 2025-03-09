@@ -1,51 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:salat_waqt/core/base/base_presenter.dart';
 import 'package:salat_waqt/core/config/salat_waqt_screen.dart';
 import 'package:salat_waqt/core/constant/app_contant.dart';
 import 'package:salat_waqt/core/constant/app_text_styles.dart';
+import 'package:salat_waqt/core/di/service_locator.dart';
+import 'package:salat_waqt/core/external_libs/presentable_widget_builder.dart';
 import 'package:salat_waqt/core/utility/utility.dart';
 import 'package:salat_waqt/presentation/common/widgets/svg_icons.dart';
+import 'package:salat_waqt/presentation/home/presenter/current_prayer_time_presenter.dart';
 
-class CurrentPrayerTime extends StatefulWidget {
+class CurrentPrayerTime extends StatelessWidget {
   final ThemeData theme;
   const CurrentPrayerTime({super.key, required this.theme});
 
   @override
-  State<CurrentPrayerTime> createState() => _CurrentPrayerTimeState();
-}
-
-class _CurrentPrayerTimeState extends State<CurrentPrayerTime>
-    with SingleTickerProviderStateMixin {
-  bool isExpanded = false;
-  late AnimationController _animationController;
-  late Animation<double> _heightAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      vsync: this,
-    );
-    _heightAnimation = Tween<double>(begin: 236, end: 450).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
-    );
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final theme = widget.theme;
-    return AnimatedBuilder(
-      animation: _heightAnimation,
-      builder: (context, child) {
+    final CurrentPrayerTimePresenter presenter = loadPresenter(
+      CurrentPrayerTimePresenter(
+        locationService: locator(),
+        prayerTimeService: locator(),
+        timerService: locator(),
+        logger: locator(),
+      ),
+    );
+
+    return PresentableWidgetBuilder(
+      presenter: presenter,
+      builder: () {
         return Container(
-          height: _heightAnimation.value,
-          // padding: const EdgeInsets.all(16),
+          height: presenter.currentUiState.currentPrayerTimeHeight,
           decoration: BoxDecoration(
             color: const Color(0xFF1A2234),
             borderRadius: BorderRadius.circular(12),
@@ -60,16 +43,7 @@ class _CurrentPrayerTimeState extends State<CurrentPrayerTime>
                   bottom: 10.px,
                 ),
                 child: InkWell(
-                  onTap: () {
-                    setState(() {
-                      isExpanded = !isExpanded;
-                      if (isExpanded) {
-                        _animationController.forward();
-                      } else {
-                        _animationController.reverse();
-                      }
-                    });
-                  },
+                  onTap: () => presenter.toggleCurrentPrayerTimeExpansion(),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -88,7 +62,7 @@ class _CurrentPrayerTimeState extends State<CurrentPrayerTime>
                                 ),
                               ),
                               Text(
-                                'DUHUR',
+                                presenter.currentUiState.currentWaqt ?? '',
                                 style: theme.textTheme.labelMedium?.copyWith(
                                   fontSize: 14.px,
                                   color: Colors.white,
@@ -100,7 +74,7 @@ class _CurrentPrayerTimeState extends State<CurrentPrayerTime>
                           ),
                           SizedBox(height: 8.px),
                           Text(
-                            '12:15 PM - 02:10 PM',
+                            '${presenter.currentUiState.currentTime} - ${presenter.currentUiState.nextPrayerTime}',
                             style: theme.textTheme.labelMedium?.copyWith(
                               fontSize: 18.px,
                               fontWeight: FontWeight.w500,
@@ -108,11 +82,15 @@ class _CurrentPrayerTimeState extends State<CurrentPrayerTime>
                               fontFamily: AppTextStyles.inter,
                             ),
                           ),
+                          SizedBox(height: 4.px),
                         ],
                       ),
                       AnimatedRotation(
                         duration: const Duration(milliseconds: 300),
-                        turns: isExpanded ? 0.5 : 0,
+                        turns:
+                            presenter.currentUiState.isCurrentPrayerTimeExpanded
+                                ? 0.5
+                                : 0,
                         child: SvgIcon(
                           svgPath: AppConstant.icArrowDown,
                           height: 24.px,
@@ -129,9 +107,9 @@ class _CurrentPrayerTimeState extends State<CurrentPrayerTime>
                 child: AnimatedSwitcher(
                   duration: const Duration(milliseconds: 300),
                   child:
-                      isExpanded
-                          ? ColumnItem(theme: theme)
-                          : RowItem(theme: theme),
+                      presenter.currentUiState.isCurrentPrayerTimeExpanded
+                          ? ColumnItem(theme: theme, presenter: presenter)
+                          : RowItem(theme: theme, presenter: presenter),
                 ),
               ),
             ],
@@ -144,7 +122,8 @@ class _CurrentPrayerTimeState extends State<CurrentPrayerTime>
 
 class ColumnItem extends StatelessWidget {
   final ThemeData theme;
-  const ColumnItem({super.key, required this.theme});
+  final CurrentPrayerTimePresenter presenter;
+  const ColumnItem({super.key, required this.theme, required this.presenter});
 
   @override
   Widget build(BuildContext context) {
@@ -154,7 +133,7 @@ class ColumnItem extends StatelessWidget {
           _buildPrayerRow(
             AppConstant.icFajr,
             'Fajr',
-            '5:45 AM',
+            presenter.currentUiState.prayerTimes?['Fajr'] ?? '',
             Icons.notifications_outlined,
           ),
           Padding(
@@ -164,7 +143,7 @@ class ColumnItem extends StatelessWidget {
           _buildPrayerRow(
             AppConstant.icDuhur,
             'Dhuhr',
-            '12:15 PM',
+            presenter.currentUiState.prayerTimes?['Dhuhr'] ?? '',
             Icons.notifications_outlined,
           ),
           Padding(
@@ -174,7 +153,7 @@ class ColumnItem extends StatelessWidget {
           _buildPrayerRow(
             AppConstant.icAsr,
             'Asr',
-            '3:45 PM',
+            presenter.currentUiState.prayerTimes?['Asr'] ?? '',
             Icons.notifications_outlined,
           ),
           Padding(
@@ -184,7 +163,7 @@ class ColumnItem extends StatelessWidget {
           _buildPrayerRow(
             AppConstant.icMaghrib,
             'Maghrib',
-            '6:15 PM',
+            presenter.currentUiState.prayerTimes?['Maghrib'] ?? '',
             Icons.notifications_outlined,
           ),
           Padding(
@@ -194,7 +173,7 @@ class ColumnItem extends StatelessWidget {
           _buildPrayerRow(
             AppConstant.icIsha,
             'Isha',
-            '7:45 PM',
+            presenter.currentUiState.prayerTimes?['Isha'] ?? '',
             Icons.notifications_outlined,
           ),
           SizedBox(height: 26.px),
@@ -249,7 +228,8 @@ class ColumnItem extends StatelessWidget {
 
 class RowItem extends StatelessWidget {
   final ThemeData theme;
-  const RowItem({super.key, required this.theme});
+  final CurrentPrayerTimePresenter presenter;
+  const RowItem({super.key, required this.theme, required this.presenter});
 
   @override
   Widget build(BuildContext context) {
@@ -258,31 +238,31 @@ class RowItem extends StatelessWidget {
       children: [
         _buildPrayerTimeItem(
           name: 'FAJR',
-          time: '5:45 AM',
+          time: presenter.currentUiState.prayerTimes?['Fajr'] ?? '',
           svgPath: AppConstant.icFajr,
           theme: theme,
         ),
         _buildPrayerTimeItem(
           name: 'DUHUR',
-          time: '12:15 PM',
+          time: presenter.currentUiState.prayerTimes?['Dhuhr'] ?? '',
           svgPath: AppConstant.icDuhur,
           theme: theme,
         ),
         _buildPrayerTimeItem(
           name: 'ASR',
-          time: '3:45 PM',
+          time: presenter.currentUiState.prayerTimes?['Asr'] ?? '',
           svgPath: AppConstant.icAsr,
           theme: theme,
         ),
         _buildPrayerTimeItem(
           name: 'MAGHRIB',
-          time: '6:15 PM',
+          time: presenter.currentUiState.prayerTimes?['Maghrib'] ?? '',
           svgPath: AppConstant.icMaghrib,
           theme: theme,
         ),
         _buildPrayerTimeItem(
           name: 'ISHA',
-          time: '7:45 PM',
+          time: presenter.currentUiState.prayerTimes?['Isha'] ?? '',
           svgPath: AppConstant.icIsha,
           theme: theme,
         ),

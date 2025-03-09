@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:salat_waqt/core/config/salat_waqt_screen.dart';
 import 'package:salat_waqt/core/constant/app_contant.dart';
-import 'package:salat_waqt/core/constant/app_text_styles.dart';
 import 'package:salat_waqt/presentation/common/widgets/svg_icons.dart';
 
 class SahriIftarTimesSection extends StatelessWidget {
-  final ThemeData theme;
-  const SahriIftarTimesSection({super.key, required this.theme});
+  final String sahriTime;
+  final String iftarTime;
+  const SahriIftarTimesSection({
+    super.key,
+    required this.sahriTime,
+    required this.iftarTime,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -14,18 +17,16 @@ class SahriIftarTimesSection extends StatelessWidget {
       children: [
         Expanded(
           child: TimeInfoCard(
-            theme: theme,
             title: 'SAHRI LAST TIME',
-            time: '04:15 AM',
+            time: sahriTime,
             svgPath: AppConstant.icSahri,
           ),
         ),
-        SizedBox(width: 12.px),
+        SizedBox(width: 12),
         Expanded(
           child: TimeInfoCard(
-            theme: theme,
             title: 'IFTAAR LAST TIME',
-            time: '04:15 AM',
+            time: iftarTime,
             svgPath: AppConstant.icIftaar,
           ),
         ),
@@ -38,20 +39,18 @@ class TimeInfoCard extends StatelessWidget {
   final String title;
   final String time;
   final String svgPath;
-  final ThemeData theme;
 
   const TimeInfoCard({
     super.key,
     required this.title,
     required this.time,
     required this.svgPath,
-    required this.theme,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20.px, vertical: 16.px),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: const Color(0xFF1A2234),
         borderRadius: BorderRadius.circular(12),
@@ -59,24 +58,19 @@ class TimeInfoCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SvgIcon(height: 36.43.px, width: 34.43.px, svgPath: svgPath),
-          SizedBox(height: 26.px),
+          SvgIcon(svgPath: svgPath),
+          const SizedBox(height: 8),
           Text(
             title,
-            style: theme.textTheme.labelMedium?.copyWith(
-              fontSize: 14.px,
-              color: Colors.white,
-              fontFamily: AppTextStyles.inter,
-            ),
+            style: const TextStyle(fontSize: 10, color: Colors.white),
           ),
-          SizedBox(height: 8.px),
+          const SizedBox(height: 4),
           Text(
             time,
-            style: theme.textTheme.labelMedium?.copyWith(
-              fontSize: 18.px,
-              fontWeight: FontWeight.w500,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
               color: Colors.white,
-              fontFamily: AppTextStyles.inter,
             ),
           ),
         ],

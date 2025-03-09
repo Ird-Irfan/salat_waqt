@@ -6,7 +6,7 @@ import 'package:salat_waqt/core/constant/app_contant.dart';
 import 'package:salat_waqt/core/constant/app_text_styles.dart';
 import 'package:salat_waqt/core/services/preferences_service.dart';
 import 'package:salat_waqt/presentation/Onboarding/widgets/reusable_flash_screen.dart';
-import 'package:salat_waqt/presentation/home/ui/location_screen.dart';
+import 'package:salat_waqt/presentation/home/ui/home_page.dart';
 import 'package:salat_waqt/core/services/logger_service.dart';
 
 class LocationPermission extends StatelessWidget {
@@ -117,7 +117,7 @@ class LocationPermission extends StatelessWidget {
   void _navigateToNextScreen(BuildContext context) {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => LocationScreen()),
+      MaterialPageRoute(builder: (context) => const HomePage()),
     );
   }
 
@@ -134,10 +134,10 @@ class LocationPermission extends StatelessWidget {
       ),
       spaceBetween: 12,
       subtitle: 'Enable location permission',
-      subtitleStyle: TextStyle(
+      subtitleStyle: const TextStyle(
         fontSize: 16,
         fontWeight: FontWeight.w400,
-        color: SalatColor.primaryColorDarkSubtitle,
+        color: SalatColor.primaryColorDark300,
         fontFamily: AppTextStyles.inter,
       ),
 
@@ -153,7 +153,7 @@ class LocationPermission extends StatelessWidget {
       secondSubtitleStyle: const TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.w400,
-        color: SalatColor.primaryColorDarkSubtitle,
+        color: SalatColor.primaryColorDark300,
         fontFamily: AppTextStyles.inter,
         height: 1.5,
       ),
