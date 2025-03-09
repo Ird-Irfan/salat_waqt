@@ -1,20 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:salat_waqt/presentation/common/widgets/svg_icons.dart';
+import 'package:salat_waqt/presentation/home/ui/appber/custom_switch.dart';
 
 class IconTextRow extends StatelessWidget {
   final String title;
   final String subtitle;
-  final IconData icon;
-  final bool switchValue;
-  final Function(bool) onSwitchChanged;
+  final String svgIconPath;
+  final bool? switchValue;
+  final Function(bool)? onSwitchChanged;
+  final bool hasSwitch;
 
   const IconTextRow({
     super.key,
-    this.title = "User Name",
-    this.subtitle = "user@example.com",
-    this.icon = Icons.account_circle,
-    required this.switchValue,
-    required this.onSwitchChanged,
-  });
+    required this.title,
+    required this.subtitle,
+    required this.svgIconPath,
+    this.hasSwitch = true,
+    this.switchValue,
+    this.onSwitchChanged,
+  }) : assert(
+          hasSwitch == false || (switchValue != null && onSwitchChanged != null),
+          'If hasSwitch is true, switchValue and onSwitchChanged must not be null',
+        );
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +35,7 @@ class IconTextRow extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min, // Content er size onujayi adjust hobe
         children: [
-          Icon(icon, size: 40, color: Colors.blue),
+          SvgIcon(svgPath: svgIconPath),
           SizedBox(width: 10), // Space between icon and text
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,14 +53,11 @@ class IconTextRow extends StatelessWidget {
             ],
           ),
           Spacer(), // Row er baki space niye nibe
-          Switch(
-            value: switchValue,
-            onChanged: onSwitchChanged,
-            activeColor: Colors.black, // When switch is ON, thumb color
-            activeTrackColor: Colors.white, // When switch is ON, track color
-            inactiveThumbColor: Colors.white, // When switch is OFF, thumb color  
-            inactiveTrackColor: Colors.black, // When switch is OFF, track color
-          ),
+          if (hasSwitch)
+            CustomSwitch(
+              switchValue: switchValue!,
+              onSwitchChanged: onSwitchChanged!,
+            ),
         ],
       ),
     );

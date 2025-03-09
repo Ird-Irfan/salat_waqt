@@ -34,10 +34,10 @@ class SettingsUiState extends BaseUiState {
     isLoading,
     userMessage,
     notificationEnabled,
-    darkModeEnabled,
-    autoUpdateEnabled,
-    doNotDisturbEnabled,
-  ];
+      darkModeEnabled,
+        autoUpdateEnabled,
+        doNotDisturbEnabled,
+      ];
 
   SettingsUiState copyWith({
     bool? isLoading,
@@ -46,6 +46,8 @@ class SettingsUiState extends BaseUiState {
     bool? darkModeEnabled,
     bool? autoUpdateEnabled,
     bool? doNotDisturbEnabled,
+    bool? use24HourFormatEnabled,
+    bool? selectedJuristic,
   }) {
     return SettingsUiState(
       isLoading: isLoading ?? this.isLoading,

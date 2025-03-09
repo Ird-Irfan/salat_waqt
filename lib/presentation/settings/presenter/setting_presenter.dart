@@ -17,6 +17,21 @@ class SettingsPresenter extends BasePresenter<SettingsUiState> {
       doNotDisturbEnabled: !currentState.doNotDisturbEnabled,
     );
   }
+
+  // void toggleUse24HourFormat() {
+  //   final currentState = currentUiState;
+  //   uiState.value = currentState.copyWith(
+  //     use24HourFormatEnabled: !currentState.use24HourFormatEnabled,
+  //   );
+  // }
+
+  // void toggleSelectedJuristic() {
+  //   final currentState = currentUiState;
+  //   uiState.value = currentState.copyWith(
+  //     selectedJuristic: !currentState.selectedJuristic,
+  //   );
+  // }
+  
   
   
   @override
