@@ -3,6 +3,7 @@ import 'package:salat_waqt/core/base/base_presenter.dart';
 import 'package:salat_waqt/core/services/date_service.dart';
 import 'package:salat_waqt/core/services/location_service.dart';
 import 'package:salat_waqt/core/services/logger_service.dart';
+import 'package:salat_waqt/core/services/notification_service_impl.dart';
 import 'package:salat_waqt/core/services/prayer_time_service.dart';
 import 'package:salat_waqt/core/services/preferences_service.dart';
 import 'package:salat_waqt/core/services/timer_service.dart';
@@ -12,6 +13,7 @@ import 'package:salat_waqt/data/repositories/location_repository_impl.dart';
 import 'package:salat_waqt/data/repositories/prayer_time_repository_impl.dart';
 import 'package:salat_waqt/domain/repositories/location_repository.dart';
 import 'package:salat_waqt/domain/repositories/prayer_time_repository.dart';
+import 'package:salat_waqt/domain/service/notification_service.dart';
 import 'package:salat_waqt/domain/usecases/get_address_from_coordinates_usecase.dart';
 import 'package:salat_waqt/domain/usecases/get_coordinates_from_address_usecase.dart';
 import 'package:salat_waqt/domain/usecases/get_current_location_usecase.dart';
@@ -48,6 +50,15 @@ class ServiceLocator {
     _serviceLocator.registerSingleton<TimerService>(TimerService());
     _serviceLocator.registerSingleton<LoggerService>(LoggerService());
     _serviceLocator.registerSingleton<DateService>(DateService());
+
+    // Initialize notification service
+    final notificationServiceImpl = NotificationServiceImpl(
+      logger: LoggerService(),
+    );
+    await notificationServiceImpl.initialize();
+    _serviceLocator.registerSingleton<NotificationService>(
+      notificationServiceImpl,
+    );
   }
 
   // Register data sources first (no dependencies)
@@ -124,6 +135,7 @@ class ServiceLocator {
         prayerTimeService: locator(),
         timerService: locator(),
         logger: locator(),
+        notificationService: locator(),
       ),
     );
     _serviceLocator.registerLazySingleton<ForbiddenTimePresenter>(
