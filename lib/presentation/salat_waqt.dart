@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:salat_waqt/core/config/salat_waqt_screen.dart';
 import 'package:salat_waqt/core/config/themes.dart';
+import 'package:salat_waqt/core/constant/app_contant.dart';
 import 'package:salat_waqt/core/constant/app_text_styles.dart';
 import 'package:salat_waqt/presentation/home/ui/home_page.dart';
 
@@ -25,18 +26,30 @@ class _SalatWaqtState extends State<SalatWaqt> {
     return ResponsiveSizer(
       builder: (context, orientation, deviceType) {
         return GetMaterialApp(
-          // theme: ThemeData(
-          //   scaffoldBackgroundColor: SalatColor.primaryColorDark900,
-          //   brightness: Brightness.dark,
-          // ),
           navigatorKey: SalatWaqt.navigatorKey,
           builder: (context, child) {
             return Overlay(
               initialEntries: [
                 OverlayEntry(
                   builder: (context) {
-                    SalatWaqtScreen.setUp(context); // Initialize screen sizes
-                    return child!;
+                    SalatWaqtScreen.setUp(context);
+                    // Wrap the entire app with the background
+                    return Theme(
+                      data: Theme.of(context),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage(
+                              Get.isDarkMode 
+                                ? AppConstant.appBgPngDark 
+                                : AppConstant.appBgPngLight
+                            ),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        child: child!,
+                      ),
+                    );
                   },
                 ),
               ],
@@ -50,10 +63,47 @@ class _SalatWaqtState extends State<SalatWaqt> {
           darkTheme: SalatTheme.getTheme('Dark', AppTextStyles.inter, 14),
           themeMode: ThemeMode.dark,
           home: const HomePage(),
-          // home: const FlashScreen(),
-          // home: const SettingsPage(),
         );
       },
     );
   }
 }
+
+// class _SalatWaqtState extends State<SalatWaqt> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return ResponsiveSizer(
+//       builder: (context, orientation, deviceType) {
+//         return GetMaterialApp(
+//           // theme: ThemeData(
+//           //   scaffoldBackgroundColor: SalatColor.primaryColorDark900,
+//           //   brightness: Brightness.dark,
+//           // ),
+//           navigatorKey: SalatWaqt.navigatorKey,
+//           builder: (context, child) {
+//             return Overlay(
+//               initialEntries: [
+//                 OverlayEntry(
+//                   builder: (context) {
+//                     SalatWaqtScreen.setUp(context); // Initialize screen sizes
+//                     return child!;
+//                   },
+//                 ),
+//               ],
+//             );
+//           },
+//           onInit: () => SalatWaqtScreen.setUp(context),
+//           onReady: () => SalatWaqtScreen.setUp(context),
+//           debugShowCheckedModeBanner: false,
+//           title: 'Salat Waqt',
+//           theme: SalatTheme.getTheme('Light', AppTextStyles.inter, 14),
+//           darkTheme: SalatTheme.getTheme('Dark', AppTextStyles.inter, 14),
+//           themeMode: ThemeMode.dark,
+//           home: const HomePage(),
+//           // home: const FlashScreen(),
+//           // home: const SettingsPage(),
+//         );
+//       },
+//     );
+//   }
+// }

@@ -1,7 +1,7 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:salat_waqt/core/base/base_presenter.dart';
-import 'package:salat_waqt/core/constant/app_contant.dart';
 import 'package:salat_waqt/core/di/service_locator.dart';
 import 'package:salat_waqt/core/external_libs/presentable_widget_builder.dart';
 import 'package:salat_waqt/presentation/home/presenter/home_presenter.dart';
@@ -36,63 +36,91 @@ class HomePage extends StatelessWidget {
       child: Scaffold(
         extendBodyBehindAppBar: true,
         backgroundColor: Colors.transparent,
-        appBar: AppBarSection(
-          location: presenter.currentUiState.currentAddress ?? '',
-        ),
         body: PresentableWidgetBuilder(
           presenter: presenter,
           builder: () {
-            return Container(
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(AppConstant.appBg),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              child: SafeArea(
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        // Date Display
-                        DateDisplay(
-                          englishDate:
-                              presenter.currentUiState.englishDate ?? '',
-                          arabicDate: presenter.currentUiState.arabicDate ?? '',
+            return CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  pinned: true,
+                  flexibleSpace: ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(15),
+                      bottomRight: Radius.circular(15),
+                    ),
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment(0.00, -1.00),
+                          end: Alignment(0, 1),
+                          colors: [Colors.black, Color(0x00666666)],
                         ),
-                        const SizedBox(height: 20),
-                        // Iftar Time Counter
-                        const IftarTimeCounter(),
-                        const SizedBox(height: 20),
-                        // Sahri & Iftar Times
-                        SahriIftarTimesSection(
-                          sahriTime:
-                              presenter.currentUiState.prayerTimes?['Sehri'] ??
-                              '',
-                          iftarTime:
-                              presenter.currentUiState.prayerTimes?['Iftar'] ??
-                              '',
+                      ),
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                        child: Container(
+                          color: Colors.black.withOpacity(0.1),
+                          child: AppBarSection(
+                            location: presenter.currentUiState.currentAddress ?? '',
+                          ),
                         ),
-                        const SizedBox(height: 16),
-                        // Current Prayer Time
-                        CurrentPrayerTime(theme: theme),
-                        const SizedBox(height: 20),
-                        // Sadaqa App Banner
-                        SadaqaAppBanner(presenter: presenter),
-                        const SizedBox(height: 20),
-                        // Forbidden Times Section
-                        ForbiddenTime(theme: theme),
-                        const SizedBox(height: 20),
-                        // About Us Footer
-                        AboutUsFooter(presenter: presenter),
-                        const SizedBox(height: 20),
-                      ],
+                      ),
                     ),
                   ),
                 ),
-              ),
+                SliverToBoxAdapter(
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      // image: DecorationImage(
+                      //   image: AssetImage(AppConstant.appBgPngDark),
+                      //   fit: BoxFit.cover,
+                      // ),
+                    ),
+                    child: SafeArea(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            // Date Display
+                            DateDisplay(
+                              englishDate:
+                                  presenter.currentUiState.englishDate ?? '',
+                              arabicDate: presenter.currentUiState.arabicDate ?? '',
+                            ),
+                            const SizedBox(height: 20),
+                            // Iftar Time Counter
+                            const IftarTimeCounter(),
+                            const SizedBox(height: 20),
+                            // Sahri & Iftar Times
+                            SahriIftarTimesSection(
+                              sahriTime:
+                                  presenter.currentUiState.prayerTimes?['Sehri'] ??
+                                  '',
+                              iftarTime:
+                                  presenter.currentUiState.prayerTimes?['Iftar'] ??
+                                  '',
+                            ),
+                            const SizedBox(height: 16),
+                            // Current Prayer Time
+                            CurrentPrayerTime(theme: theme),
+                            const SizedBox(height: 20),
+                            // Sadaqa App Banner
+                            SadaqaAppBanner(presenter: presenter),
+                            const SizedBox(height: 20),
+                            // Forbidden Times Section
+                            ForbiddenTime(theme: theme),
+                            const SizedBox(height: 20),
+                            // About Us Footer
+                            AboutUsFooter(presenter: presenter),
+                            const SizedBox(height: 20),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             );
           },
         ),

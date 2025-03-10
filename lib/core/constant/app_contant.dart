@@ -37,7 +37,8 @@ class AppConstant {
   static const String icLayer = 'assets/svgs/ic_layer.svg'; 
   static const String icReview = 'assets/svgs/ic_review.svg';
 
-  static const String appBg = 'assets/images/bg_screen.png';
+  static const String appBgPngDark = 'assets/images/appBgPngDark.png';
+  static const String appBgPngLight = 'assets/images/appBgPngLight.png';
   static const String bgflashScreen = 'assets/images/bg_flash_screen.png';
   static const String flashScreenlogo = 'assets/images/flash_screen_logo.png';
   static const String locationicon = 'assets/images/location_icon.png';

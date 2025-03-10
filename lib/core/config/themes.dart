@@ -293,12 +293,13 @@ class SalatTheme {
       thumbColor: WidgetStateProperty.all(SalatColor.primaryColorLight600),
     ),
     appBarTheme: const AppBarTheme(
-      shadowColor: Colors.white,
-      backgroundColor: Color(0xff68F2B7),
-      foregroundColor: Color(0xff477848),
-      iconTheme: IconThemeData(color: Colors.black87),
-      elevation: 0,
-      scrolledUnderElevation: 0,
+      backgroundColor: Colors.transparent,
+      // shadowColor: Colors.white,
+      // backgroundColor: Color(0xff68F2B7),
+      // foregroundColor: Color(0xff477848),
+      // iconTheme: IconThemeData(color: Colors.black87),
+      // elevation: 0,
+      // scrolledUnderElevation: 0,
     ),
     textTheme: SalatTextTheme.baseTextTheme.apply(
       bodyColor: Colors.black87,
@@ -446,6 +447,7 @@ class SalatTheme {
       thumbColor: WidgetStateProperty.all(Colors.white),
     ),
     appBarTheme: const AppBarTheme(
+      backgroundColor: Colors.transparent,
       // shadowColor: Colors.black,
       //backgroundColor: Color(0xff235FA6),
       // foregroundColor: Color(0xff477848),
@@ -479,24 +481,19 @@ class SalatTheme {
     ),
   );
 }
-
 Future<SystemUiOverlayStyle?> getSystemUiOverlayStyle({
   bool? isDark,
   BuildContext? context,
 }) async {
   final LoggerService logger = LoggerService();
   try {
-    final ThemeData theme = Theme.of(context ?? SalatWaqt.globalContext);
-    final Color statusBarColor =
-        isDark == null
-            ? theme.primaryColor
-            : (isDark ? const Color(0x00ffffff) : const Color(0xffffffff));
-
+    Theme.of(context ?? SalatWaqt.globalContext);
+    
     return SystemUiOverlayStyle(
-      statusBarColor: statusBarColor,
+      statusBarColor: Colors.transparent, // Always transparent
       statusBarIconBrightness:
           isDark != null && isDark ? Brightness.light : Brightness.dark,
-      systemNavigationBarColor: statusBarColor,
+      systemNavigationBarColor: Colors.transparent, // Make navigation bar transparent too
       systemNavigationBarIconBrightness:
           isDark != null && isDark ? Brightness.light : Brightness.dark,
     );

@@ -26,41 +26,7 @@ class SettingsPage extends StatelessWidget {
         builder: () {
           return CustomScrollView(
             slivers: [
-              SliverAppBar(
-                pinned: true,
-                leading: IconButton(
-                  icon: const Icon(Icons.arrow_back),
-                  onPressed: () => Navigator.pop(context),
-                ),
-                title: Text(
-                  'Preferences',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontSize: 16.px,
-                    fontFamily: AppTextStyles.inter,
-                    fontWeight: FontWeight.w500,
-                    color: context.color.cardTitleColor,
-                  ),
-                ),
-                flexibleSpace: ClipRRect(
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(15.px),
-                    bottomRight: Radius.circular(15.px),
-                  ),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: const Alignment(0.00, -1.00),
-                        end: const Alignment(0, 1),
-                        colors: [Colors.black, const Color(0x00666666)],
-                      ),
-                    ),
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                      child: Container(color: Colors.black.withOpacity(0.1)),
-                    ),
-                  ),
-                ),
-              ),
+              CustomAppBar(theme: theme),
               SliverPadding(
                 padding: EdgeInsets.all(16.px),
                 sliver: SliverList(
@@ -222,6 +188,54 @@ class SettingsPage extends StatelessWidget {
             ],
           );
         },
+      ),
+    );
+  }
+}
+
+class CustomAppBar extends StatelessWidget {
+  const CustomAppBar({
+    super.key,
+    required this.theme,
+  });
+
+  final ThemeData theme;
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverAppBar(
+      pinned: true,
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () => Navigator.pop(context),
+      ),
+      title: Text(
+        'Preferences',
+        style: theme.textTheme.titleMedium?.copyWith(
+          fontSize: 16.px,
+          fontFamily: AppTextStyles.inter,
+          fontWeight: FontWeight.w500,
+          color: context.color.cardTitleColor,
+        ),
+      ),
+      flexibleSpace: ClipRRect(
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(15.px),
+          bottomRight: Radius.circular(15.px),
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: const Alignment(0.00, -1.00),
+              end: const Alignment(0, 1),
+              colors: [Colors.black, const Color(0x00666666)],
+            ),
+          ),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+            child: Container(color: Colors.black.withOpacity(0.1)),
+          ),
+        ),
       ),
     );
   }
