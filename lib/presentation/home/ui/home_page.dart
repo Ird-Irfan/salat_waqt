@@ -57,11 +57,7 @@ class HomePage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         // Date Display
-                        DateDisplay(
-                          englishDate:
-                              presenter.currentUiState.englishDate ?? '',
-                          arabicDate: presenter.currentUiState.arabicDate ?? '',
-                        ),
+                        DateDisplay(presenter: presenter),
                         const SizedBox(height: 20),
                         // Iftar Time Counter
                         const IftarTimeCounter(),

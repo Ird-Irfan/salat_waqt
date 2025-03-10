@@ -485,4 +485,18 @@ class HomePresenter extends BasePresenter<HomeUiState> {
       throw Exception('Could not launch $url');
     }
   }
+
+  Future<void> previousDate() async {
+    final currentDate = _dateService.getEnglishDate();
+    final previousDate = _dateService.getPreviousDate(currentDate);
+    _dateService.setEnglishDate(previousDate);
+    _updateDates();
+  }
+
+  Future<void> nextDate() async {
+    final currentDate = _dateService.getEnglishDate();
+    final nextDate = _dateService.getNextDate(currentDate);
+    _dateService.setEnglishDate(nextDate);
+    _updateDates();
+  }
 }
