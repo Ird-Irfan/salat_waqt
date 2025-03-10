@@ -82,7 +82,6 @@ class CurrentPrayerTime extends StatelessWidget {
                               fontFamily: AppTextStyles.inter,
                             ),
                           ),
-                          SizedBox(height: 4.px),
                         ],
                       ),
                       AnimatedRotation(

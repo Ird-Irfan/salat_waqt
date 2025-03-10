@@ -6,6 +6,7 @@ import 'package:salat_waqt/core/constant/app_contant.dart';
 import 'package:salat_waqt/core/constant/app_text_styles.dart';
 import 'package:salat_waqt/presentation/common/widgets/svg_icons.dart';
 import 'package:salat_waqt/presentation/home/ui/appber/bg_blur.dart';
+import 'package:salat_waqt/presentation/settings/ui/settings_page.dart';
 
 class AppBarSection extends StatelessWidget implements PreferredSizeWidget {
   final String location;
@@ -61,6 +62,35 @@ class AppBarSection extends StatelessWidget implements PreferredSizeWidget {
             svgPath: AppConstant.icCategory,
             width: 24.px,
             height: 24.px,
+            onTap: () {
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder:
+                      (context, animation, secondaryAnimation) =>
+                          const SettingsPage(),
+                  transitionsBuilder: (
+                    context,
+                    animation,
+                    secondaryAnimation,
+                    child,
+                  ) {
+                    const begin = Offset(1.0, 0.0);
+                    const end = Offset.zero;
+                    const curve = Curves.easeInOut;
+                    var tween = Tween(
+                      begin: begin,
+                      end: end,
+                    ).chain(CurveTween(curve: curve));
+                    var offsetAnimation = animation.drive(tween);
+                    return SlideTransition(
+                      position: offsetAnimation,
+                      child: child,
+                    );
+                  },
+                ),
+              );
+            },
           ),
         ),
       ],

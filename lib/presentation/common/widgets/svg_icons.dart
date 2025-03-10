@@ -7,6 +7,7 @@ class SvgIcon extends StatelessWidget {
   final double? height;
   final double? width;
   final Color? color;
+  final VoidCallback? onTap;
 
   const SvgIcon({
     super.key,
@@ -14,17 +15,28 @@ class SvgIcon extends StatelessWidget {
     this.height = 40,
     this.width = 40,
     this.color,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SvgPicture.asset(
-      svgPath,
-      height: height?.px,
-      width: width?.px,
-      colorFilter: color != null
-          ? ColorFilter.mode(color!, BlendMode.srcIn)
-          : null,
-    );
+    return onTap != null
+        ? GestureDetector(
+          onTap: onTap,
+          child: SvgPicture.asset(
+            svgPath,
+            height: height?.px,
+            width: width?.px,
+            colorFilter:
+                color != null
+                    ? ColorFilter.mode(color!, BlendMode.srcIn)
+                    : null,
+          ),
+        )
+        : SvgPicture.asset(
+          svgPath,
+          colorFilter:
+              color != null ? ColorFilter.mode(color!, BlendMode.srcIn) : null,
+        );
   }
 }
