@@ -245,6 +245,7 @@ class CurrentPrayerTimePresenter
       if (prayerTimeString == null) return;
 
       DateTime? prayerTime = _prayerTimeService.parseTime(prayerTimeString);
+      _logger.i('prayerTime: $prayerTime');
       if (prayerTime == null) return;
 
       // If the prayer time has already passed today, schedule for tomorrow
@@ -260,8 +261,7 @@ class CurrentPrayerTimePresenter
       // Toggle notification
       final isEnabled = await _notificationService.togglePrayerTimeNotification(
         prayerName: prayerName,
-        //prayerTime: prayerTime,
-        prayerTime: DateTime.now(),
+        prayerTime: prayerTime,
         title: title,
         body: body,
       );

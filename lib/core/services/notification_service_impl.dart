@@ -209,6 +209,9 @@ class NotificationServiceImpl implements NotificationService {
     final prefs = await SharedPreferences.getInstance();
     _logger.i('key: $key');
     _logger.i('prefs: ${prefs.getBool(key)}');
+    await prefs.reload();
+    _logger.i('key: $key');
+    _logger.i('prefs: ${prefs.getBool(key)}');
     return prefs.getBool(key) ?? false;
   }
 }
