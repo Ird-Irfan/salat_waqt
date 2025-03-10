@@ -19,14 +19,14 @@ class SalatTheme {
     double fontSize,
   ) {
     switch (themeName) {
-      case 'Light':
-        return lightTheme(fontFamily);
+      // case 'Light':
+      //   return lightTheme(fontFamily);
       case 'Dark':
         return darkTheme(fontFamily);
       case 'Green':
         return greenTheme(fontFamily);
       default:
-        return lightTheme(fontFamily);
+        return greenTheme(fontFamily);
     }
   }
 
@@ -50,128 +50,127 @@ class SalatTheme {
     dividerTheme: const DividerThemeData(thickness: 1),
   );
 
-  static ThemeData lightTheme(String fontFamily) => _baseTheme.copyWith(
-    brightness: Brightness.light,
-    extensions: [
-      SalatCustomTheme(
-        primaryColor100: SalatColor.primaryColorLight100,
-        primaryColor200: SalatColor.primaryColorLight200,
-        primaryColor300: SalatColor.primaryColorLight300,
-        primaryColor400: SalatColor.primaryColorLight400,
-        primaryColor500: SalatColor.primaryColorLight500,
-        primaryColor600: SalatColor.primaryColorLight600,
-        primaryColor700: SalatColor.primaryColorLight700,
-        primaryColor750: SalatColor.primaryColorLight700,
-        primaryColor800: SalatColor.primaryColorLight800,
-        primaryColor900: SalatColor.primaryColorLight900,
-        primaryColorDarkSubtitle: SalatColor.primaryColorDarkSubtitle,
-      ),
-      SalatCustomTextTheme(
-        labelExtraSmall: TextStyle(
-          fontSize: AppTextStyles.smallSize,
-          color: Colors.black87,
-          fontFamily: AppTextStyles.inter,
-        ),
-        title: TextStyle(
-          fontSize: AppTextStyles.titleSize,
-          fontWeight: FontWeight.w400,
-          color: Colors.black87,
-        ),
-        arabicText: TextStyle(
-          fontFamily: 'Amiri',
-          fontSize: AppTextStyles.largeSize,
-          fontWeight: FontWeight.w400,
-          height: 2,
-          color: Colors.black87,
-        ),
-        buttonText: TextStyle(
-          fontSize: AppTextStyles.mediumSize,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
-          fontFamily: fontFamily,
-        ),
-        cardText: TextStyle(
-          fontSize: AppTextStyles.mediumSize,
-          color: Colors.black87,
-          fontFamily: fontFamily,
-        ),
-      ),
-    ],
-    checkboxTheme: CheckboxThemeData(
-      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      fillColor: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.selected)) {
-          return SalatColor.primaryColorLight500;
-        }
-        return Colors.transparent;
-      }),
-      side: BorderSide(
-        color: SalatColor.primaryColorLight500.withOpacityInt(40),
-        width: 1.5,
-      ),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-    ),
-    radioTheme: RadioThemeData(
-      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      fillColor: WidgetStateProperty.resolveWith<Color>((states) {
-        if (states.contains(WidgetState.selected)) {
-          return SalatColor.primaryColorLight500;
-        }
-        return SalatColor.primaryColorLight500.withOpacityInt(38);
-      }),
-    ),
-    dialogTheme: const DialogTheme(backgroundColor: Colors.white),
-    inputDecorationTheme: const InputDecorationTheme(
-      focusColor: Color(0xff55C595),
-      labelStyle: TextStyle(color: Color(0xff17B686)),
-      fillColor: Color(0xFFEEEEEE),
-    ),
-    dividerTheme: DividerThemeData(
-      color: SalatColor.primaryColorLight500.withOpacityInt(90),
-    ),
-    textSelectionTheme: TextSelectionThemeData(
-      cursorColor: SalatColor.primaryColorLight500,
-      selectionColor: SalatColor.primaryColorLight500.withOpacityInt(20),
-      selectionHandleColor: SalatColor.primaryColorLight500,
-    ),
-    primaryColorLight: Colors.black,
-    buttonTheme: const ButtonThemeData(buttonColor: Colors.black87),
-    cardColor: Colors.white,
-    iconTheme: const IconThemeData(color: Colors.black87),
-    primaryColor: SalatColor.primaryColorLight500,
-    scaffoldBackgroundColor: Colors.white,
-    scrollbarTheme: ScrollbarThemeData(
-      thumbColor: WidgetStateProperty.all(SalatColor.primaryColorLight500),
-    ),
-    appBarTheme: const AppBarTheme(
-      shadowColor: Colors.white,
-      backgroundColor: Color(0xff5ED9A4),
-      foregroundColor: Color(0xff477848),
-      iconTheme: IconThemeData(color: Colors.black87),
-      elevation: 0,
-      scrolledUnderElevation: 0,
-    ),
-    textTheme: SalatTextTheme.baseTextTheme.apply(
-      bodyColor: Colors.black87,
-      displayColor: Colors.black87,
-      fontFamily: fontFamily,
-    ),
-    colorScheme: const ColorScheme(
-      brightness: Brightness.light,
-      primary: Color(0xff55C595),
-      secondary: Color(0xff5ED9A4),
-      surface: Color(0xff55C595),
-      error: Color(0xFFED3535),
-      onPrimary: Color(0xFFFFFFFF),
-      onSecondary: Color(0xFF000000),
-      onSurface: Color(0xFF000000),
-      onError: Color(0xFFFFFFFF),
-      errorContainer: Color(0xFFFFE7DF),
-      scrim: Color(0xFFEEEEEE),
-      inverseSurface: Colors.white,
-      inversePrimary: Colors.black87,
-    ),
-  );
+  // static ThemeData lightTheme(String fontFamily) => _baseTheme.copyWith(
+  //   brightness: Brightness.light,
+  //   extensions: [
+  //     SalatCustomTheme(
+  //       primaryColor100: SalatColor.primaryColorLight100,
+  //       primaryColor200: SalatColor.primaryColorLight200,
+  //       primaryColor300: SalatColor.primaryColorLight300,
+  //       primaryColor400: SalatColor.primaryColorLight400,
+  //       primaryColor500: SalatColor.primaryColorLight500,
+  //       primaryColor600: SalatColor.primaryColorLight600,
+  //       primaryColor700: SalatColor.primaryColorLight700,
+  //       primaryColor750: SalatColor.primaryColorLight700,
+  //       primaryColor800: SalatColor.primaryColorLight800,
+  //       primaryColor900: SalatColor.primaryColorLight900,
+  //     ),
+  //     SalatCustomTextTheme(
+  //       labelExtraSmall: TextStyle(
+  //         fontSize: AppTextStyles.smallSize,
+  //         color: Colors.black87,
+  //         fontFamily: AppTextStyles.inter,
+  //       ),
+  //       title: TextStyle(
+  //         fontSize: AppTextStyles.titleSize,
+  //         fontWeight: FontWeight.w400,
+  //         color: Colors.black87,
+  //       ),
+  //       arabicText: TextStyle(
+  //         fontFamily: 'Amiri',
+  //         fontSize: AppTextStyles.largeSize,
+  //         fontWeight: FontWeight.w400,
+  //         height: 2,
+  //         color: Colors.black87,
+  //       ),
+  //       buttonText: TextStyle(
+  //         fontSize: AppTextStyles.mediumSize,
+  //         fontWeight: FontWeight.bold,
+  //         color: Colors.white,
+  //         fontFamily: fontFamily,
+  //       ),
+  //       cardText: TextStyle(
+  //         fontSize: AppTextStyles.mediumSize,
+  //         color: Colors.black87,
+  //         fontFamily: fontFamily,
+  //       ),
+  //     ),
+  //   ],
+  //   checkboxTheme: CheckboxThemeData(
+  //     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+  //     fillColor: WidgetStateProperty.resolveWith((states) {
+  //       if (states.contains(WidgetState.selected)) {
+  //         return SalatColor.primaryColorLight500;
+  //       }
+  //       return Colors.transparent;
+  //     }),
+  //     side: BorderSide(
+  //       color: SalatColor.primaryColorLight500.withOpacityInt(40),
+  //       width: 1.5,
+  //     ),
+  //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+  //   ),
+  //   radioTheme: RadioThemeData(
+  //     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+  //     fillColor: WidgetStateProperty.resolveWith<Color>((states) {
+  //       if (states.contains(WidgetState.selected)) {
+  //         return SalatColor.primaryColorLight500;
+  //       }
+  //       return SalatColor.primaryColorLight500.withOpacityInt(38);
+  //     }),
+  //   ),
+  //   dialogTheme: const DialogTheme(backgroundColor: Colors.white),
+  //   inputDecorationTheme: const InputDecorationTheme(
+  //     focusColor: Color(0xff55C595),
+  //     labelStyle: TextStyle(color: Color(0xff17B686)),
+  //     fillColor: Color(0xFFEEEEEE),
+  //   ),
+  //   dividerTheme: DividerThemeData(
+  //     color: SalatColor.primaryColorLight500.withOpacityInt(90),
+  //   ),
+  //   textSelectionTheme: TextSelectionThemeData(
+  //     cursorColor: SalatColor.primaryColorLight500,
+  //     selectionColor: SalatColor.primaryColorLight500.withOpacityInt(20),
+  //     selectionHandleColor: SalatColor.primaryColorLight500,
+  //   ),
+  //   primaryColorLight: Colors.black,
+  //   buttonTheme: const ButtonThemeData(buttonColor: Colors.black87),
+  //   cardColor: Colors.white,
+  //   iconTheme: const IconThemeData(color: Colors.black87),
+  //   primaryColor: SalatColor.primaryColorLight500,
+  //   scaffoldBackgroundColor: Colors.white,
+  //   scrollbarTheme: ScrollbarThemeData(
+  //     thumbColor: WidgetStateProperty.all(SalatColor.primaryColorLight500),
+  //   ),
+  //   appBarTheme: const AppBarTheme(
+  //     shadowColor: Colors.white,
+  //     backgroundColor: Color(0xff5ED9A4),
+  //     foregroundColor: Color(0xff477848),
+  //     iconTheme: IconThemeData(color: Colors.black87),
+  //     elevation: 0,
+  //     scrolledUnderElevation: 0,
+  //   ),
+  //   textTheme: SalatTextTheme.baseTextTheme.apply(
+  //     bodyColor: Colors.black87,
+  //     displayColor: Colors.black87,
+  //     fontFamily: fontFamily,
+  //   ),
+  //   colorScheme: const ColorScheme(
+  //     brightness: Brightness.light,
+  //     primary: Color(0xff55C595),
+  //     secondary: Color(0xff5ED9A4),
+  //     surface: Color(0xff55C595),
+  //     error: Color(0xFFED3535),
+  //     onPrimary: Color(0xFFFFFFFF),
+  //     onSecondary: Color(0xFF000000),
+  //     onSurface: Color(0xFF000000),
+  //     onError: Color(0xFFFFFFFF),
+  //     errorContainer: Color(0xFFFFE7DF),
+  //     scrim: Color(0xFFEEEEEE),
+  //     inverseSurface: Colors.white,
+  //     inversePrimary: Colors.black87,
+  //   ),
+  // );
 
   static ThemeData greenTheme(String fontFamily) => _baseTheme.copyWith(
     brightness: Brightness.light,
@@ -187,7 +186,30 @@ class SalatTheme {
         primaryColor750: SalatColor.primaryColorLight700,
         primaryColor800: SalatColor.primaryColorLight800,
         primaryColor900: SalatColor.primaryColorLight900,
-        primaryColorDarkSubtitle: SalatColor.primaryColorDarkSubtitle,
+
+        bgSurfaceColor: SalatColor.bgSurfaceColorLight,
+        cardTitleColor: SalatColor.cardTitleColorLight,
+        sunIconColor: SalatColor.sunIconColorLight,
+        fajrIconColor: SalatColor.fajrIconCloudColorLight,
+        inputBoxColor: SalatColor.inputBoxColorLight,
+        asrIconCloudColor: SalatColor.asrIconCloudColorLight,
+        magribIconCloudColor: SalatColor.magribIconCloudColorLight,
+        switchGlowColor: SalatColor.switchGlowColorLight,
+        primaryBtnTextColor: SalatColor.primaryBTNTextColorLight,
+        appBarBgColor: SalatColor.appbarBGColorLight,
+        cardSubtitleColor: SalatColor.cardSubtitleColorLight,
+        collapseBtnColor: SalatColor.collapseBTNColorLight,
+        cardSiblingBottomBorderColor: SalatColor.cardSiblingBottomBorderColorLight,
+        forbiddenInfoIconColor: SalatColor.forbiddenInfoIconColorLight,
+        notificationActiveIconColor: SalatColor.notificationActiveIconColorLight,
+        notificationInactiveIconColor: SalatColor.notificationInactiveIconColorLight,
+        trackerDonuntRingColor: SalatColor.trackerDonutRingColorLight,
+        meshCircleColor: SalatColor.meshCircleColorLight,
+        onBProgressPrimaryColor: SalatColor.onBProgressPrimaryColorLight,
+        onBProgressSecondaryColor: SalatColor.onBProgressSecondaryColorLight,
+        onBIconSecondaryColor: SalatColor.onBIconSecondaryColorLight,
+        iftaarSunColor: SalatColor.iftaarSunColorLight,
+
       ),
       SalatCustomTextTheme(
         labelExtraSmall: TextStyle(
@@ -310,7 +332,30 @@ class SalatTheme {
         primaryColor750: SalatColor.primaryColorDark750,
         primaryColor800: SalatColor.primaryColorDark800,
         primaryColor900: SalatColor.primaryColorDark900,
-        primaryColorDarkSubtitle: SalatColor.primaryColorDarkSubtitle,
+
+        bgSurfaceColor: SalatColor.bgSurfaceColorDark,
+        cardTitleColor: SalatColor.cardTitleColorDark,
+        sunIconColor: SalatColor.sunIconColorDark,
+        fajrIconColor: SalatColor.fajrIconCloudColorDark,
+        inputBoxColor: SalatColor.inputBoxColorDark,
+        asrIconCloudColor: SalatColor.asrIconCloudColorDark,
+        magribIconCloudColor: SalatColor.magribIconCloudColorDark,
+        switchGlowColor: SalatColor.switchGlowColorDark,
+        primaryBtnTextColor: SalatColor.primaryBTNTextColorDark,
+        appBarBgColor: SalatColor.appbarBGColorDark,
+        cardSubtitleColor: SalatColor.cardSubtitleColorDark,
+        collapseBtnColor: SalatColor.collapseBTNColorDark,
+        cardSiblingBottomBorderColor: SalatColor.cardSiblingBottomBorderColorDark,
+        forbiddenInfoIconColor: SalatColor.forbiddenInfoIconColorDark,
+        notificationActiveIconColor: SalatColor.notificationActiveIconColorDark,
+        notificationInactiveIconColor: SalatColor.notificationInactiveIconColorDark,
+        trackerDonuntRingColor: SalatColor.trackerDonutRingColorDark,
+        meshCircleColor: SalatColor.meshCircleColorDark,
+        onBProgressPrimaryColor: SalatColor.onBProgressPrimaryColorDark,
+        onBProgressSecondaryColor: SalatColor.onBProgressSecondaryColorDark,
+        onBIconSecondaryColor: SalatColor.onBIconSecondaryColorDark,
+        iftaarSunColor: SalatColor.iftaarSunColorDark,
+
       ),
       // SalatCustomTheme.darkTheme,
       SalatCustomTextTheme(
