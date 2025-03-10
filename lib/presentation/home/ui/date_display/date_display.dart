@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:salat_waqt/core/utility/utility.dart';
+import 'package:salat_waqt/presentation/home/presenter/home_presenter.dart';
 
 class DateDisplay extends StatelessWidget {
-  final String englishDate;
-  final String arabicDate;
-  const DateDisplay({
-    super.key,
-    required this.englishDate,
-    required this.arabicDate,
-  });
+  final HomePresenter presenter;
+  const DateDisplay({super.key, required this.presenter});
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +25,14 @@ class DateDisplay extends StatelessWidget {
         children: [
           IconButton(
             icon: const Icon(Icons.chevron_left, color: Colors.white),
-            onPressed: () {},
+            onPressed: () {
+              presenter.previousDate();
+            },
           ),
           Column(
             children: [
               Text(
-                arabicDate,
+                presenter.currentUiState.arabicDate ?? '',
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -44,7 +42,7 @@ class DateDisplay extends StatelessWidget {
               const SizedBox(height: 4),
               Expanded(
                 child: Text(
-                  englishDate,
+                  presenter.currentUiState.englishDate ?? '',
                   style: const TextStyle(fontSize: 12, color: Colors.white),
                 ),
               ),
@@ -52,7 +50,9 @@ class DateDisplay extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(Icons.chevron_right, color: Colors.white),
-            onPressed: () {},
+            onPressed: () {
+              presenter.nextDate();
+            },
           ),
         ],
       ),

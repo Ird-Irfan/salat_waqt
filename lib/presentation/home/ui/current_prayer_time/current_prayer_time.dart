@@ -21,6 +21,7 @@ class CurrentPrayerTime extends StatelessWidget {
         prayerTimeService: locator(),
         timerService: locator(),
         logger: locator(),
+        notificationService: locator(),
       ),
     );
 
@@ -133,7 +134,8 @@ class ColumnItem extends StatelessWidget {
             AppConstant.icFajr,
             'Fajr',
             presenter.currentUiState.prayerTimes?['Fajr'] ?? '',
-            Icons.notifications_outlined,
+            presenter.currentUiState.notificationStatus['Fajr'] ?? false,
+            () => presenter.togglePrayerNotification('Fajr'),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
@@ -143,7 +145,8 @@ class ColumnItem extends StatelessWidget {
             AppConstant.icDuhur,
             'Dhuhr',
             presenter.currentUiState.prayerTimes?['Dhuhr'] ?? '',
-            Icons.notifications_outlined,
+            presenter.currentUiState.notificationStatus['Dhuhr'] ?? false,
+            () => presenter.togglePrayerNotification('Dhuhr'),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
@@ -153,7 +156,8 @@ class ColumnItem extends StatelessWidget {
             AppConstant.icAsr,
             'Asr',
             presenter.currentUiState.prayerTimes?['Asr'] ?? '',
-            Icons.notifications_outlined,
+            presenter.currentUiState.notificationStatus['Asr'] ?? false,
+            () => presenter.togglePrayerNotification('Asr'),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
@@ -163,7 +167,8 @@ class ColumnItem extends StatelessWidget {
             AppConstant.icMaghrib,
             'Maghrib',
             presenter.currentUiState.prayerTimes?['Maghrib'] ?? '',
-            Icons.notifications_outlined,
+            presenter.currentUiState.notificationStatus['Maghrib'] ?? false,
+            () => presenter.togglePrayerNotification('Maghrib'),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
@@ -173,7 +178,8 @@ class ColumnItem extends StatelessWidget {
             AppConstant.icIsha,
             'Isha',
             presenter.currentUiState.prayerTimes?['Isha'] ?? '',
-            Icons.notifications_outlined,
+            presenter.currentUiState.notificationStatus['Isha'] ?? false,
+            () => presenter.togglePrayerNotification('Isha'),
           ),
           SizedBox(height: 26.px),
         ],
@@ -185,42 +191,53 @@ class ColumnItem extends StatelessWidget {
     String svgPath,
     String prayerName,
     String time,
-    IconData notificationIcon,
+    bool isNotificationEnabled,
+    VoidCallback onNotificationTap,
   ) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          SvgIcon(svgPath: svgPath, height: 26.px, width: 26.px),
-          SizedBox(width: 10.px),
-          Text(
-            prayerName,
-            style: theme.textTheme.labelMedium?.copyWith(
-              fontSize: 16.px,
-              color: Colors.white,
-              fontFamily: AppTextStyles.inter,
-              fontWeight: FontWeight.w500,
-            ),
+    return Builder(
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              SvgIcon(svgPath: svgPath, height: 26.px, width: 26.px),
+              SizedBox(width: 10.px),
+              Text(
+                prayerName,
+                style: theme.textTheme.labelMedium?.copyWith(
+                  fontSize: 16.px,
+                  color: Colors.white,
+                  fontFamily: AppTextStyles.inter,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const Spacer(),
+              Text(
+                time,
+                style: theme.textTheme.labelMedium?.copyWith(
+                  fontSize: 16.px,
+                  color: Colors.white,
+                  fontFamily: AppTextStyles.inter,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              SizedBox(width: 10.px),
+              InkWell(
+                onTap: onNotificationTap,
+                child: SvgIcon(
+                  svgPath:
+                      isNotificationEnabled
+                          ? AppConstant.icNotificationOn
+                          : AppConstant.icNotificationOff,
+                  height: 20.px,
+                  width: 20.px,
+                ),
+              ),
+            ],
           ),
-          const Spacer(),
-          Text(
-            time,
-            style: theme.textTheme.labelMedium?.copyWith(
-              fontSize: 16.px,
-              color: Colors.white,
-              fontFamily: AppTextStyles.inter,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          SizedBox(width: 10.px),
-          SvgIcon(
-            svgPath: AppConstant.icNotificationOn,
-            height: 20.px,
-            width: 20.px,
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

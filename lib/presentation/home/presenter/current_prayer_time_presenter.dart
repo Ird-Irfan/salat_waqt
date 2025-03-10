@@ -5,6 +5,7 @@ import 'package:salat_waqt/core/services/location_service.dart';
 import 'package:salat_waqt/core/services/logger_service.dart';
 import 'package:salat_waqt/core/services/prayer_time_service.dart';
 import 'package:salat_waqt/core/services/timer_service.dart';
+import 'package:salat_waqt/domain/service/notification_service.dart';
 import 'package:salat_waqt/presentation/home/presenter/current_prayer_time_ui_state.dart';
 
 class CurrentPrayerTimePresenter
@@ -23,6 +24,7 @@ class CurrentPrayerTimePresenter
   final PrayerTimeService _prayerTimeService;
   final TimerService _timerService;
   final LoggerService _logger;
+  final NotificationService _notificationService;
 
   // Constructor
   CurrentPrayerTimePresenter({
@@ -30,10 +32,12 @@ class CurrentPrayerTimePresenter
     required PrayerTimeService prayerTimeService,
     required TimerService timerService,
     required LoggerService logger,
+    required NotificationService notificationService,
   }) : _locationService = locationService,
        _prayerTimeService = prayerTimeService,
        _timerService = timerService,
-       _logger = logger;
+       _logger = logger,
+       _notificationService = notificationService;
 
   // Lifecycle methods
   @override
@@ -54,6 +58,7 @@ class CurrentPrayerTimePresenter
     await _loadPrayerTimes();
     _startTimer();
     updateCurrentWaqt();
+    await _loadNotificationStatuses();
   }
 
   // Load prayer times
@@ -122,8 +127,12 @@ class CurrentPrayerTimePresenter
 
     try {
       final now = DateTime.now();
+      // Format time in 12-hour format with AM/PM
+      final hour =
+          now.hour > 12 ? now.hour - 12 : (now.hour == 0 ? 12 : now.hour);
+      final amPm = now.hour >= 12 ? 'PM' : 'AM';
       final currentTime =
-          "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}";
+          "${hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')} $amPm";
       final prayerTimes = currentUiState.prayerTimes!;
 
       // Convert prayer times to DateTime objects
@@ -204,6 +213,73 @@ class CurrentPrayerTimePresenter
       );
     } catch (e) {
       _logger.e('Error updating current waqt', e);
+    }
+  }
+
+  // Load notification statuses for all prayers
+  Future<void> _loadNotificationStatuses() async {
+    try {
+      Map<String, bool> notificationStatus = {};
+
+      for (var prayerName in ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha']) {
+        final isScheduled = await _notificationService
+            .isPrayerTimeNotificationScheduled(prayerName);
+        notificationStatus[prayerName] = isScheduled;
+      }
+
+      uiState.value = uiState.value.copyWith(
+        notificationStatus: notificationStatus,
+      );
+    } catch (e) {
+      _logger.e('Error loading notification statuses', e);
+    }
+  }
+
+  // Toggle notification for a specific prayer
+  Future<void> togglePrayerNotification(String prayerName) async {
+    try {
+      if (currentUiState.prayerTimes == null) return;
+
+      // Get the prayer time
+      final prayerTimeString = currentUiState.prayerTimes![prayerName];
+      if (prayerTimeString == null) return;
+
+      DateTime? prayerTime = _prayerTimeService.parseTime(prayerTimeString);
+      _logger.i('prayerTime: $prayerTime');
+      if (prayerTime == null) return;
+
+      // If the prayer time has already passed today, schedule for tomorrow
+      final now = DateTime.now();
+      if (prayerTime.isBefore(now)) {
+        prayerTime = prayerTime.add(const Duration(days: 1));
+      }
+
+      // Create notification title and body
+      final title = 'Prayer Time Reminder';
+      final body = 'It\'s time for $prayerName prayer.';
+
+      // Toggle notification
+      final isEnabled = await _notificationService.togglePrayerTimeNotification(
+        prayerName: prayerName,
+        prayerTime: prayerTime,
+        title: title,
+        body: body,
+      );
+      _logger.i('togglePrayerTimeNotification isEnabled: $isEnabled');
+
+      // Update UI state
+      final updatedNotificationStatus = Map<String, bool>.from(
+        currentUiState.notificationStatus,
+      );
+      updatedNotificationStatus[prayerName] = isEnabled;
+
+      uiState.value = uiState.value.copyWith(
+        notificationStatus: updatedNotificationStatus,
+      );
+
+      _logger.i('Prayer notification for $prayerName toggled: $isEnabled');
+    } catch (e) {
+      _logger.e('Error toggling prayer notification for $prayerName', e);
     }
   }
 
