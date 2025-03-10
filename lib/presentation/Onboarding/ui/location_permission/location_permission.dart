@@ -9,8 +9,16 @@ import 'package:salat_waqt/presentation/Onboarding/widgets/reusable_flash_screen
 import 'package:salat_waqt/presentation/home/ui/home_page.dart';
 import 'package:salat_waqt/core/services/logger_service.dart';
 
-class LocationPermission extends StatelessWidget {
+class LocationPermission extends StatefulWidget {
   const LocationPermission({super.key});
+
+  @override
+  State<LocationPermission> createState() => _LocationPermissionState();
+}
+
+class _LocationPermissionState extends State<LocationPermission> {
+  bool _isLoading = false;
+  String _statusMessage = '';
 
   // Get the preferences service from the service locator
   PreferencesService get _preferencesService =>
@@ -20,14 +28,22 @@ class LocationPermission extends StatelessWidget {
   static final LoggerService _logger = LoggerService();
 
   // Function to handle the location permission
-  Future<void> _handleLocationPermission(BuildContext context) async {
+  Future<void> _handleLocationPermission() async {
+    setState(() {
+      _isLoading = true;
+      _statusMessage = 'Checking location services...';
+    });
+
     bool serviceEnabled;
     geo.LocationPermission permission;
 
     // Check if location services are enabled
     serviceEnabled = await geo.Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      if (context.mounted) {
+      if (mounted) {
+        setState(() {
+          _statusMessage = 'Location services are disabled';
+        });
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text(
@@ -38,18 +54,40 @@ class LocationPermission extends StatelessWidget {
       }
       // Save that user didn't enable location services
       await _preferencesService.setLocationEnabled(false);
-      if (context.mounted) {
-        _navigateToNextScreen(context);
+      await _preferencesService.setDefaultLocation('Dhaka');
+      // Wait for a moment to show the user what happened
+      await Future.delayed(const Duration(seconds: 2));
+      if (mounted) {
+        _navigateToNextScreen();
       }
       return;
+    }
+
+    if (mounted) {
+      setState(() {
+        _statusMessage = 'Checking location permission...';
+      });
     }
 
     // Check permission status
     permission = await geo.Geolocator.checkPermission();
     if (permission == geo.LocationPermission.denied) {
+      if (mounted) {
+        setState(() {
+          _statusMessage = 'Requesting location permission...';
+        });
+      }
+
       permission = await geo.Geolocator.requestPermission();
+
+      // Add a small delay after permission request to let the system process it
+      await Future.delayed(const Duration(milliseconds: 500));
+
       if (permission == geo.LocationPermission.denied) {
-        if (context.mounted) {
+        if (mounted) {
+          setState(() {
+            _statusMessage = 'Location permission denied';
+          });
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Location permissions are denied')),
           );
@@ -58,15 +96,20 @@ class LocationPermission extends StatelessWidget {
         await _preferencesService.setLocationEnabled(false);
         // Set default location
         await _preferencesService.setDefaultLocation('Dhaka');
-        if (context.mounted) {
-          _navigateToNextScreen(context);
+        // Wait for a moment to show the user what happened
+        await Future.delayed(const Duration(seconds: 2));
+        if (mounted) {
+          _navigateToNextScreen();
         }
         return;
       }
     }
 
     if (permission == geo.LocationPermission.deniedForever) {
-      if (context.mounted) {
+      if (mounted) {
+        setState(() {
+          _statusMessage = 'Location permission permanently denied';
+        });
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text(
@@ -79,18 +122,54 @@ class LocationPermission extends StatelessWidget {
       await _preferencesService.setLocationEnabled(false);
       // Set default location
       await _preferencesService.setDefaultLocation('Dhaka');
-      if (context.mounted) {
-        _navigateToNextScreen(context);
+      // Wait for a moment to show the user what happened
+      await Future.delayed(const Duration(seconds: 2));
+      if (mounted) {
+        _navigateToNextScreen();
       }
       return;
     }
 
     // Permission granted, try to get current position
+    if (mounted) {
+      setState(() {
+        _statusMessage =
+            'Location permission granted, fetching your location...';
+      });
+    }
+
+    // Add a delay to ensure the permission has been properly processed
+    await Future.delayed(const Duration(seconds: 1));
+
     try {
+      // Show this is going to take some time
+      if (mounted) {
+        setState(() {
+          _statusMessage = 'Retrieving your location...';
+        });
+      }
+
+      // Try to get location with a reasonable timeout
       final position = await geo.Geolocator.getCurrentPosition(
-        // ignore: deprecated_member_use
         desiredAccuracy: geo.LocationAccuracy.high,
+        timeLimit: const Duration(seconds: 10),
+      ).timeout(
+        const Duration(seconds: 15),
+        onTimeout: () async {
+          _logger.w('Location retrieval timed out, trying with lower accuracy');
+          // If high accuracy times out, try with lower accuracy
+          return await geo.Geolocator.getCurrentPosition(
+            desiredAccuracy: geo.LocationAccuracy.low,
+            timeLimit: const Duration(seconds: 5),
+          );
+        },
       );
+
+      if (mounted) {
+        setState(() {
+          _statusMessage = 'Location found, saving your coordinates...';
+        });
+      }
 
       // Save location data
       await _preferencesService.saveLocationCoordinates(
@@ -99,22 +178,47 @@ class LocationPermission extends StatelessWidget {
       );
 
       _logger.i('Location: ${position.latitude}, ${position.longitude}');
+
+      if (mounted) {
+        setState(() {
+          _statusMessage = 'All set! Taking you to the home screen...';
+        });
+      }
+
+      // Give some time for the system to process the location data
+      await Future.delayed(const Duration(seconds: 2));
     } catch (e) {
       _logger.e('Error getting location', e);
+
+      if (mounted) {
+        setState(() {
+          _statusMessage = 'Could not get your location, using default...';
+        });
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error getting location: $e')));
+      }
+
       // Save that there was an error getting location
       await _preferencesService.setLocationEnabled(false);
       // Set default location
       await _preferencesService.setDefaultLocation('Dhaka');
+
+      // Wait to show the message
+      await Future.delayed(const Duration(seconds: 2));
     }
 
     // Navigate to next screen
-    if (context.mounted) {
-      _navigateToNextScreen(context);
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+      _navigateToNextScreen();
     }
   }
 
   // Navigate to the next screen
-  void _navigateToNextScreen(BuildContext context) {
+  void _navigateToNextScreen() {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const HomePage()),
@@ -149,7 +253,9 @@ class LocationPermission extends StatelessWidget {
       secondLogoWidth: 120,
       secondLogoHeight: 120,
       secondSubtitle:
-          'Enable location permissions to find your local prayer times & calculate qibla directions.',
+          _isLoading
+              ? _statusMessage
+              : 'Enable location permissions to find your local prayer times & calculate qibla directions.',
       secondSubtitleStyle: const TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.w400,
@@ -159,7 +265,7 @@ class LocationPermission extends StatelessWidget {
       ),
 
       // Button configuration
-      buttonText: 'Enable Location Permission',
+      buttonText: _isLoading ? 'Please Wait...' : 'Enable Location Permission',
       buttonGradientColors: const [
         SalatColor.primaryColorDark500,
         SalatColor.primaryColorDark600,
@@ -181,10 +287,26 @@ class LocationPermission extends StatelessWidget {
       // Content layout
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
 
+      // Loading indicator
+      additionalWidgets:
+          _isLoading
+              ? [
+                const SizedBox(height: 20),
+                const CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    SalatColor.primaryColorDark500,
+                  ),
+                ),
+              ]
+              : null,
+
       // Action
-      onButtonPressed: () async {
-        await _handleLocationPermission(context);
-      },
+      onButtonPressed:
+          _isLoading
+              ? null
+              : () async {
+                await _handleLocationPermission();
+              },
     );
   }
 }

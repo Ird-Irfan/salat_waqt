@@ -42,12 +42,11 @@ class ServiceLocator {
   }
 
   Future<void> _setUpService() async {
-    // Register LoggerService first, since other services depend on it
-    _serviceLocator.registerSingleton<LoggerService>(LoggerService());
     final preferencesService = PreferencesService.instance;
     await preferencesService.init();
     _serviceLocator.registerSingleton<PreferencesService>(preferencesService);
     _serviceLocator.registerSingleton<TimerService>(TimerService());
+    _serviceLocator.registerSingleton<LoggerService>(LoggerService());
     _serviceLocator.registerSingleton<DateService>(DateService());
   }
 
@@ -105,6 +104,9 @@ class ServiceLocator {
   }
 
   Future<void> _setUpPresenters() async {
+    _serviceLocator.registerLazySingleton<FlashScreenPresenter>(
+      () => FlashScreenPresenter(),
+    );
     _serviceLocator.registerLazySingleton<HomePresenter>(
       () => HomePresenter(
         locationService: locator(),
@@ -115,9 +117,7 @@ class ServiceLocator {
         logger: locator(),
       ),
     );
-    _serviceLocator.registerLazySingleton<FlashScreenPresenter>(
-      () => FlashScreenPresenter(),
-    );
+
     _serviceLocator.registerLazySingleton<CurrentPrayerTimePresenter>(
       () => CurrentPrayerTimePresenter(
         locationService: locator(),
