@@ -122,8 +122,12 @@ class CurrentPrayerTimePresenter
 
     try {
       final now = DateTime.now();
+      // Format time in 12-hour format with AM/PM
+      final hour =
+          now.hour > 12 ? now.hour - 12 : (now.hour == 0 ? 12 : now.hour);
+      final amPm = now.hour >= 12 ? 'PM' : 'AM';
       final currentTime =
-          "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}";
+          "${hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')} $amPm";
       final prayerTimes = currentUiState.prayerTimes!;
 
       // Convert prayer times to DateTime objects
