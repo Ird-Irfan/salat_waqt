@@ -1,11 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:salat_waqt/core/base/base_presenter.dart';
-import 'package:salat_waqt/core/services/date_service.dart';
-import 'package:salat_waqt/core/services/location_service.dart';
-import 'package:salat_waqt/core/services/logger_service.dart';
-import 'package:salat_waqt/core/services/prayer_time_service.dart';
 import 'package:salat_waqt/core/services/preferences_service.dart';
-import 'package:salat_waqt/core/services/timer_service.dart';
 import 'package:salat_waqt/data/data_sources/location_data_source.dart';
 import 'package:salat_waqt/data/data_sources/prayer_time_data_source.dart';
 import 'package:salat_waqt/data/repositories/location_repository_impl.dart';
@@ -17,9 +12,8 @@ import 'package:salat_waqt/domain/usecases/get_coordinates_from_address_usecase.
 import 'package:salat_waqt/domain/usecases/get_current_location_usecase.dart';
 import 'package:salat_waqt/domain/usecases/get_prayer_times_usecase.dart';
 import 'package:salat_waqt/presentation/Onboarding/presenter/flash_screen_presenter.dart';
-import 'package:salat_waqt/presentation/home/presenter/current_prayer_time_presenter.dart';
-import 'package:salat_waqt/presentation/home/presenter/forbidden_time_presenter.dart';
 import 'package:salat_waqt/presentation/home/presenter/home_presenter.dart';
+import 'package:salat_waqt/presentation/settings/presenter/setting_presenter.dart';
 
 final GetIt _serviceLocator = GetIt.instance;
 T locator<T extends Object>() => _serviceLocator.get<T>();
@@ -44,34 +38,6 @@ class ServiceLocator {
     final preferencesService = PreferencesService.instance;
     await preferencesService.init();
     _serviceLocator.registerSingleton<PreferencesService>(preferencesService);
-
-    // Register logger service
-    _serviceLocator.registerLazySingleton<LoggerService>(() => LoggerService());
-
-    // Register date service
-    _serviceLocator.registerLazySingleton<DateService>(() => DateService());
-
-    // Register timer service
-    _serviceLocator.registerLazySingleton<TimerService>(() => TimerService());
-
-    // Register location service
-    _serviceLocator.registerLazySingleton<LocationService>(
-      () => LocationService(
-        preferencesService: locator(),
-        logger: locator(),
-        getCurrentLocationUseCase: locator(),
-        getAddressFromCoordinatesUseCase: locator(),
-        getCoordinatesFromAddressUseCase: locator(),
-      ),
-    );
-
-    // Register prayer time service
-    _serviceLocator.registerLazySingleton<PrayerTimeService>(
-      () => PrayerTimeService(
-        getPrayerTimesUseCase: locator(),
-        logger: locator(),
-      ),
-    );
 
     // _serviceLocator.registerLazySingleton(() => QuranDatabase());
   }
@@ -115,27 +81,17 @@ class ServiceLocator {
   Future<void> _setUpPresenters() async {
     _serviceLocator.registerLazySingleton<HomePresenter>(
       () => HomePresenter(
-        locationService: locator(),
-        prayerTimeService: locator(),
-        dateService: locator(),
-        timerService: locator(),
-        preferencesService: locator(),
-        logger: locator(),
+        getCurrentLocationUseCase: locator(),
+        getAddressFromCoordinatesUseCase: locator(),
+        getCoordinatesFromAddressUseCase: locator(),
+        getPrayerTimesUseCase: locator(),
       ),
     );
     _serviceLocator.registerLazySingleton<FlashScreenPresenter>(
       () => FlashScreenPresenter(),
     );
-    _serviceLocator.registerLazySingleton<ForbiddenTimePresenter>(
-      () => ForbiddenTimePresenter(),
-    );
-    _serviceLocator.registerLazySingleton<CurrentPrayerTimePresenter>(
-      () => CurrentPrayerTimePresenter(
-        locationService: locator(),
-        prayerTimeService: locator(),
-        timerService: locator(),
-        logger: locator(),
-      ),
-    );
+    _serviceLocator.registerLazySingleton<SettingsPresenter>(
+        () => SettingsPresenter(),
+      );
   }
 }

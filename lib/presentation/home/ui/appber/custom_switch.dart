@@ -1,31 +1,24 @@
 import 'package:flutter/material.dart';
 
-class CustomSwitch extends StatefulWidget {
-  const CustomSwitch({super.key});
+class CustomSwitch extends StatelessWidget {
+  final bool switchValue;
+  final Function(bool) onSwitchChanged;
 
-  @override
-  CustomSwitchState createState() => CustomSwitchState();
-}
-
-class CustomSwitchState extends State<CustomSwitch> {
-  bool _switchValue =
-      true; // Start with the switch in the "on" position (yellow knob to the right)
+  const CustomSwitch({
+    super.key,
+    required this.switchValue,
+    required this.onSwitchChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Switch(
-      value: _switchValue,
-      onChanged: (value) {
-        setState(() {
-          _switchValue = value;
-        });
-      },
-      materialTapTargetSize:
-          MaterialTapTargetSize.padded, // Adjusts the tap area
-      activeColor: Colors.yellow, // Yellow knob when on
-      inactiveThumbColor: Colors.grey, // Grey knob when off (if needed)
-      activeTrackColor: Colors.blue[900]!, // Dark blue track when on
-      inactiveTrackColor: Colors.blue[900]!, // Dark blue track when off
+      value: switchValue,
+      onChanged: onSwitchChanged,
+      activeColor: Colors.black, // When switch is ON, thumb color
+      activeTrackColor: Colors.white, // When switch is ON, track color
+      inactiveThumbColor: Colors.white, // When switch is OFF, thumb color
+      inactiveTrackColor: Colors.black, // When switch is OFF, track color
     );
   }
 }
