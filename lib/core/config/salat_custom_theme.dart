@@ -35,6 +35,8 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
   final Color onBProgressSecondaryColor;
   final Color onBIconSecondaryColor;
   final Color iftaarSunColor;
+  final Color bgCardGradient1;
+  final Color bgCardGradient2;
   
 
   
@@ -71,6 +73,8 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
     required this.onBProgressSecondaryColor,
     required this.onBIconSecondaryColor,
     required this.iftaarSunColor,
+    required this.bgCardGradient1,
+    required this.bgCardGradient2,
   });
 
   // Light Theme
@@ -107,7 +111,8 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
     onBProgressSecondaryColor: SalatColor.onBProgressSecondaryColorLight,
     onBIconSecondaryColor: SalatColor.onBIconSecondaryColorLight,
     iftaarSunColor: SalatColor.iftaarSunColorLight,
-    
+    bgCardGradient1: SalatColor.bgCardGradientLight1,
+    bgCardGradient2: SalatColor.bgCardGradientLight2,
   );
 
   // Dark Theme
@@ -144,7 +149,8 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
     onBProgressSecondaryColor: SalatColor.onBProgressSecondaryColorDark,
     onBIconSecondaryColor: SalatColor.onBIconSecondaryColorDark,
     iftaarSunColor: SalatColor.iftaarSunColorDark,
-    
+    bgCardGradient1: SalatColor.bgCardGradientDark1,
+    bgCardGradient2: SalatColor.bgCardGradientDark2,
   );
 
   @override
@@ -181,8 +187,8 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
     Color? onBProgressSecondaryColor,
     Color? onBIconSecondaryColor,
     Color? iftaarSunColor,
-    
-    
+    Color? bgCardGradient1,
+    Color? bgCardGradient2,
   }) {
     return SalatCustomTheme(
       primaryColor100: primaryColor100 ?? this.primaryColor100,
@@ -217,8 +223,8 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
       onBProgressSecondaryColor: onBProgressSecondaryColor ?? this.onBProgressSecondaryColor,
       onBIconSecondaryColor: onBIconSecondaryColor ?? this.onBIconSecondaryColor,
       iftaarSunColor: iftaarSunColor ?? this.iftaarSunColor,
-      
-
+      bgCardGradient1: bgCardGradient1 ?? this.bgCardGradient1,
+      bgCardGradient2: bgCardGradient2 ?? this.bgCardGradient2,
       
     );
   }
@@ -264,8 +270,8 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
       onBProgressSecondaryColor: Color.lerp(onBProgressSecondaryColor, other.onBProgressSecondaryColor, t)!,
       onBIconSecondaryColor: Color.lerp(onBIconSecondaryColor, other.onBIconSecondaryColor, t)!,
       iftaarSunColor: Color.lerp(iftaarSunColor, other.iftaarSunColor, t)!,
-      
-      
+      bgCardGradient1: Color.lerp(bgCardGradient1, other.bgCardGradient1, t)!,
+      bgCardGradient2: Color.lerp(bgCardGradient2, other.bgCardGradient2, t)!,
 
     
     );

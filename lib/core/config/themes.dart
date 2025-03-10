@@ -199,17 +199,21 @@ class SalatTheme {
         appBarBgColor: SalatColor.appbarBGColorLight,
         cardSubtitleColor: SalatColor.cardSubtitleColorLight,
         collapseBtnColor: SalatColor.collapseBTNColorLight,
-        cardSiblingBottomBorderColor: SalatColor.cardSiblingBottomBorderColorLight,
+        cardSiblingBottomBorderColor:
+            SalatColor.cardSiblingBottomBorderColorLight,
         forbiddenInfoIconColor: SalatColor.forbiddenInfoIconColorLight,
-        notificationActiveIconColor: SalatColor.notificationActiveIconColorLight,
-        notificationInactiveIconColor: SalatColor.notificationInactiveIconColorLight,
+        notificationActiveIconColor:
+            SalatColor.notificationActiveIconColorLight,
+        notificationInactiveIconColor:
+            SalatColor.notificationInactiveIconColorLight,
         trackerDonuntRingColor: SalatColor.trackerDonutRingColorLight,
         meshCircleColor: SalatColor.meshCircleColorLight,
         onBProgressPrimaryColor: SalatColor.onBProgressPrimaryColorLight,
         onBProgressSecondaryColor: SalatColor.onBProgressSecondaryColorLight,
         onBIconSecondaryColor: SalatColor.onBIconSecondaryColorLight,
         iftaarSunColor: SalatColor.iftaarSunColorLight,
-
+        bgCardGradient1: SalatColor.bgCardGradientLight1,
+        bgCardGradient2: SalatColor.bgCardGradientLight2,
       ),
       SalatCustomTextTheme(
         labelExtraSmall: TextStyle(
@@ -345,17 +349,20 @@ class SalatTheme {
         appBarBgColor: SalatColor.appbarBGColorDark,
         cardSubtitleColor: SalatColor.cardSubtitleColorDark,
         collapseBtnColor: SalatColor.collapseBTNColorDark,
-        cardSiblingBottomBorderColor: SalatColor.cardSiblingBottomBorderColorDark,
+        cardSiblingBottomBorderColor:
+            SalatColor.cardSiblingBottomBorderColorDark,
         forbiddenInfoIconColor: SalatColor.forbiddenInfoIconColorDark,
         notificationActiveIconColor: SalatColor.notificationActiveIconColorDark,
-        notificationInactiveIconColor: SalatColor.notificationInactiveIconColorDark,
+        notificationInactiveIconColor:
+            SalatColor.notificationInactiveIconColorDark,
         trackerDonuntRingColor: SalatColor.trackerDonutRingColorDark,
         meshCircleColor: SalatColor.meshCircleColorDark,
         onBProgressPrimaryColor: SalatColor.onBProgressPrimaryColorDark,
         onBProgressSecondaryColor: SalatColor.onBProgressSecondaryColorDark,
         onBIconSecondaryColor: SalatColor.onBIconSecondaryColorDark,
         iftaarSunColor: SalatColor.iftaarSunColorDark,
-
+        bgCardGradient1: SalatColor.bgCardGradientDark1,
+        bgCardGradient2: SalatColor.bgCardGradientDark2,
       ),
       // SalatCustomTheme.darkTheme,
       SalatCustomTextTheme(
@@ -439,15 +446,15 @@ class SalatTheme {
       thumbColor: WidgetStateProperty.all(Colors.white),
     ),
     appBarTheme: const AppBarTheme(
-      shadowColor: Colors.black,
-      backgroundColor: Color(0xff235FA6),
-      foregroundColor: Color(0xff477848),
-      iconTheme: IconThemeData(color: Colors.white),
-      elevation: 0,
-      scrolledUnderElevation: 0,
+      // shadowColor: Colors.black,
+      //backgroundColor: Color(0xff235FA6),
+      // foregroundColor: Color(0xff477848),
+      // iconTheme: IconThemeData(color: Colors.white),
+      // elevation: 0,
+      // scrolledUnderElevation: 0,
     ),
-    primaryColor: SalatColor.primaryColorDark500,
-    scaffoldBackgroundColor: Color(0xFF121212),
+    // primaryColor: SalatColor.primaryColorDark500,
+    scaffoldBackgroundColor: SalatColor.bgSurfaceColorDark,
     primaryColorDark: const Color(0xff122337),
     dividerColor: const Color(0xFF585868),
     iconTheme: const IconThemeData(color: Color(0xff7F909F)),

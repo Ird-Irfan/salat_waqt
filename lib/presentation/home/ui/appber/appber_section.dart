@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:salat_waqt/core/config/salat_color.dart';
 import 'package:salat_waqt/core/config/salat_custom_theme.dart';
 import 'package:salat_waqt/core/constant/app_contant.dart';
 import 'package:salat_waqt/core/constant/app_text_styles.dart';
 import 'package:salat_waqt/presentation/common/widgets/svg_icons.dart';
-import 'package:salat_waqt/presentation/home/ui/appber/bg_blur.dart';
 import 'package:salat_waqt/presentation/settings/ui/settings_page.dart';
 
 class AppBarSection extends StatelessWidget implements PreferredSizeWidget {
@@ -15,16 +13,6 @@ class AppBarSection extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.transparent,
-      flexibleSpace: BgBlur(
-        sigmaX: 5,
-        sigmaY: 5,
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(colors: SalatColor.appBarGradientDark),
-          ),
-        ),
-      ),
       elevation: 0,
       title: Container(
         // padding: EdgeInsets.symmetric(horizontal: 16.px, vertical: 8.px),

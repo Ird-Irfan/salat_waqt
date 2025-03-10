@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:salat_waqt/core/utility/utility.dart';
 
 class CustomSwitch extends StatelessWidget {
   final bool switchValue;
@@ -12,13 +13,33 @@ class CustomSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Switch(
-      value: switchValue,
-      onChanged: onSwitchChanged,
-      activeColor: Colors.black, // When switch is ON, thumb color
-      activeTrackColor: Colors.white, // When switch is ON, track color
-      inactiveThumbColor: Colors.white, // When switch is OFF, thumb color
-      inactiveTrackColor: Colors.black, // When switch is OFF, track color
+    return Transform.scale(
+      scale: 0.85,
+      child: Switch(
+        value: switchValue,
+        onChanged: onSwitchChanged,
+        activeColor: context.color.switchGlowColor,
+        activeTrackColor: Colors.transparent,
+        inactiveThumbColor: Colors.grey[400],
+        inactiveTrackColor: Colors.transparent,
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        splashRadius: 8,
+        thumbIcon: MaterialStateProperty.resolveWith((states) {
+          return Icon(
+            Icons.circle,
+            size: 16,
+            color:
+                switchValue ? context.color.switchGlowColor : Colors.grey[400],
+          );
+        }),
+        trackOutlineWidth: const MaterialStatePropertyAll(1.5),
+        trackOutlineColor: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.selected)) {
+            return context.color.switchGlowColor;
+          }
+          return Colors.grey[400];
+        }),
+      ),
     );
   }
 }

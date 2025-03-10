@@ -12,8 +12,8 @@ class SvgIcon extends StatelessWidget {
   const SvgIcon({
     super.key,
     required this.svgPath,
-    this.height = 40,
-    this.width = 40,
+    this.height,
+    this.width,
     this.color,
     this.onTap,
   });
@@ -25,8 +25,8 @@ class SvgIcon extends StatelessWidget {
           onTap: onTap,
           child: SvgPicture.asset(
             svgPath,
-            height: height?.px,
-            width: width?.px,
+            height: height?.px ?? 24.px,
+            width: width?.px ?? 24.px,
             colorFilter:
                 color != null
                     ? ColorFilter.mode(color!, BlendMode.srcIn)

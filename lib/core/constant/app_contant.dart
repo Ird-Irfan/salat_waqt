@@ -9,6 +9,7 @@ class AppConstant {
   static const String icCategory = 'assets/svgs/ic_category.svg';
   static const String icArrowLeft = 'assets/svgs/ic_arrowleft.svg';
   static const String icArrowRight = 'assets/svgs/ic_arrowright.svg';
+  static const String icLeftArrowBack = 'assets/svgs/ic_arrow-back.svg';
 
   static const String icNotificationOn = 'assets/svgs/ic_notification_on.svg';
   static const String icNotificationOff = 'assets/svgs/ic_notification_off.svg';
@@ -32,6 +33,9 @@ class AppConstant {
       'assets/svgs/ic_islamic_calender.svg';
   static const String icTheme = 'assets/svgs/ic_theme.svg';
   static const String icWeat = 'assets/svgs/ic_weat.svg';
+
+  static const String icLayer = 'assets/svgs/ic_layer.svg'; 
+  static const String icReview = 'assets/svgs/ic_review.svg';
 
   static const String appBg = 'assets/images/bg_screen.png';
   static const String bgflashScreen = 'assets/images/bg_flash_screen.png';

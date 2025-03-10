@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:salat_waqt/core/constant/app_contant.dart';
 import 'package:salat_waqt/core/constant/app_text_styles.dart';
+import 'package:salat_waqt/core/utility/utility.dart';
 import 'package:salat_waqt/presentation/common/widgets/svg_icons.dart';
 
 class AnimatedExpansion extends StatefulWidget {
@@ -28,15 +29,23 @@ class AnimatedExpansionState extends State<AnimatedExpansion> {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       width: double.infinity,
-      height: _isExpanded ? null : 100,
+      height: _isExpanded ? null : 88,
       constraints: BoxConstraints(
-        minHeight: 100,
-        maxHeight: _isExpanded ? 220 : 100,
+        minHeight: 88,
+        maxHeight: _isExpanded ? 220 : 88,
       ),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Theme.of(context).dividerColor),
+      decoration: ShapeDecoration(
+        gradient: RadialGradient(
+          center: Alignment(0.93, 1.20),
+          radius: 0.72,
+          colors: [
+            context.color.bgCardGradient1,
+            context.color.bgCardGradient2,
+          ],
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.px),
+        ),
       ),
       child: ClipRect(
         child: SingleChildScrollView(
@@ -56,40 +65,53 @@ class AnimatedExpansionState extends State<AnimatedExpansion> {
                     horizontal: 16,
                     vertical: 8,
                   ),
-                  height: 80,
-                  child: Row(
-                    children: [
-                      SvgIcon(
-                        svgPath: AppConstant.icTheme,
-                        width: 28.px,
-                        height: 28.px,
-                      ),
-                      const SizedBox(width: 12),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Theme',
-                            style: widget.theme.textTheme.titleMedium?.copyWith(
-                              fontFamily: AppTextStyles.inter,
+                  // height: 80.px,
+                  child: Padding(
+                    padding: EdgeInsets.all(8.0.px),
+                    child: Row(
+                      children: [
+                        SvgIcon(
+                          svgPath: AppConstant.icTheme,
+                          width: 32.px,
+                          height: 32.px,
+                        ),
+                        const SizedBox(width: 12),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Theme',
+                              style: widget.theme.textTheme.titleMedium
+                                  ?.copyWith(
+                                    fontFamily: AppTextStyles.inter,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 20.px,
+                                    color: context.color.cardTitleColor,
+                                  ),
                             ),
-                          ),
-                          Text(
-                            widget.isDarkMode
-                                ? 'Night Mode Selected'
-                                : 'Day Mode Selected',
-                            style: widget.theme.textTheme.bodySmall,
-                          ),
-                        ],
-                      ),
-                      const Spacer(),
-                      Icon(
-                        _isExpanded
-                            ? Icons.keyboard_arrow_up
-                            : Icons.keyboard_arrow_down,
-                      ),
-                    ],
+                            SizedBox(height: 8.px),
+                            Text(
+                              widget.isDarkMode
+                                  ? 'Night Mode Selected'
+                                  : 'Day Mode Selected',
+                              style: widget.theme.textTheme.bodySmall?.copyWith(
+                                fontFamily: AppTextStyles.inter,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 15.px,
+                                color: context.color.cardSubtitleColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Spacer(),
+                        Icon(
+                          _isExpanded
+                              ? Icons.keyboard_arrow_up
+                              : Icons.keyboard_arrow_down,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
