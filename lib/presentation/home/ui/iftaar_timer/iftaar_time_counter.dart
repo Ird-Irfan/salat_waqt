@@ -4,6 +4,7 @@ import 'package:salat_waqt/core/config/salat_color.dart';
 import 'package:salat_waqt/core/constant/app_text_styles.dart';
 import 'package:salat_waqt/core/di/service_locator.dart';
 import 'package:salat_waqt/core/external_libs/presentable_widget_builder.dart';
+import 'package:salat_waqt/core/utility/utility.dart';
 import 'package:salat_waqt/presentation/home/presenter/home_presenter.dart';
 import 'dart:ui' as ui;
 import 'dart:async';
@@ -36,17 +37,12 @@ class IftarTimeCounter extends StatelessWidget {
     BuildContext context,
     HomePresenter presenter,
   ) {
-    final nextPrayerName = presenter.currentUiState.nextPrayerName;
     final remainingTime = presenter.currentUiState.remainingTime;
     final progressValue = presenter.currentUiState.progressValue ?? 0.0;
 
-    // Determine color based on next prayer
-    Color progressColor = Colors.blue;
-    if (nextPrayerName == 'Iftar') {
-      progressColor = SalatColor.primaryColorDark600;
-    } else if (nextPrayerName == 'Sehri') {
-      progressColor = SalatColor.primaryColorDark600;
-    }
+    // Determine gradient colors based on theme
+    final gradientStartColor = context.color.donutRingGradientStartColor;
+    final gradientEndColor = context.color.donutRingGradientEndColor;
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -62,8 +58,9 @@ class IftarTimeCounter extends StatelessWidget {
                   size: const Size(300, 300),
                   painter: CircularProgressPainter(
                     progressValue: progressValue,
-                    progressColor: progressColor,
-                    backgroundColor: SalatColor.primaryColorDark600,
+                    gradientStartColor: gradientStartColor,
+                    gradientEndColor: gradientEndColor,
+                    backgroundColor: context.color.donutBottomCircleColor,
                     strokeWidth: 20,
                     backgroundImage: snapshot.data,
                   ),
@@ -86,7 +83,7 @@ class IftarTimeCounter extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 60,
                     fontWeight: FontWeight.bold,
-                    color: progressColor,
+                    color: gradientStartColor,
                     fontFamily: AppTextStyles.unicaOne,
                   ),
                 ),
@@ -126,7 +123,8 @@ class IftarTimeCounter extends StatelessWidget {
 
 class CircularProgressPainter extends CustomPainter {
   final double progressValue;
-  final Color progressColor;
+  final Color gradientStartColor;
+  final Color gradientEndColor;
   final Color backgroundColor;
   final double strokeWidth;
   final ui.Image? backgroundImage;
@@ -134,7 +132,8 @@ class CircularProgressPainter extends CustomPainter {
 
   CircularProgressPainter({
     required this.progressValue,
-    required this.progressColor,
+    required this.gradientStartColor,
+    required this.gradientEndColor,
     required this.backgroundColor,
     required this.strokeWidth,
     this.backgroundImage,
@@ -172,16 +171,24 @@ class CircularProgressPainter extends CustomPainter {
 
     canvas.drawCircle(center, radius, backgroundPaint);
 
-    // Draw progress arc
+    // Create gradient for progress arc
+    final rect = Rect.fromCircle(center: center, radius: radius);
+    final gradient = SweepGradient(
+      center: Alignment(1.20, 0.93),
+      // radius: 0.72,
+      colors: [gradientStartColor, gradientEndColor],
+    );
+
+    // Draw progress arc with gradient
     final progressPaint =
         Paint()
-          ..color = progressColor
+          ..shader = gradient.createShader(rect)
           ..style = PaintingStyle.stroke
           ..strokeWidth = strokeWidth
           ..strokeCap = StrokeCap.round;
 
     canvas.drawArc(
-      Rect.fromCircle(center: center, radius: radius),
+      rect,
       -1.5708, // Start from top (pi/2)
       progressValue * 6.2832, // Full circle is 2*pi
       false,
@@ -192,7 +199,8 @@ class CircularProgressPainter extends CustomPainter {
   @override
   bool shouldRepaint(CircularProgressPainter oldDelegate) {
     return oldDelegate.progressValue != progressValue ||
-        oldDelegate.progressColor != progressColor ||
+        oldDelegate.gradientStartColor != gradientStartColor ||
+        oldDelegate.gradientEndColor != gradientEndColor ||
         oldDelegate.backgroundColor != backgroundColor ||
         oldDelegate.strokeWidth != strokeWidth ||
         oldDelegate.backgroundImage != backgroundImage;

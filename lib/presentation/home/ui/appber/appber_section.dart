@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:salat_waqt/core/config/salat_custom_theme.dart';
 import 'package:salat_waqt/core/constant/app_contant.dart';
-import 'package:salat_waqt/core/constant/app_text_styles.dart';
+import 'package:salat_waqt/core/utility/utility.dart';
 import 'package:salat_waqt/presentation/common/widgets/svg_icons.dart';
 import 'package:salat_waqt/presentation/settings/ui/settings_page.dart';
 
 class AppBarSection extends StatelessWidget implements PreferredSizeWidget {
+  final ThemeData theme;  
   final String location;
-  const AppBarSection({super.key, required this.location});
+  const AppBarSection({super.key, required this.location, required this.theme});
 
   @override
   Widget build(BuildContext context) {
@@ -20,17 +20,14 @@ class AppBarSection extends StatelessWidget implements PreferredSizeWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            SvgIcon(svgPath: AppConstant.icGps, width: 24.px, height: 24.px),
+            SvgIcon(svgPath: AppConstant.icGps, width: 24.px, height: 24.px, color: context.color.cardTitleColor,),
             SizedBox(width: 10.px),
             Text(
               location,
-              style: AppTextStyles.title.copyWith(
+              style: theme.textTheme.titleMedium?.copyWith(
+                color: context.color.cardTitleColor,
                 fontSize: 14.px,
                 fontWeight: FontWeight.w400,
-                color:
-                    Theme.of(
-                      context,
-                    ).extension<SalatCustomTheme>()?.primaryColor100,
               ),
             ),
             SizedBox(width: 4.px),
@@ -50,6 +47,7 @@ class AppBarSection extends StatelessWidget implements PreferredSizeWidget {
             svgPath: AppConstant.icCategory,
             width: 24.px,
             height: 24.px,
+            color: context.color.cardTitleColor,
             onTap: () {
               Navigator.push(
                 context,

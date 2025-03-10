@@ -214,6 +214,9 @@ class SalatTheme {
         iftaarSunColor: SalatColor.iftaarSunColorLight,
         bgCardGradient1: SalatColor.bgCardGradientLight1,
         bgCardGradient2: SalatColor.bgCardGradientLight2,
+        donutRingGradientStartColor: SalatColor.donutRingGradientStartColorLight,
+        donutRingGradientEndColor: SalatColor.donutRingGradientEndColorLight,
+        donutBottomCircleColor: SalatColor.donutBottomCircleColorLight,
       ),
       SalatCustomTextTheme(
         labelExtraSmall: TextStyle(
@@ -364,6 +367,9 @@ class SalatTheme {
         iftaarSunColor: SalatColor.iftaarSunColorDark,
         bgCardGradient1: SalatColor.bgCardGradientDark1,
         bgCardGradient2: SalatColor.bgCardGradientDark2,
+        donutRingGradientStartColor: SalatColor.donutRingGradientStartColorDark,
+        donutRingGradientEndColor: SalatColor.donutRingGradientEndColorDark,
+        donutBottomCircleColor: SalatColor.donutBottomCircleColorDark,
       ),
       // SalatCustomTheme.darkTheme,
       SalatCustomTextTheme(

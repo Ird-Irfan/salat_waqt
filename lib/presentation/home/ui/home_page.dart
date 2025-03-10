@@ -62,6 +62,7 @@ class HomePage extends StatelessWidget {
                           color: Colors.black.withOpacity(0.1),
                           child: AppBarSection(
                             location: presenter.currentUiState.currentAddress ?? '',
+                            theme: theme,
                           ),
                         ),
                       ),
@@ -71,10 +72,6 @@ class HomePage extends StatelessWidget {
                 SliverToBoxAdapter(
                   child: Container(
                     decoration: const BoxDecoration(
-                      // image: DecorationImage(
-                      //   image: AssetImage(AppConstant.appBgPngDark),
-                      //   fit: BoxFit.cover,
-                      // ),
                     ),
                     child: SafeArea(
                       child: Padding(
@@ -83,10 +80,11 @@ class HomePage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             // Date Display
-                            DateDisplay(
+                            DateDisplay(  
+                              theme: theme,
                               englishDate:
                                   presenter.currentUiState.englishDate ?? '',
-                              arabicDate: presenter.currentUiState.arabicDate ?? '',
+                                arabicDate: presenter.currentUiState.arabicDate ?? '', presenter: presenter,
                             ),
                             const SizedBox(height: 20),
                             // Iftar Time Counter

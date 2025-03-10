@@ -37,6 +37,12 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
   final Color iftaarSunColor;
   final Color bgCardGradient1;
   final Color bgCardGradient2;
+
+  final Color donutRingGradientStartColor;
+  final Color donutRingGradientEndColor;  
+
+  final Color donutBottomCircleColor;
+
   
 
   
@@ -75,6 +81,9 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
     required this.iftaarSunColor,
     required this.bgCardGradient1,
     required this.bgCardGradient2,
+    required this.donutRingGradientStartColor,
+    required this.donutRingGradientEndColor,
+    required this.donutBottomCircleColor,
   });
 
   // Light Theme
@@ -113,6 +122,9 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
     iftaarSunColor: SalatColor.iftaarSunColorLight,
     bgCardGradient1: SalatColor.bgCardGradientLight1,
     bgCardGradient2: SalatColor.bgCardGradientLight2,
+    donutRingGradientStartColor: SalatColor.donutRingGradientStartColorLight,
+    donutRingGradientEndColor: SalatColor.donutRingGradientEndColorLight,
+    donutBottomCircleColor: SalatColor.donutBottomCircleColorLight,
   );
 
   // Dark Theme
@@ -151,6 +163,9 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
     iftaarSunColor: SalatColor.iftaarSunColorDark,
     bgCardGradient1: SalatColor.bgCardGradientDark1,
     bgCardGradient2: SalatColor.bgCardGradientDark2,
+    donutRingGradientStartColor: SalatColor.donutRingGradientStartColorDark,
+    donutRingGradientEndColor: SalatColor.donutRingGradientEndColorDark,
+    donutBottomCircleColor: SalatColor.donutBottomCircleColorDark,
   );
 
   @override
@@ -189,6 +204,9 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
     Color? iftaarSunColor,
     Color? bgCardGradient1,
     Color? bgCardGradient2,
+    Color? donutRingGradientStartColor,
+    Color? donutRingGradientEndColor,
+    Color? donutBottomCircleColor,
   }) {
     return SalatCustomTheme(
       primaryColor100: primaryColor100 ?? this.primaryColor100,
@@ -225,7 +243,9 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
       iftaarSunColor: iftaarSunColor ?? this.iftaarSunColor,
       bgCardGradient1: bgCardGradient1 ?? this.bgCardGradient1,
       bgCardGradient2: bgCardGradient2 ?? this.bgCardGradient2,
-      
+      donutRingGradientStartColor: donutRingGradientStartColor ?? this.donutRingGradientStartColor,
+      donutRingGradientEndColor: donutRingGradientEndColor ?? this.donutRingGradientEndColor,
+      donutBottomCircleColor: donutBottomCircleColor ?? this.donutBottomCircleColor,
     );
   }
 
@@ -272,8 +292,9 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
       iftaarSunColor: Color.lerp(iftaarSunColor, other.iftaarSunColor, t)!,
       bgCardGradient1: Color.lerp(bgCardGradient1, other.bgCardGradient1, t)!,
       bgCardGradient2: Color.lerp(bgCardGradient2, other.bgCardGradient2, t)!,
-
-    
+      donutRingGradientStartColor: Color.lerp(donutRingGradientStartColor, other.donutRingGradientStartColor, t)!,
+      donutRingGradientEndColor: Color.lerp(donutRingGradientEndColor, other.donutRingGradientEndColor, t)!,
+      donutBottomCircleColor: Color.lerp(donutBottomCircleColor, other.donutBottomCircleColor, t)!,
     );
   }
 }
