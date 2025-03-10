@@ -8,7 +8,7 @@ class CurrentPrayerTimeUiState extends BaseUiState {
   final String? currentTime;
   final String? nextPrayerTime;
   final String? nextPrayerWaqt;
-  final Map<String, bool> notificationStatus;
+  final Map<String, bool>? notificationStatus;
 
   const CurrentPrayerTimeUiState({
     required super.userMessage,
@@ -20,13 +20,7 @@ class CurrentPrayerTimeUiState extends BaseUiState {
     this.currentTime,
     this.nextPrayerTime,
     this.nextPrayerWaqt,
-    this.notificationStatus = const {
-      'Fajr': false,
-      'Dhuhr': false,
-      'Asr': false,
-      'Maghrib': false,
-      'Isha': false,
-    },
+    this.notificationStatus,
   });
 
   factory CurrentPrayerTimeUiState.empty() {
@@ -40,13 +34,7 @@ class CurrentPrayerTimeUiState extends BaseUiState {
       currentTime: null,
       nextPrayerTime: null,
       nextPrayerWaqt: null,
-      notificationStatus: {
-        'Fajr': false,
-        'Dhuhr': false,
-        'Asr': false,
-        'Maghrib': false,
-        'Isha': false,
-      },
+      notificationStatus: null,
     );
   }
 

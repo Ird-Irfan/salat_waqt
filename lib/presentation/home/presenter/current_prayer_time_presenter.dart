@@ -269,7 +269,7 @@ class CurrentPrayerTimePresenter
 
       // Update UI state
       final updatedNotificationStatus = Map<String, bool>.from(
-        currentUiState.notificationStatus,
+        currentUiState.notificationStatus ?? {},
       );
       updatedNotificationStatus[prayerName] = isEnabled;
 

@@ -293,8 +293,7 @@ class SalatTheme {
       thumbColor: WidgetStateProperty.all(SalatColor.primaryColorLight600),
     ),
     appBarTheme: const AppBarTheme(
-      backgroundColor: Color(0xff68F2B7),
-      foregroundColor: Color(0xff477848),
+      backgroundColor: Colors.transparent,
       iconTheme: IconThemeData(color: Colors.black87),
       elevation: 0,
       scrolledUnderElevation: 0,
@@ -445,6 +444,9 @@ class SalatTheme {
       thumbColor: WidgetStateProperty.all(Colors.white),
     ),
     appBarTheme: const AppBarTheme(
+      backgroundColor: Colors.transparent,
+      shadowColor: Colors.transparent,
+      scrolledUnderElevation: 0,
       // shadowColor: Colors.black,
       //backgroundColor: Color(0xff235FA6),
       // foregroundColor: Color(0xff477848),

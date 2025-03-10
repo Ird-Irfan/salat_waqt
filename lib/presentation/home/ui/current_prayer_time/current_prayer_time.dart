@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:salat_waqt/core/base/base_presenter.dart';
 import 'package:salat_waqt/core/config/salat_waqt_screen.dart';
@@ -134,7 +136,7 @@ class ColumnItem extends StatelessWidget {
             AppConstant.icFajr,
             'Fajr',
             presenter.currentUiState.prayerTimes?['Fajr'] ?? '',
-            presenter.currentUiState.notificationStatus['Fajr'] ?? false,
+            presenter.currentUiState.notificationStatus?['Fajr'] ?? false,
             () => presenter.togglePrayerNotification('Fajr'),
           ),
           Padding(
@@ -145,7 +147,7 @@ class ColumnItem extends StatelessWidget {
             AppConstant.icDuhur,
             'Dhuhr',
             presenter.currentUiState.prayerTimes?['Dhuhr'] ?? '',
-            presenter.currentUiState.notificationStatus['Dhuhr'] ?? false,
+            presenter.currentUiState.notificationStatus?['Dhuhr'] ?? false,
             () => presenter.togglePrayerNotification('Dhuhr'),
           ),
           Padding(
@@ -156,8 +158,13 @@ class ColumnItem extends StatelessWidget {
             AppConstant.icAsr,
             'Asr',
             presenter.currentUiState.prayerTimes?['Asr'] ?? '',
-            presenter.currentUiState.notificationStatus['Asr'] ?? false,
-            () => presenter.togglePrayerNotification('Asr'),
+            presenter.currentUiState.notificationStatus?['Asr'] ?? false,
+            () async {
+              await presenter.togglePrayerNotification('Asr');
+              log(
+                'Asr: ${presenter.currentUiState.notificationStatus?['Asr']}',
+              );
+            },
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
@@ -167,7 +174,7 @@ class ColumnItem extends StatelessWidget {
             AppConstant.icMaghrib,
             'Maghrib',
             presenter.currentUiState.prayerTimes?['Maghrib'] ?? '',
-            presenter.currentUiState.notificationStatus['Maghrib'] ?? false,
+            presenter.currentUiState.notificationStatus?['Maghrib'] ?? false,
             () => presenter.togglePrayerNotification('Maghrib'),
           ),
           Padding(
@@ -178,7 +185,7 @@ class ColumnItem extends StatelessWidget {
             AppConstant.icIsha,
             'Isha',
             presenter.currentUiState.prayerTimes?['Isha'] ?? '',
-            presenter.currentUiState.notificationStatus['Isha'] ?? false,
+            presenter.currentUiState.notificationStatus?['Isha'] ?? false,
             () => presenter.togglePrayerNotification('Isha'),
           ),
           SizedBox(height: 26.px),
