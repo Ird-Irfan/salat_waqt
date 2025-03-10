@@ -10,7 +10,6 @@ abstract class LocationDataSource {
 class LocationDataSourceImpl implements LocationDataSource {
   @override
   Future<Position> getCurrentPosition() async {
-    // ... (আপনার পূর্বের _getCurrentLocation ফাংশনের লজিক এখানে থাকবে)
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -25,6 +24,9 @@ class LocationDataSourceImpl implements LocationDataSource {
       if (permission == LocationPermission.denied) {
         throw Exception('Location permissions are denied');
       }
+
+      // Add a small delay after permission is granted to avoid race conditions
+      await Future.delayed(Duration(milliseconds: 500));
     }
 
     if (permission == LocationPermission.deniedForever) {
@@ -33,7 +35,23 @@ class LocationDataSourceImpl implements LocationDataSource {
       );
     }
 
-    return await Geolocator.getCurrentPosition();
+    try {
+      // Try with higher accuracy first
+      return await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+        timeLimit: Duration(seconds: 5),
+      );
+    } catch (e) {
+      // If high accuracy fails or times out, try with lower accuracy
+      try {
+        return await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.low,
+          timeLimit: Duration(seconds: 5),
+        );
+      } catch (e) {
+        throw Exception('Failed to get location: $e');
+      }
+    }
   }
 
   @override

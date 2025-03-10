@@ -136,17 +136,39 @@ class HomePresenter extends BasePresenter<HomeUiState> {
         return;
       }
 
-      // Check location permission
-      final permission = await _locationService.checkAndRequestPermission();
-      if (permission != LocationPermission.whileInUse &&
-          permission != LocationPermission.always) {
-        _loadDefaultLocation('Location permission was not granted');
-        return;
-      }
+      // Add try-catch around permission request
+      try {
+        // Check location permission
+        final permission = await _locationService.checkAndRequestPermission();
 
-      // Permission granted, load current location
-      uiState.value = uiState.value.copyWith(locationPermissionGranted: true);
-      await _loadCurrentLocation();
+        // Add a small delay after permission check to let system process it
+        await Future.delayed(Duration(milliseconds: 500));
+
+        if (permission != LocationPermission.whileInUse &&
+            permission != LocationPermission.always) {
+          _loadDefaultLocation('Location permission was not granted');
+          return;
+        }
+
+        // Permission granted, load current location
+        uiState.value = uiState.value.copyWith(locationPermissionGranted: true);
+
+        // Wrap this in try-catch to isolate potential issues
+        try {
+          await _loadCurrentLocation();
+        } catch (locationError) {
+          _logger.e(
+            'Error loading location after permission granted',
+            locationError,
+          );
+          _loadDefaultLocation(
+            'Error accessing location after permission granted',
+          );
+        }
+      } catch (permissionError) {
+        _logger.e('Error during permission request', permissionError);
+        _loadDefaultLocation('Error requesting location permission');
+      }
     } catch (e) {
       _logger.e('Error during location permission check', e);
       _loadDefaultLocation('A problem occurred: ${e.toString()}');
@@ -328,9 +350,32 @@ class HomePresenter extends BasePresenter<HomeUiState> {
   Future<void> _loadCurrentLocation() async {
     toggleLoading(loading: true);
     try {
-      final position = await _locationService.getCurrentLocation();
+      // Add a small delay to ensure permissions are fully granted
+      await Future.delayed(Duration(milliseconds: 500));
+
+      // Try to get location with retry
+      Position? position;
+      int retryCount = 0;
+      const maxRetries = 2;
+
+      while (position == null && retryCount < maxRetries) {
+        try {
+          position = await _locationService.getCurrentLocation();
+          if (position == null) {
+            retryCount++;
+            await Future.delayed(Duration(milliseconds: 500));
+          }
+        } catch (e) {
+          _logger.e('Error getting location (attempt ${retryCount + 1})', e);
+          retryCount++;
+          await Future.delayed(Duration(milliseconds: 500));
+        }
+      }
+
       if (position == null) {
-        throw Exception('Could not get current location');
+        throw Exception(
+          'Could not get current location after $maxRetries attempts',
+        );
       }
 
       final address = await _locationService.getAddressFromCoordinates(
@@ -348,11 +393,23 @@ class HomePresenter extends BasePresenter<HomeUiState> {
       await _loadPrayerTimes(position.latitude, position.longitude);
     } catch (e) {
       _logger.e('Error loading current location', e);
-      if (_locationService.isLocationPermissionError(e)) {
-        _loadDefaultLocation('Location permission error');
+
+      // Check if we're still attached to the UI
+      if (!Get.isDialogOpen!) {
+        if (_locationService.isLocationPermissionError(e)) {
+          _loadDefaultLocation('Location permission error');
+        } else {
+          Get.snackbar(
+            'Location Error',
+            'Falling back to default location',
+            backgroundColor: Colors.amber,
+            duration: Duration(seconds: 3),
+          );
+          _loadDefaultLocation('Error getting location: ${e.toString()}');
+        }
       } else {
-        Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
-        _loadDefaultLocation('Error getting location');
+        // If a dialog is open, just silently fall back to default location
+        _loadDefaultLocation('Error while dialog is open');
       }
     } finally {
       toggleLoading(loading: false);
