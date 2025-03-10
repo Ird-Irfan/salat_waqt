@@ -63,7 +63,7 @@ class IftarTimeCounter extends StatelessWidget {
                   painter: CircularProgressPainter(
                     progressValue: progressValue,
                     progressColor: progressColor,
-                    backgroundColor: SalatColor.primaryColorDark600,
+                    backgroundColor: SalatColor.primaryColorDark900,
                     strokeWidth: 20,
                     backgroundImage: snapshot.data,
                   ),

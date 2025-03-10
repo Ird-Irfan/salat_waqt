@@ -293,7 +293,6 @@ class SalatTheme {
       thumbColor: WidgetStateProperty.all(SalatColor.primaryColorLight600),
     ),
     appBarTheme: const AppBarTheme(
-      shadowColor: Colors.white,
       backgroundColor: Color(0xff68F2B7),
       foregroundColor: Color(0xff477848),
       iconTheme: IconThemeData(color: Colors.black87),
