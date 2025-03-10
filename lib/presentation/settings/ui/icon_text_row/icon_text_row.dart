@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:salat_waqt/presentation/common/widgets/svg_icons.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:salat_waqt/core/config/salat_waqt_screen.dart';
+import 'package:salat_waqt/core/constant/app_text_styles.dart';
+import 'package:salat_waqt/core/utility/utility.dart';
 import 'package:salat_waqt/presentation/home/ui/appber/custom_switch.dart';
 
 class IconTextRow extends StatelessWidget {
+  final ThemeData theme;
   final String title;
+  final double? titleFontSize;
   final String subtitle;
   final String svgIconPath;
   final bool? switchValue;
@@ -12,53 +17,81 @@ class IconTextRow extends StatelessWidget {
 
   const IconTextRow({
     super.key,
+    required this.theme,
     required this.title,
     required this.subtitle,
     required this.svgIconPath,
+    this.titleFontSize,
     this.hasSwitch = true,
     this.switchValue,
     this.onSwitchChanged,
   }) : assert(
-          hasSwitch == false || (switchValue != null && onSwitchChanged != null),
-          'If hasSwitch is true, switchValue and onSwitchChanged must not be null',
-        );
+         hasSwitch == false || (switchValue != null && onSwitchChanged != null),
+         'If hasSwitch is true, switchValue and onSwitchChanged must not be null',
+       );
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        color: Colors.blue[100],
-        borderRadius: BorderRadius.circular(12),
+      decoration: ShapeDecoration(
+        gradient: RadialGradient(
+          center: Alignment(0.93, 1.20),
+          radius: 0.72,
+          colors: [
+            context.color.bgCardGradient1,
+            context.color.bgCardGradient2,
+          ],
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.px),
+        ),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min, // Content er size onujayi adjust hobe
-        children: [
-          SvgIcon(svgPath: svgIconPath),
-          SizedBox(width: 10), // Space between icon and text
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize:
-                MainAxisSize.min, // Content er size onujayi adjust hobe
-            children: [
-              Text(
-                title,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            SvgPicture.asset(svgIconPath, width: 28.px, height: 28.px),
+            SizedBox(width: 16.px),
+            Expanded(
+              flex: 5,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    title,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontFamily: AppTextStyles.inter,
+                      fontWeight: FontWeight.w500,
+                      fontSize: titleFontSize ?? 18.px,
+                      color: context.color.cardTitleColor,
+                    ),
+                  ),
+                  SizedBox(height: 4.px),
+                  Text(
+                    subtitle,
+                    style: theme.textTheme.labelMedium?.copyWith(
+                      fontFamily: AppTextStyles.inter,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14.px,
+                      color: context.color.cardSubtitleColor,
+                    ),
+                  ),
+                ],
               ),
-              Text(
-                subtitle,
-                style: TextStyle(fontSize: 14, color: Colors.grey[700]),
-              ),
-            ],
-          ),
-          Spacer(), // Row er baki space niye nibe
-          if (hasSwitch)
-            CustomSwitch(
-              switchValue: switchValue!,
-              onSwitchChanged: onSwitchChanged!,
             ),
-        ],
+            if (hasSwitch)
+              Expanded(
+                flex: 1,
+                child: CustomSwitch(
+                  switchValue: switchValue!,
+                  onSwitchChanged: onSwitchChanged!,
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

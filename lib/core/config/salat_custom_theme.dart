@@ -13,8 +13,33 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
   final Color primaryColor800;
   final Color primaryColor900;
 
-  final Color primaryColorDarkSubtitle;
+  final Color bgSurfaceColor;
+  final Color cardTitleColor;
+  final Color sunIconColor;
+  final Color fajrIconColor;
+  final Color inputBoxColor;
+  final Color asrIconCloudColor;
+  final Color magribIconCloudColor;
+  final Color switchGlowColor;
+  final Color primaryBtnTextColor;
+  final Color appBarBgColor;
+  final Color cardSubtitleColor;
+  final Color collapseBtnColor;
+  final Color cardSiblingBottomBorderColor;
+  final Color forbiddenInfoIconColor;
+  final Color notificationActiveIconColor;
+  final Color notificationInactiveIconColor;
+  final Color trackerDonuntRingColor;
+  final Color meshCircleColor;
+  final Color onBProgressPrimaryColor;
+  final Color onBProgressSecondaryColor;
+  final Color onBIconSecondaryColor;
+  final Color iftaarSunColor;
+  final Color bgCardGradient1;
+  final Color bgCardGradient2;
+  
 
+  
   const SalatCustomTheme({
     required this.primaryColor100,
     required this.primaryColor200,
@@ -26,7 +51,30 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
     required this.primaryColor750,
     required this.primaryColor800,
     required this.primaryColor900,
-    required this.primaryColorDarkSubtitle,
+    required this.bgSurfaceColor,
+    required this.cardTitleColor,
+    required this.sunIconColor,
+    required this.fajrIconColor,
+    required this.inputBoxColor,
+    required this.asrIconCloudColor,
+    required this.magribIconCloudColor,
+    required this.switchGlowColor,
+    required this.primaryBtnTextColor,
+    required this.appBarBgColor,
+    required this.cardSubtitleColor,
+    required this.collapseBtnColor, 
+    required this.cardSiblingBottomBorderColor,
+    required this.forbiddenInfoIconColor,
+    required this.notificationActiveIconColor,
+    required this.notificationInactiveIconColor,
+    required this.trackerDonuntRingColor,
+    required this.meshCircleColor,
+    required this.onBProgressPrimaryColor,    
+    required this.onBProgressSecondaryColor,
+    required this.onBIconSecondaryColor,
+    required this.iftaarSunColor,
+    required this.bgCardGradient1,
+    required this.bgCardGradient2,
   });
 
   // Light Theme
@@ -41,8 +89,30 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
     primaryColor750: SalatColor.primaryColorLight700,
     primaryColor800: SalatColor.primaryColorLight800,
     primaryColor900: SalatColor.primaryColorLight900,
-    primaryColorDarkSubtitle: SalatColor.primaryColorDarkSubtitle,
-   
+    bgSurfaceColor: SalatColor.bgSurfaceColorLight,
+    cardTitleColor: SalatColor.cardTitleColorLight,
+    sunIconColor: SalatColor.sunIconColorLight,
+    fajrIconColor: SalatColor.fajrIconCloudColorLight,
+    inputBoxColor: SalatColor.inputBoxColorLight,
+    asrIconCloudColor: SalatColor.asrIconCloudColorLight,
+    magribIconCloudColor: SalatColor.magribIconCloudColorLight,
+    switchGlowColor: SalatColor.switchGlowColorLight,
+    primaryBtnTextColor: SalatColor.primaryBTNTextColorLight,
+    appBarBgColor: SalatColor.appbarBGColorLight,
+    cardSubtitleColor: SalatColor.cardSubtitleColorLight,
+    collapseBtnColor: SalatColor.collapseBTNColorLight,
+    cardSiblingBottomBorderColor: SalatColor.cardSiblingBottomBorderColorLight,
+    forbiddenInfoIconColor: SalatColor.forbiddenInfoIconColorLight,
+    notificationActiveIconColor: SalatColor.notificationActiveIconColorLight,
+    notificationInactiveIconColor: SalatColor.notificationInactiveIconColorLight,
+    trackerDonuntRingColor: SalatColor.trackerDonutRingColorLight,
+    meshCircleColor: SalatColor.meshCircleColorLight,
+    onBProgressPrimaryColor: SalatColor.onBProgressPrimaryColorLight,
+    onBProgressSecondaryColor: SalatColor.onBProgressSecondaryColorLight,
+    onBIconSecondaryColor: SalatColor.onBIconSecondaryColorLight,
+    iftaarSunColor: SalatColor.iftaarSunColorLight,
+    bgCardGradient1: SalatColor.bgCardGradientLight1,
+    bgCardGradient2: SalatColor.bgCardGradientLight2,
   );
 
   // Dark Theme
@@ -57,14 +127,30 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
     primaryColor750: SalatColor.primaryColorDark750,
     primaryColor800: SalatColor.primaryColorDark800,
     primaryColor900: SalatColor.primaryColorDark900,
-    primaryColorDarkSubtitle: SalatColor.primaryColorDarkSubtitle,
-   
-       
-       
-
-       
-       
-       
+    bgSurfaceColor: SalatColor.bgSurfaceColorDark,
+    cardTitleColor: SalatColor.cardTitleColorDark,
+    sunIconColor: SalatColor.sunIconColorDark,
+    fajrIconColor: SalatColor.fajrIconCloudColorDark,
+    inputBoxColor: SalatColor.inputBoxColorDark,
+    asrIconCloudColor: SalatColor.asrIconCloudColorDark,
+    magribIconCloudColor: SalatColor.magribIconCloudColorDark,
+    switchGlowColor: SalatColor.switchGlowColorDark,
+    primaryBtnTextColor: SalatColor.primaryBTNTextColorDark,
+    appBarBgColor: SalatColor.appbarBGColorDark,
+    cardSubtitleColor: SalatColor.cardSubtitleColorDark,
+    collapseBtnColor: SalatColor.collapseBTNColorDark,
+    cardSiblingBottomBorderColor: SalatColor.cardSiblingBottomBorderColorDark,
+    forbiddenInfoIconColor: SalatColor.forbiddenInfoIconColorDark,
+    notificationActiveIconColor: SalatColor.notificationActiveIconColorDark,
+    notificationInactiveIconColor: SalatColor.notificationInactiveIconColorDark,
+    trackerDonuntRingColor: SalatColor.trackerDonutRingColorDark,
+    meshCircleColor: SalatColor.meshCircleColorDark,
+    onBProgressPrimaryColor: SalatColor.onBProgressPrimaryColorDark,
+    onBProgressSecondaryColor: SalatColor.onBProgressSecondaryColorDark,
+    onBIconSecondaryColor: SalatColor.onBIconSecondaryColorDark,
+    iftaarSunColor: SalatColor.iftaarSunColorDark,
+    bgCardGradient1: SalatColor.bgCardGradientDark1,
+    bgCardGradient2: SalatColor.bgCardGradientDark2,
   );
 
   @override
@@ -79,23 +165,31 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
     Color? primaryColor750,
     Color? primaryColor800,
     Color? primaryColor900,
-    Color? primaryColorDarkSubtitle,
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-
-   
-   
-
-    }) {
+    Color? bgSurfaceColor,
+    Color? cardTitleColor,
+    Color? sunIconColor,
+    Color? fajrIconColor,
+    Color? inputBoxColor,
+    Color? asrIconCloudColor,
+    Color? magribIconCloudColor,
+    Color? switchGlowColor,
+    Color? primaryBtnTextColor,
+    Color? appBarBgColor,
+    Color? cardSubtitleColor,
+    Color? collapseBtnColor,
+    Color? cardSiblingBottomBorderColor,
+    Color? forbiddenInfoIconColor,
+    Color? notificationActiveIconColor,
+    Color? notificationInactiveIconColor,
+    Color? trackerDonuntRingColor,
+    Color? meshCircleColor,
+    Color? onBProgressPrimaryColor,
+    Color? onBProgressSecondaryColor,
+    Color? onBIconSecondaryColor,
+    Color? iftaarSunColor,
+    Color? bgCardGradient1,
+    Color? bgCardGradient2,
+  }) {
     return SalatCustomTheme(
       primaryColor100: primaryColor100 ?? this.primaryColor100,
       primaryColor200: primaryColor200 ?? this.primaryColor200,
@@ -107,9 +201,31 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
       primaryColor750: primaryColor750 ?? this.primaryColor750,
       primaryColor800: primaryColor800 ?? this.primaryColor800,
       primaryColor900: primaryColor900 ?? this.primaryColor900,
-      primaryColorDarkSubtitle: primaryColorDarkSubtitle ?? this.primaryColorDarkSubtitle,
-     
-    
+      bgSurfaceColor: bgSurfaceColor ?? this.bgSurfaceColor,
+      cardTitleColor: cardTitleColor ?? this.cardTitleColor,
+      sunIconColor: sunIconColor ?? this.sunIconColor,
+      fajrIconColor: fajrIconColor ?? this.fajrIconColor,
+      inputBoxColor: inputBoxColor ?? this.inputBoxColor,
+      asrIconCloudColor: asrIconCloudColor ?? this.asrIconCloudColor,
+      magribIconCloudColor: magribIconCloudColor ?? this.magribIconCloudColor,
+      switchGlowColor: switchGlowColor ?? this.switchGlowColor,
+      primaryBtnTextColor: primaryBtnTextColor ?? this.primaryBtnTextColor,
+      appBarBgColor: appBarBgColor ?? this.appBarBgColor,
+      cardSubtitleColor: cardSubtitleColor ?? this.cardSubtitleColor,
+      collapseBtnColor: collapseBtnColor ?? this.collapseBtnColor,
+      cardSiblingBottomBorderColor: cardSiblingBottomBorderColor ?? this.cardSiblingBottomBorderColor,
+      forbiddenInfoIconColor: forbiddenInfoIconColor ?? this.forbiddenInfoIconColor,
+      notificationActiveIconColor: notificationActiveIconColor ?? this.notificationActiveIconColor,
+      notificationInactiveIconColor: notificationInactiveIconColor ?? this.notificationInactiveIconColor,
+      trackerDonuntRingColor: trackerDonuntRingColor ?? this.trackerDonuntRingColor,
+      meshCircleColor: meshCircleColor ?? this.meshCircleColor,
+      onBProgressPrimaryColor: onBProgressPrimaryColor ?? this.onBProgressPrimaryColor,
+      onBProgressSecondaryColor: onBProgressSecondaryColor ?? this.onBProgressSecondaryColor,
+      onBIconSecondaryColor: onBIconSecondaryColor ?? this.onBIconSecondaryColor,
+      iftaarSunColor: iftaarSunColor ?? this.iftaarSunColor,
+      bgCardGradient1: bgCardGradient1 ?? this.bgCardGradient1,
+      bgCardGradient2: bgCardGradient2 ?? this.bgCardGradient2,
+      
     );
   }
 
@@ -132,19 +248,32 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
       primaryColor750: Color.lerp(primaryColor750, other.primaryColor750, t)!,
       primaryColor800: Color.lerp(primaryColor800, other.primaryColor800, t)!,
       primaryColor900: Color.lerp(primaryColor900, other.primaryColor900, t)!,
-      primaryColorDarkSubtitle: Color.lerp(primaryColorDarkSubtitle, other.primaryColorDarkSubtitle, t)!,
-     
+      bgSurfaceColor: Color.lerp(bgSurfaceColor, other.bgSurfaceColor, t)!,
+      cardTitleColor: Color.lerp(cardTitleColor, other.cardTitleColor, t)!,
+      sunIconColor: Color.lerp(sunIconColor, other.sunIconColor, t)!,
+      fajrIconColor: Color.lerp(fajrIconColor, other.fajrIconColor, t)!,
+      inputBoxColor: Color.lerp(inputBoxColor, other.inputBoxColor, t)!,
+      asrIconCloudColor: Color.lerp(asrIconCloudColor, other.asrIconCloudColor, t)!,
+      magribIconCloudColor: Color.lerp(magribIconCloudColor, other.magribIconCloudColor, t)!,
+      switchGlowColor: Color.lerp(switchGlowColor, other.switchGlowColor, t)!,
+      primaryBtnTextColor: Color.lerp(primaryBtnTextColor, other.primaryBtnTextColor, t)!,
+      appBarBgColor: Color.lerp(appBarBgColor, other.appBarBgColor, t)!,
+      cardSubtitleColor: Color.lerp(cardSubtitleColor, other.cardSubtitleColor, t)!,
+      collapseBtnColor: Color.lerp(collapseBtnColor, other.collapseBtnColor, t)!,
+      cardSiblingBottomBorderColor: Color.lerp(cardSiblingBottomBorderColor, other.cardSiblingBottomBorderColor, t)!,
+      forbiddenInfoIconColor: Color.lerp(forbiddenInfoIconColor, other.forbiddenInfoIconColor, t)!,
+      notificationActiveIconColor: Color.lerp(notificationActiveIconColor, other.notificationActiveIconColor, t)!,
+      notificationInactiveIconColor: Color.lerp(notificationInactiveIconColor, other.notificationInactiveIconColor, t)!,
+      trackerDonuntRingColor: Color.lerp(trackerDonuntRingColor, other.trackerDonuntRingColor, t)!,
+      meshCircleColor: Color.lerp(meshCircleColor, other.meshCircleColor, t)!,
+      onBProgressPrimaryColor: Color.lerp(onBProgressPrimaryColor, other.onBProgressPrimaryColor, t)!,
+      onBProgressSecondaryColor: Color.lerp(onBProgressSecondaryColor, other.onBProgressSecondaryColor, t)!,
+      onBIconSecondaryColor: Color.lerp(onBIconSecondaryColor, other.onBIconSecondaryColor, t)!,
+      iftaarSunColor: Color.lerp(iftaarSunColor, other.iftaarSunColor, t)!,
+      bgCardGradient1: Color.lerp(bgCardGradient1, other.bgCardGradient1, t)!,
+      bgCardGradient2: Color.lerp(bgCardGradient2, other.bgCardGradient2, t)!,
 
-     
-     
-     
-     
-
-     
-     
-
-     
-     
+    
     );
   }
 }
