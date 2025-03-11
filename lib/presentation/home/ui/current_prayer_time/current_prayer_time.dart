@@ -52,6 +52,8 @@ class CurrentPrayerTime extends StatelessWidget {
                   bottom: 12.px,
                 ),
                 child: InkWell(
+                  overlayColor: MaterialStateProperty.all(Colors.transparent),
+                splashColor: Colors.transparent,
                   onTap: () => presenter.toggleCurrentPrayerTimeExpansion(),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -251,6 +253,8 @@ class ColumnItem extends StatelessWidget {
               ),
               SizedBox(width: 12.px),
               InkWell(
+                overlayColor: MaterialStateProperty.all(Colors.transparent),
+                splashColor: Colors.transparent,
                 onTap: onNotificationTap,
                 child: SvgPicture.asset(
                   isNotificationEnabled

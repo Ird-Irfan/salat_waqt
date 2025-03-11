@@ -114,6 +114,8 @@ class AnimatedCardState extends State<AnimatedCard> {
 
   Widget buildSelectableText(String text) {
     return InkWell(
+      overlayColor: MaterialStateProperty.all(Colors.transparent),
+                splashColor: Colors.transparent,
       onTap: () {
         setState(() {
           // Toggle selection: Select new item or deselect if already selected

@@ -39,6 +39,8 @@ class DateDisplay extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           InkWell(
+            overlayColor: MaterialStateProperty.all(Colors.transparent),
+                splashColor: Colors.transparent,
             onTap: () {
               presenter.previousDate();
             },
@@ -75,6 +77,8 @@ class DateDisplay extends StatelessWidget {
             ],
           ),
           InkWell(
+            overlayColor: MaterialStateProperty.all(Colors.transparent),
+                splashColor: Colors.transparent,
             onTap: () {
               presenter.nextDate();
             },

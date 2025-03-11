@@ -48,6 +48,8 @@ class ForbiddenTime extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 InkWell(
+                  overlayColor: MaterialStateProperty.all(Colors.transparent),
+                splashColor: Colors.transparent,
                   onTap: () => presenter.toggleExpanded(),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
