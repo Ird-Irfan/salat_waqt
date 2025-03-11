@@ -6,6 +6,7 @@ import 'package:salat_waqt/core/config/salat_waqt_screen.dart';
 import 'package:salat_waqt/core/di/service_locator.dart';
 import 'package:salat_waqt/core/external_libs/presentable_widget_builder.dart';
 import 'package:salat_waqt/core/utility/utility.dart';
+import 'package:salat_waqt/presentation/common/widgets/custom_bottom_sheet.dart';
 import 'package:salat_waqt/presentation/home/presenter/home_presenter.dart';
 import 'package:salat_waqt/presentation/home/ui/about_us_footer/about_us_footer.dart';
 import 'package:salat_waqt/presentation/home/ui/appber/appber_section.dart';
@@ -66,7 +67,12 @@ class HomePage extends StatelessWidget {
                         child: Container(
                           color: Colors.black.withOpacity(0.1),
                           child: AppBarSection(
-                            onLocationTap: () {},
+                            onLocationTap: () {
+                              CustomBottomSheet.show(
+                                context: context,
+                                child: Container(height: 100.px),
+                              );
+                            },
                             location:
                                 presenter.currentUiState.currentAddress ?? '',
                             theme: theme,
