@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:salat_waqt/core/base/base_presenter.dart';
 import 'package:salat_waqt/core/config/salat_waqt_screen.dart';
 import 'package:salat_waqt/core/constant/app_contant.dart';
@@ -31,17 +32,24 @@ class CurrentPrayerTime extends StatelessWidget {
         return Container(
           height: presenter.currentUiState.currentPrayerTimeHeight,
           decoration: BoxDecoration(
-            color: const Color(0xFF1A2234),
-            borderRadius: BorderRadius.circular(12),
+            gradient: RadialGradient(
+              center: Alignment(0.93, 1.20),
+              radius: 0.72,
+              colors: [
+                context.color.bgCardGradient1,
+                context.color.bgCardGradient2,
+              ],
+            ),
+            borderRadius: BorderRadius.circular(16.px),
           ),
           child: Column(
             children: [
               Padding(
                 padding: EdgeInsets.only(
-                  left: 16.px,
-                  right: 16.px,
-                  top: 16.px,
-                  bottom: 10.px,
+                  left: 20.px,
+                  right: 28.px,
+                  top: 20.px,
+                  bottom: 12.px,
                 ),
                 child: InkWell(
                   onTap: () => presenter.toggleCurrentPrayerTimeExpansion(),
@@ -56,19 +64,19 @@ class CurrentPrayerTime extends StatelessWidget {
                               Text(
                                 'CURRENT WAQT • ',
                                 style: theme.textTheme.labelMedium?.copyWith(
-                                  fontSize: 14.px,
-                                  color: Colors.white,
+                                  fontSize: 13.px,
+                                  color: context.color.cardTitleColor,
                                   fontFamily: AppTextStyles.inter,
-                                  fontWeight: FontWeight.normal,
+                                  fontWeight: FontWeight.w400,
                                 ),
                               ),
                               Text(
-                                presenter.currentUiState.currentWaqt ?? '',
+                                presenter.currentUiState.currentWaqt ?? '--:--',
                                 style: theme.textTheme.labelMedium?.copyWith(
                                   fontSize: 14.px,
-                                  color: Colors.white,
+                                  color: context.color.cardTitleColor,
                                   fontFamily: AppTextStyles.inter,
-                                  fontWeight: FontWeight.w500,
+                                  fontWeight: FontWeight.w700,
                                 ),
                               ),
                             ],
@@ -79,7 +87,7 @@ class CurrentPrayerTime extends StatelessWidget {
                             style: theme.textTheme.labelMedium?.copyWith(
                               fontSize: 18.px,
                               fontWeight: FontWeight.w500,
-                              color: Colors.white,
+                              color: context.color.cardTitleColor,
                               fontFamily: AppTextStyles.inter,
                             ),
                           ),
@@ -95,22 +103,25 @@ class CurrentPrayerTime extends StatelessWidget {
                           svgPath: AppConstant.icArrowDown,
                           height: 24.px,
                           width: 24.px,
+                          color: context.color.cardTitleColor,
                         ),
                       ),
                     ],
                   ),
                 ),
               ),
-              Divider(color: Colors.grey.withOpacityInt(0.2)),
+              Divider(
+                height: 0.1.px,
+                color: context.color.cardSiblingBottomBorderColor
+                    .withOpacityInt(0.05),
+              ),
               SizedBox(height: 16.px),
-              Expanded(
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 300),
-                  child:
-                      presenter.currentUiState.isCurrentPrayerTimeExpanded
-                          ? ColumnItem(theme: theme, presenter: presenter)
-                          : RowItem(theme: theme, presenter: presenter),
-                ),
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 600),
+                child:
+                    presenter.currentUiState.isCurrentPrayerTimeExpanded
+                        ? ColumnItem(theme: theme, presenter: presenter)
+                        : RowItem(theme: theme, presenter: presenter),
               ),
             ],
           ),
@@ -138,8 +149,12 @@ class ColumnItem extends StatelessWidget {
             () => presenter.togglePrayerNotification('Fajr'),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
-            child: Divider(color: Colors.grey.withOpacityInt(0.2)),
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: Divider(
+              color: context.color.cardSiblingBottomBorderColor.withOpacityInt(
+                0.05,
+              ),
+            ),
           ),
           _buildPrayerRow(
             AppConstant.icDuhur,
@@ -149,8 +164,12 @@ class ColumnItem extends StatelessWidget {
             () => presenter.togglePrayerNotification('Dhuhr'),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
-            child: Divider(color: Colors.grey.withOpacityInt(0.2)),
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: Divider(
+              color: context.color.cardSiblingBottomBorderColor.withOpacityInt(
+                0.05,
+              ),
+            ),
           ),
           _buildPrayerRow(
             AppConstant.icAsr,
@@ -160,8 +179,12 @@ class ColumnItem extends StatelessWidget {
             () => presenter.togglePrayerNotification('Asr'),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
-            child: Divider(color: Colors.grey.withOpacityInt(0.2)),
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: Divider(
+              color: context.color.cardSiblingBottomBorderColor.withOpacityInt(
+                0.05,
+              ),
+            ),
           ),
           _buildPrayerRow(
             AppConstant.icMaghrib,
@@ -171,8 +194,12 @@ class ColumnItem extends StatelessWidget {
             () => presenter.togglePrayerNotification('Maghrib'),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
-            child: Divider(color: Colors.grey.withOpacityInt(0.2)),
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: Divider(
+              color: context.color.cardSiblingBottomBorderColor.withOpacityInt(
+                0.05,
+              ),
+            ),
           ),
           _buildPrayerRow(
             AppConstant.icIsha,
@@ -181,7 +208,7 @@ class ColumnItem extends StatelessWidget {
             presenter.currentUiState.notificationStatus['Isha'] ?? false,
             () => presenter.togglePrayerNotification('Isha'),
           ),
-          SizedBox(height: 26.px),
+          // SizedBox(height: 26.px),
         ],
       ),
     );
@@ -197,17 +224,17 @@ class ColumnItem extends StatelessWidget {
     return Builder(
       builder: (context) {
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              SvgIcon(svgPath: svgPath, height: 26.px, width: 26.px),
+              SvgIcon(svgPath: svgPath, height: 28.px, width: 28.px),
               SizedBox(width: 10.px),
               Text(
                 prayerName,
                 style: theme.textTheme.labelMedium?.copyWith(
                   fontSize: 16.px,
-                  color: Colors.white,
+                  color: context.color.cardTitleColor,
                   fontFamily: AppTextStyles.inter,
                   fontWeight: FontWeight.w500,
                 ),
@@ -217,21 +244,20 @@ class ColumnItem extends StatelessWidget {
                 time,
                 style: theme.textTheme.labelMedium?.copyWith(
                   fontSize: 16.px,
-                  color: Colors.white,
+                  color: context.color.cardTitleColor,
                   fontFamily: AppTextStyles.inter,
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              SizedBox(width: 10.px),
+              SizedBox(width: 12.px),
               InkWell(
                 onTap: onNotificationTap,
-                child: SvgIcon(
-                  svgPath:
-                      isNotificationEnabled
-                          ? AppConstant.icNotificationOn
-                          : AppConstant.icNotificationOff,
-                  height: 20.px,
-                  width: 20.px,
+                child: SvgPicture.asset(
+                  isNotificationEnabled
+                      ? AppConstant.icNotificationOn
+                      : AppConstant.icNotificationOff,
+                  height: 24.px,
+                  width: 21.px,
                 ),
               ),
             ],
@@ -249,40 +275,48 @@ class RowItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        _buildPrayerTimeItem(
-          name: 'FAJR',
-          time: presenter.currentUiState.prayerTimes?['Fajr'] ?? '',
-          svgPath: AppConstant.icFajr,
-          theme: theme,
-        ),
-        _buildPrayerTimeItem(
-          name: 'DUHUR',
-          time: presenter.currentUiState.prayerTimes?['Dhuhr'] ?? '',
-          svgPath: AppConstant.icDuhur,
-          theme: theme,
-        ),
-        _buildPrayerTimeItem(
-          name: 'ASR',
-          time: presenter.currentUiState.prayerTimes?['Asr'] ?? '',
-          svgPath: AppConstant.icAsr,
-          theme: theme,
-        ),
-        _buildPrayerTimeItem(
-          name: 'MAGHRIB',
-          time: presenter.currentUiState.prayerTimes?['Maghrib'] ?? '',
-          svgPath: AppConstant.icMaghrib,
-          theme: theme,
-        ),
-        _buildPrayerTimeItem(
-          name: 'ISHA',
-          time: presenter.currentUiState.prayerTimes?['Isha'] ?? '',
-          svgPath: AppConstant.icIsha,
-          theme: theme,
-        ),
-      ],
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _buildPrayerTimeItem(
+            name: 'FAJR',
+            time: presenter.currentUiState.prayerTimes?['Fajr'] ?? '',
+            svgPath: AppConstant.icFajr,
+            theme: theme,
+            context: context,
+          ),
+          _buildPrayerTimeItem(
+            name: 'DUHUR',
+            time: presenter.currentUiState.prayerTimes?['Dhuhr'] ?? '',
+            svgPath: AppConstant.icDuhur,
+            theme: theme,
+            context: context,
+          ),
+          _buildPrayerTimeItem(
+            name: 'ASR',
+            time: presenter.currentUiState.prayerTimes?['Asr'] ?? '',
+            svgPath: AppConstant.icAsr,
+            theme: theme,
+            context: context,
+          ),
+          _buildPrayerTimeItem(
+            name: 'MAGHRIB',
+            time: presenter.currentUiState.prayerTimes?['Maghrib'] ?? '',
+            svgPath: AppConstant.icMaghrib,
+            theme: theme,
+            context: context,
+          ),
+          _buildPrayerTimeItem(
+            name: 'ISHA',
+            time: presenter.currentUiState.prayerTimes?['Isha'] ?? '',
+            svgPath: AppConstant.icIsha,
+            theme: theme,
+            context: context,
+          ),
+        ],
+      ),
     );
   }
 
@@ -291,30 +325,34 @@ class RowItem extends StatelessWidget {
     required String time,
     required String svgPath,
     required ThemeData theme,
+    required BuildContext context,
   }) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: EdgeInsets.all(8.px),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             name,
             style: theme.textTheme.labelMedium?.copyWith(
               fontSize: 12.px,
-              color: Colors.white,
+              color: context.color.cardSubtitleColor,
               fontFamily: AppTextStyles.inter,
               fontWeight: FontWeight.w400,
-              letterSpacing: 1.5.px,
+              // letterSpacing: 1.5.px,
             ),
           ),
-          SizedBox(height: 14.px),
-          SvgIcon(svgPath: svgPath, height: 24.px, width: 24.px),
-          SizedBox(height: 18.px),
+          SizedBox(height: 10.px),
+          SvgIcon(svgPath: svgPath, height: 22.px, width: 22.px),
+          SizedBox(height: 12.px),
           Text(
             time,
             style: theme.textTheme.labelMedium?.copyWith(
-              fontSize: 10.px,
-              color: Colors.white,
+              fontSize: 13.px,
+              color: context.color.cardTitleColor,
+              fontFamily: AppTextStyles.inter,
+              fontWeight: FontWeight.w500,
             ),
           ),
         ],

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:salat_waqt/core/base/base_presenter.dart';
-import 'package:salat_waqt/core/config/salat_color.dart';
 import 'package:salat_waqt/core/constant/app_text_styles.dart';
 import 'package:salat_waqt/core/di/service_locator.dart';
 import 'package:salat_waqt/core/external_libs/presentable_widget_builder.dart';
@@ -10,7 +10,8 @@ import 'dart:ui' as ui;
 import 'dart:async';
 
 class IftarTimeCounter extends StatelessWidget {
-  const IftarTimeCounter({super.key});
+  final ThemeData theme;
+  const IftarTimeCounter({super.key, required this.theme});
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +56,7 @@ class IftarTimeCounter extends StatelessWidget {
               future: _loadImage('assets/images/circle_bg.png'),
               builder: (context, snapshot) {
                 return CustomPaint(
-                  size: const Size(300, 300),
+                  size: Size(294.px, 294.px),
                   painter: CircularProgressPainter(
                     progressValue: progressValue,
                     gradientStartColor: gradientStartColor,
@@ -73,25 +74,29 @@ class IftarTimeCounter extends StatelessWidget {
               children: [
                 Text(
                   '${presenter.currentUiState.nextPrayerName} time',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: SalatColor.primaryColorDark300,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    color: context.color.cardTitleColor,
+                    fontFamily: AppTextStyles.inter,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 20.px,
                   ),
                 ),
                 Text(
                   remainingTime ?? '',
-                  style: TextStyle(
-                    fontSize: 60,
-                    fontWeight: FontWeight.bold,
+                  style: theme.textTheme.titleLarge?.copyWith(
                     color: gradientStartColor,
                     fontFamily: AppTextStyles.unicaOne,
+                    fontSize: 60.px,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
                   'Remaining',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: SalatColor.primaryColorDark300,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    color: context.color.cardTitleColor,
+                    fontFamily: AppTextStyles.inter,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 20.px,
                   ),
                 ),
               ],
@@ -173,10 +178,10 @@ class CircularProgressPainter extends CustomPainter {
 
     // Create gradient for progress arc
     final rect = Rect.fromCircle(center: center, radius: radius);
-    final gradient = SweepGradient(
-      center: Alignment(1.20, 0.93),
-      // radius: 0.72,
-      colors: [gradientStartColor, gradientEndColor],
+    final gradient = LinearGradient(
+      begin: Alignment(-0.76, -0.65),
+      end: Alignment(-0.76, 0.65),
+      colors: [gradientEndColor, gradientStartColor],
     );
 
     // Draw progress arc with gradient

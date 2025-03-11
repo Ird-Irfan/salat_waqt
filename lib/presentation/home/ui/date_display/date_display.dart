@@ -21,8 +21,8 @@ class DateDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 320.px,
-      height: 110.px,
-      padding: EdgeInsets.all(30.px),
+      height: 88.px,
+      padding: EdgeInsets.all(20.px),
       decoration: BoxDecoration(
         gradient: RadialGradient(
           center: Alignment(0.93, 1.20),
@@ -32,9 +32,10 @@ class DateDisplay extends StatelessWidget {
             context.color.bgCardGradient2,
           ],
         ),
-        borderRadius: BorderRadius.all(Radius.circular(12)),
+        borderRadius: BorderRadius.all(Radius.circular(16.px)),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           InkWell(
