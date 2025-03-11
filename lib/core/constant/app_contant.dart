@@ -10,6 +10,7 @@ class AppConstant {
   static const String icArrowLeft = 'assets/svgs/ic_arrowleft.svg';
   static const String icArrowRight = 'assets/svgs/ic_arrowright.svg';
   static const String icLeftArrowBack = 'assets/svgs/ic_arrow-back.svg';
+  static const String icRightArrowForward = 'assets/svgs/ic_arrow_right.svg';
 
   static const String icNotificationOn = 'assets/svgs/ic_notification_on.svg';
   static const String icNotificationOff = 'assets/svgs/ic_notification_off.svg';
