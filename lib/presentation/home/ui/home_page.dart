@@ -45,6 +45,7 @@ class HomePage extends StatelessWidget {
               slivers: [
                 SliverAppBar(
                   pinned: true,
+                  scrolledUnderElevation: 0,
                   flexibleSpace: ClipRRect(
                     borderRadius: const BorderRadius.only(
                       bottomLeft: Radius.circular(15),
@@ -135,5 +136,3 @@ class HomePage extends StatelessWidget {
     );
   }
 }
-
-

@@ -19,7 +19,7 @@ class SalatWaqt extends StatefulWidget {
   @override
   State<SalatWaqt> createState() => _SalatWaqtState();
 }
-
+// In salat_waqt.dart
 class _SalatWaqtState extends State<SalatWaqt> {
   @override
   Widget build(BuildContext context) {
@@ -33,23 +33,26 @@ class _SalatWaqtState extends State<SalatWaqt> {
                 OverlayEntry(
                   builder: (context) {
                     SalatWaqtScreen.setUp(context);
-                    // Wrap the entire app with the background
-                    return Theme(
-                      data: Theme.of(context),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage(
-                              Get.isDarkMode 
-                                ? AppConstant.appBgPngDark 
-                                : AppConstant.appBgPngLight
-                            ),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        child: child!,
-                      ),
-                    );
+                    // Wrap the Container in a Builder
+                    return Theme(  //add this.
+                        data: Theme.of(context),
+                        child: Builder(
+                          builder: (innerContext) {  // Add the Builder here
+                            return Container(
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: AssetImage(
+                                    Get.isDarkMode  // This now correctly reflects current theme
+                                        ? AppConstant.appBgPngDark
+                                        : AppConstant.appBgPngLight,
+                                  ),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              child: child!,
+                            );
+                        }));
+                    
                   },
                 ),
               ],
@@ -61,11 +64,10 @@ class _SalatWaqtState extends State<SalatWaqt> {
           title: 'Salat Waqt',
           theme: SalatTheme.getTheme('Light', AppTextStyles.inter, 14),
           darkTheme: SalatTheme.getTheme('Dark', AppTextStyles.inter, 14),
-          themeMode: ThemeMode.dark,
+          themeMode: ThemeMode.system, //use system default, dark, or light
           home: const HomePage(),
         );
       },
     );
   }
 }
-

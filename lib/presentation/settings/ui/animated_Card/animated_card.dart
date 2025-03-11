@@ -38,7 +38,7 @@ class AnimatedCardState extends State<AnimatedCard> {
       },
       child: Container(
         width: double.infinity,
-        height: _isExpanded ? 236.px : 95.px,
+        height: _isExpanded ? 265.px : 95.px,
         decoration: ShapeDecoration(
           gradient: RadialGradient(
             center: Alignment(0.93, 1.20),
@@ -59,8 +59,12 @@ class AnimatedCardState extends State<AnimatedCard> {
               padding: EdgeInsets.all(20.px),
               child: Row(
                 children: [
-                  SvgPicture.asset(AppConstant.icWeat, width: 28, height: 28),
-                  SizedBox(width: 16),
+                  SvgPicture.asset(
+                    AppConstant.icWeat,
+                    width: 28.px,
+                    height: 28.px,
+                  ),
+                  SizedBox(width: 16.px),
                   Expanded(
                     flex: 5,
                     child: Column(
@@ -101,7 +105,6 @@ class AnimatedCardState extends State<AnimatedCard> {
                 child: Column(
                   children: [
                     buildSelectableText("Hanafi"),
-                    Divider(color: Colors.black, thickness: 1),
                     buildSelectableText("SHafi,Maliki,Hambli"),
                   ],
                 ),
@@ -115,7 +118,7 @@ class AnimatedCardState extends State<AnimatedCard> {
   Widget buildSelectableText(String text) {
     return InkWell(
       overlayColor: MaterialStateProperty.all(Colors.transparent),
-                splashColor: Colors.transparent,
+      splashColor: Colors.transparent,
       onTap: () {
         setState(() {
           // Toggle selection: Select new item or deselect if already selected
@@ -127,7 +130,7 @@ class AnimatedCardState extends State<AnimatedCard> {
         });
       },
       child: Container(
-        color: selectedText == text ? Colors.grey[300] : null,
+        // color: selectedText == text ? Colors.grey[300] : null,
         padding: EdgeInsets.all(16),
         width: double.infinity,
         child: Row(
