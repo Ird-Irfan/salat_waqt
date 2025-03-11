@@ -53,7 +53,7 @@ class CurrentPrayerTime extends StatelessWidget {
                 ),
                 child: InkWell(
                   overlayColor: MaterialStateProperty.all(Colors.transparent),
-                splashColor: Colors.transparent,
+                  splashColor: Colors.transparent,
                   onTap: () => presenter.toggleCurrentPrayerTimeExpansion(),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

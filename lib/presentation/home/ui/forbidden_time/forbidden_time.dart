@@ -229,17 +229,17 @@ class ForbiddenTimeItems extends StatelessWidget {
                     Text(
                       title,
                       style: theme.textTheme.labelMedium?.copyWith(
-                        fontSize: 16.px,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white,
+                        fontSize: 12.px,
+                        fontWeight: FontWeight.w400,
+                        color: context.color.cardTitleColor,
                       ),
                     ),
-                    SizedBox(height: 4),
+                    SizedBox(height: 6.px),
                     Text(
                       timeRange,
                       style: theme.textTheme.labelMedium?.copyWith(
-                        fontSize: 12.px,
-                        color: Colors.white,
+                        fontSize: 16.px,
+                        color: context.color.cardTitleColor,
                         fontWeight: FontWeight.w500,
                         fontFamily: AppTextStyles.inter,
                       ),

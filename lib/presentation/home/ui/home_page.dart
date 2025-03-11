@@ -2,8 +2,10 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:salat_waqt/core/base/base_presenter.dart';
+import 'package:salat_waqt/core/config/salat_waqt_screen.dart';
 import 'package:salat_waqt/core/di/service_locator.dart';
 import 'package:salat_waqt/core/external_libs/presentable_widget_builder.dart';
+import 'package:salat_waqt/core/utility/utility.dart';
 import 'package:salat_waqt/presentation/home/presenter/home_presenter.dart';
 import 'package:salat_waqt/presentation/home/ui/about_us_footer/about_us_footer.dart';
 import 'package:salat_waqt/presentation/home/ui/appber/appber_section.dart';
@@ -44,19 +46,19 @@ class HomePage extends StatelessWidget {
             return CustomScrollView(
               slivers: [
                 SliverAppBar(
+                  toolbarHeight: 68.px,
                   pinned: true,
                   scrolledUnderElevation: 0,
                   flexibleSpace: ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(15),
-                      bottomRight: Radius.circular(15),
-                    ),
                     child: Container(
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         gradient: LinearGradient(
                           begin: Alignment(0.00, -1.00),
                           end: Alignment(0, 1),
-                          colors: [Colors.black, Color(0x00666666)],
+                          colors: [
+                            context.color.appBarBgColor.withOpacityInt(0.01),
+                            Colors.transparent,
+                          ],
                         ),
                       ),
                       child: BackdropFilter(
@@ -64,6 +66,7 @@ class HomePage extends StatelessWidget {
                         child: Container(
                           color: Colors.black.withOpacity(0.1),
                           child: AppBarSection(
+                            onLocationTap: () {},
                             location:
                                 presenter.currentUiState.currentAddress ?? '',
                             theme: theme,
