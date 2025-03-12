@@ -7,8 +7,6 @@ class SettingsUiState extends BaseUiState {
 
   final bool doNotDisturbEnabled;
 
-
-
   const SettingsUiState({
     required super.userMessage,
     required super.isLoading,
@@ -34,10 +32,10 @@ class SettingsUiState extends BaseUiState {
     isLoading,
     userMessage,
     notificationEnabled,
-      darkModeEnabled,
-        autoUpdateEnabled,
-        doNotDisturbEnabled,
-      ];
+    darkModeEnabled,
+    autoUpdateEnabled,
+    doNotDisturbEnabled,
+  ];
 
   SettingsUiState copyWith({
     bool? isLoading,

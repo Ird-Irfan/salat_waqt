@@ -194,10 +194,7 @@ class SettingsPage extends StatelessWidget {
 }
 
 class CustomAppBar extends StatelessWidget {
-  const CustomAppBar({
-    super.key,
-    required this.theme,
-  });
+  const CustomAppBar({super.key, required this.theme});
 
   final ThemeData theme;
 
