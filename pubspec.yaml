@@ -116,6 +116,10 @@ flutter:
     - family: UnicaOne-Regular
       fonts:
         - asset: assets/fonts/unicaone/UnicaOne-Regular.ttf
+
+    - family: AlinurProttyoee
+      fonts:
+        - asset: assets/fonts/alinurprottoyoee.ttf
     # - family: Trajan Pro
     #   fonts:
     #     - asset: fonts/TrajanPro.ttf

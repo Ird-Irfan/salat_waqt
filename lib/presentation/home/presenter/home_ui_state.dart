@@ -69,7 +69,7 @@ class HomeUiState extends BaseUiState {
       nextPrayerName: null,
       remainingTime: null,
       progressValue: 0.0,
-      nextPrayerTime: null,
+      nextPrayerTime: '00:00',
       isCurrentPrayerTimeExpanded: false,
       currentPrayerTimeHeight: 236,
       currentWaqt: 'DUHUR',

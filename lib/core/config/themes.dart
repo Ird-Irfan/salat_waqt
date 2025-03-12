@@ -214,6 +214,10 @@ class SalatTheme {
         iftaarSunColor: SalatColor.iftaarSunColorLight,
         bgCardGradient1: SalatColor.bgCardGradientLight1,
         bgCardGradient2: SalatColor.bgCardGradientLight2,
+        donutRingGradientStartColor:
+            SalatColor.donutRingGradientStartColorLight,
+        donutRingGradientEndColor: SalatColor.donutRingGradientEndColorLight,
+        donutBottomCircleColor: SalatColor.donutBottomCircleColorLight,
       ),
       SalatCustomTextTheme(
         labelExtraSmall: TextStyle(
@@ -294,9 +298,12 @@ class SalatTheme {
     ),
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.transparent,
-      iconTheme: IconThemeData(color: Colors.black87),
-      elevation: 0,
-      scrolledUnderElevation: 0,
+      // shadowColor: Colors.white,
+      // backgroundColor: Color(0xff68F2B7),
+      // foregroundColor: Color(0xff477848),
+      // iconTheme: IconThemeData(color: Colors.black87),
+      // elevation: 0,
+      // scrolledUnderElevation: 0,
     ),
     textTheme: SalatTextTheme.baseTextTheme.apply(
       bodyColor: Colors.black87,
@@ -361,6 +368,9 @@ class SalatTheme {
         iftaarSunColor: SalatColor.iftaarSunColorDark,
         bgCardGradient1: SalatColor.bgCardGradientDark1,
         bgCardGradient2: SalatColor.bgCardGradientDark2,
+        donutRingGradientStartColor: SalatColor.donutRingGradientStartColorDark,
+        donutRingGradientEndColor: SalatColor.donutRingGradientEndColorDark,
+        donutBottomCircleColor: SalatColor.donutBottomCircleColorDark,
       ),
       // SalatCustomTheme.darkTheme,
       SalatCustomTextTheme(
@@ -445,8 +455,6 @@ class SalatTheme {
     ),
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.transparent,
-      shadowColor: Colors.transparent,
-      scrolledUnderElevation: 0,
       // shadowColor: Colors.black,
       //backgroundColor: Color(0xff235FA6),
       // foregroundColor: Color(0xff477848),
@@ -455,10 +463,10 @@ class SalatTheme {
       // scrolledUnderElevation: 0,
     ),
     // primaryColor: SalatColor.primaryColorDark500,
-    scaffoldBackgroundColor: SalatColor.bgSurfaceColorDark,
-    primaryColorDark: const Color(0xff122337),
-    dividerColor: const Color(0xFF585868),
-    iconTheme: const IconThemeData(color: Color(0xff7F909F)),
+    scaffoldBackgroundColor: Colors.transparent,
+    // primaryColorDark: const Color(0xff122337),
+    // dividerColor: const Color(0xFF585868),
+    // iconTheme: const IconThemeData(color: Color(0xff7F909F)),
     textTheme: SalatTextTheme.baseTextTheme.apply(
       bodyColor: Colors.white,
       displayColor: Colors.white,
@@ -487,17 +495,14 @@ Future<SystemUiOverlayStyle?> getSystemUiOverlayStyle({
 }) async {
   final LoggerService logger = LoggerService();
   try {
-    final ThemeData theme = Theme.of(context ?? SalatWaqt.globalContext);
-    final Color statusBarColor =
-        isDark == null
-            ? theme.primaryColor
-            : (isDark ? const Color(0x00ffffff) : const Color(0xffffffff));
+    Theme.of(context ?? SalatWaqt.globalContext);
 
     return SystemUiOverlayStyle(
-      statusBarColor: statusBarColor,
+      statusBarColor: Colors.transparent, // Always transparent
       statusBarIconBrightness:
           isDark != null && isDark ? Brightness.light : Brightness.dark,
-      systemNavigationBarColor: statusBarColor,
+      systemNavigationBarColor:
+          Colors.transparent, // Make navigation bar transparent too
       systemNavigationBarIconBrightness:
           isDark != null && isDark ? Brightness.light : Brightness.dark,
     );

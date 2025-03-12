@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:salat_waqt/core/base/base_presenter.dart';
 import 'package:salat_waqt/core/config/salat_waqt_screen.dart';
@@ -30,27 +31,32 @@ class ForbiddenTime extends StatelessWidget {
         builder: (context, child) {
           return Container(
             padding: EdgeInsets.all(20.px),
-            decoration: BoxDecoration(
-              color:
-                  isInForbiddenTime
-                      ? const Color(0xFF4D1717)
-                      : const Color(0xFF1A2234),
-              borderRadius: BorderRadius.circular(16.px),
+            decoration: ShapeDecoration(
+              gradient: RadialGradient(
+                center: Alignment(0.93, 1.20),
+                radius: 0.72,
+                colors: [
+                  context.color.bgCardGradient1,
+                  context.color.bgCardGradient2,
+                ],
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16.px),
+              ),
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 InkWell(
+                  overlayColor: MaterialStateProperty.all(Colors.transparent),
+                splashColor: Colors.transparent,
                   onTap: () => presenter.toggleExpanded(),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       SvgIcon(
                         svgPath: AppConstant.icForbidden,
-                        color:
-                            isInForbiddenTime
-                                ? Colors.red.shade300
-                                : Colors.red,
+                        color: Colors.red,
                         height: 32.px,
                         width: 32.px,
                       ),
@@ -64,20 +70,17 @@ class ForbiddenTime extends StatelessWidget {
                                 : 'Forbidden Times',
                             style: theme.textTheme.labelMedium?.copyWith(
                               fontSize: 18.px,
-                              color: Colors.white,
+                              color: context.color.cardTitleColor,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          SizedBox(height: 4),
+                          SizedBox(height: 8.px),
                           Text(
                             timeRangeDisplay,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color:
-                                  isInForbiddenTime
-                                      ? Colors.red.shade200
-                                      : Colors.white,
+                            style: theme.textTheme.labelMedium?.copyWith(
+                              fontSize: 14.px,
+                              fontWeight: FontWeight.w400,
+                              color: context.color.cardSubtitleColor,
                             ),
                           ),
                         ],
@@ -86,11 +89,14 @@ class ForbiddenTime extends StatelessWidget {
                       AnimatedRotation(
                         duration: const Duration(milliseconds: 300),
                         turns: presenter.isExpanded ? 0.5 : 0,
-                        child: SvgIcon(
-                          svgPath: AppConstant.icArrowDown,
-                          color: Colors.white,
-                          height: 24,
-                          width: 24,
+                        child: SvgPicture.asset(
+                          AppConstant.icArrowDown,
+                          height: 24.px,
+                          width: 24.px,
+                          colorFilter: ColorFilter.mode(
+                            context.color.collapseBtnColor,
+                            BlendMode.srcIn,
+                          ),
                         ),
                       ),
                     ],
@@ -145,19 +151,31 @@ class ForbiddenTimeItems extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 16.0),
       child: Column(
-        spacing: 16.px,
+        // spacing: 16.px,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Divider(color: Colors.grey.withOpacityInt(0.2)),
           ...List.generate(
             forbiddenTimes.length,
-            (index) => _buildForbiddenTimeItem(
-              context,
-              getIconPath(forbiddenTimes[index]['icon'] ?? 'Fajr'),
-              forbiddenTimes[index]['name'] ?? '',
-              index,
-              theme,
-              '${forbiddenTimes[index]['startTime']} - ${forbiddenTimes[index]['endTime']}',
+            (index) => Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12.0),
+                  child: Divider(
+                    color: context.color.cardSiblingBottomBorderColor
+                        .withOpacityInt(0.05),
+                    height: 0.5.px,
+                  ),
+                ),
+                _buildForbiddenTimeItem(
+                  context,
+                  getIconPath(forbiddenTimes[index]['icon'] ?? 'Fajr'),
+                  forbiddenTimes[index]['name'] ?? '',
+                  index,
+                  theme,
+                  '${forbiddenTimes[index]['startTime']} - ${forbiddenTimes[index]['endTime']}',
+                ),
+                SizedBox(height: 12.px),
+              ],
             ),
           ),
         ],
@@ -201,37 +219,34 @@ class ForbiddenTimeItems extends StatelessWidget {
           offset: Offset((1.0 - value) * 20, 0),
           child: Opacity(
             opacity: value,
-            child: Padding(
-              padding: EdgeInsets.only(bottom: 12.0),
-              child: Row(
-                children: [
-                  SvgIcon(svgPath: svgPath, height: 27.px, width: 29.px),
-                  SizedBox(width: 16.px),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: theme.textTheme.labelMedium?.copyWith(
-                          fontSize: 16.px,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white,
-                        ),
+            child: Row(
+              children: [
+                SvgIcon(svgPath: svgPath, height: 27.px, width: 29.px),
+                SizedBox(width: 16.px),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        fontSize: 12.px,
+                        fontWeight: FontWeight.w400,
+                        color: context.color.cardTitleColor,
                       ),
-                      SizedBox(height: 4),
-                      Text(
-                        timeRange,
-                        style: theme.textTheme.labelMedium?.copyWith(
-                          fontSize: 12.px,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                          fontFamily: AppTextStyles.inter,
-                        ),
+                    ),
+                    SizedBox(height: 6.px),
+                    Text(
+                      timeRange,
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        fontSize: 16.px,
+                        color: context.color.cardTitleColor,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: AppTextStyles.inter,
                       ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         );

@@ -55,6 +55,8 @@ class AnimatedExpansionState extends State<AnimatedExpansion> {
             children: [
               // Header (always visible)
               InkWell(
+                overlayColor: MaterialStateProperty.all(Colors.transparent),
+                splashColor: Colors.transparent,
                 onTap: () {
                   setState(() {
                     _isExpanded = !_isExpanded;
@@ -119,6 +121,8 @@ class AnimatedExpansionState extends State<AnimatedExpansion> {
               if (_isExpanded) ...[
                 // Day Mode Option
                 InkWell(
+                  overlayColor: MaterialStateProperty.all(Colors.transparent),
+                splashColor: Colors.transparent,
                   onTap: () {
                     if (widget.isDarkMode) {
                       widget.onThemeChanged(false);
@@ -131,6 +135,8 @@ class AnimatedExpansionState extends State<AnimatedExpansion> {
                 ),
                 // Night Mode Option
                 InkWell(
+                  overlayColor: MaterialStateProperty.all(Colors.transparent),
+                splashColor: Colors.transparent,
                   onTap: () {
                     if (!widget.isDarkMode) {
                       widget.onThemeChanged(true);

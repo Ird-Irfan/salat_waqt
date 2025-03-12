@@ -56,6 +56,8 @@ class GradientButton extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
+          overlayColor: MaterialStateProperty.all(Colors.transparent),
+                splashColor: Colors.transparent,
           onTap: onPressed,
           borderRadius: BorderRadius.circular(borderRadius),
           child: Center(
