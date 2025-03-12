@@ -47,7 +47,6 @@ class HomePage extends StatelessWidget {
             return CustomScrollView(
               slivers: [
                 SliverAppBar(
-                  toolbarHeight: 68.px,
                   pinned: true,
                   scrolledUnderElevation: 0,
                   flexibleSpace: ClipRRect(
