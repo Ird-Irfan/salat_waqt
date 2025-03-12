@@ -9,23 +9,31 @@ class AppBarSection extends StatelessWidget implements PreferredSizeWidget {
   final Function()? onLocationTap;
   final ThemeData theme;
   final String location;
-  const AppBarSection({super.key, required this.location, required this.theme, this.onLocationTap});
+  const AppBarSection({
+    super.key,
+    required this.location,
+    required this.theme,
+    this.onLocationTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        left: 16.px,
-        right: 16.px,
-        top: 8.px,
-        bottom: 8.px,
-      ),
-      child: AppBar(
-        elevation: 0,
-        title: InkWell(
-          onTap: onLocationTap,
+    return AppBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      title: InkWell(
+        onTap: onLocationTap,
+        child: Padding(
+          padding: EdgeInsets.only(
+            left: 16.px,
+            right: 16.px,
+            top: 8.px,
+            bottom: 8.px,
+          ),
           child: Container(
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(20.px)),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20.px),
+            ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -40,8 +48,8 @@ class AppBarSection extends StatelessWidget implements PreferredSizeWidget {
                   location,
                   style: theme.textTheme.titleMedium?.copyWith(
                     color: context.color.cardTitleColor,
-                    fontSize: 14.px,
-                    fontWeight: FontWeight.w400,
+                    fontSize: 16.px,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
                 SizedBox(width: 4.px),
@@ -49,56 +57,57 @@ class AppBarSection extends StatelessWidget implements PreferredSizeWidget {
                   svgPath: AppConstant.icArrowDown,
                   width: 16.px,
                   height: 16.px,
+                  color: context.color.cardTitleColor,
                 ),
               ],
             ),
           ),
         ),
-        actions: [
-          // Switch(value: true, onChanged: (value) {}),
-          Padding(
-            padding: EdgeInsets.only(right: 16.px),
-            child: SvgIcon(
-              svgPath: AppConstant.icCategory,
-              width: 24.px,
-              height: 24.px,
-              color: context.color.cardTitleColor,
-              onTap: () {
-                Navigator.push(
-                  context,
-                  PageRouteBuilder(
-                    pageBuilder:
-                        (context, animation, secondaryAnimation) =>
-                            const SettingsPage(),
-                    transitionsBuilder: (
-                      context,
-                      animation,
-                      secondaryAnimation,
-                      child,
-                    ) {
-                      const begin = Offset(1.0, 0.0);
-                      const end = Offset.zero;
-                      const curve = Curves.easeInOut;
-                      var tween = Tween(
-                        begin: begin,
-                        end: end,
-                      ).chain(CurveTween(curve: curve));
-                      var offsetAnimation = animation.drive(tween);
-                      return SlideTransition(
-                        position: offsetAnimation,
-                        child: child,
-                      );
-                    },
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
       ),
+      actions: [
+        // Switch(value: true, onChanged: (value) {}),
+        Padding(
+          padding: EdgeInsets.only(right: 16.px),
+          child: SvgIcon(
+            svgPath: AppConstant.icCategory,
+            width: 24.px,
+            height: 24.px,
+            color: context.color.cardTitleColor,
+            onTap: () {
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder:
+                      (context, animation, secondaryAnimation) =>
+                          const SettingsPage(),
+                  transitionsBuilder: (
+                    context,
+                    animation,
+                    secondaryAnimation,
+                    child,
+                  ) {
+                    const begin = Offset(1.0, 0.0);
+                    const end = Offset.zero;
+                    const curve = Curves.easeInOut;
+                    var tween = Tween(
+                      begin: begin,
+                      end: end,
+                    ).chain(CurveTween(curve: curve));
+                    var offsetAnimation = animation.drive(tween);
+                    return SlideTransition(
+                      position: offsetAnimation,
+                      child: child,
+                    );
+                  },
+                ),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(80);
+  Size get preferredSize => Size.fromHeight(74.px);
 }

@@ -202,6 +202,7 @@ class CustomAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverAppBar(
       pinned: true,
+      scrolledUnderElevation: 0,
       leading: IconButton(
         icon: const Icon(Icons.arrow_back),
         onPressed: () => Navigator.pop(context),
@@ -216,16 +217,15 @@ class CustomAppBar extends StatelessWidget {
         ),
       ),
       flexibleSpace: ClipRRect(
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(15.px),
-          bottomRight: Radius.circular(15.px),
-        ),
         child: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: const Alignment(0.00, -1.00),
               end: const Alignment(0, 1),
-              colors: [Colors.black, const Color(0x00666666)],
+              colors: [
+                context.color.appBarBgColor.withOpacityInt(0.01),
+                Colors.transparent,
+              ],
             ),
           ),
           child: BackdropFilter(
