@@ -55,7 +55,15 @@ class SettingsPage extends StatelessWidget {
                         );
                       },
                     ),
-                    SizedBox(height: 16.px),
+                    SizedBox(height: 12.px),
+                    AnimatedCard(
+                      theme: theme,
+                      title: 'Select Language',
+                      subtitle: 'Current: English',
+                      svgIconPath: AppConstant.icLanguage,
+                      selectedTextOne: 'English',
+                    ),
+                      SizedBox(height: 12.px),
                     IconTextRow(
                       theme: theme,
                       title: 'Do Not Disturb',
@@ -92,14 +100,14 @@ class SettingsPage extends StatelessWidget {
                         presenter.toggleUse24HourFormat();
                       },
                     ),
-                    SizedBox(height: 16.px),
+                    SizedBox(height: 12.px),
                     AnimatedCard(
                       theme: theme,
                       title: 'Juristic Method',
                       subtitle: 'Current: Hanafi',
                       svgIconPath: AppConstant.icCalculator,
                     ),
-                    SizedBox(height: 16.px),
+                    SizedBox(height: 12.px),
 
                     IconTextRow(
                       theme: theme,
@@ -108,7 +116,7 @@ class SettingsPage extends StatelessWidget {
                       svgIconPath: AppConstant.icCalculator,
                       hasSwitch: false,
                     ),
-                    SizedBox(height: 16.px),
+                    SizedBox(height: 12.px),
                     IconTextRow(
                       theme: theme,
                       title: 'Time Adjustments',
@@ -119,7 +127,7 @@ class SettingsPage extends StatelessWidget {
                         presenter.toggleTimeAdjustment();
                       },
                     ),
-                    SizedBox(height: 16.px),
+                      SizedBox(height: 12.px),
                     Padding(
                       padding: EdgeInsets.only(
                         top: 22.px,
@@ -142,7 +150,7 @@ class SettingsPage extends StatelessWidget {
                       subtitle: 'Current: Bangladesh',
                       svgIconPath: AppConstant.icIslamicCalender,
                     ),
-                    SizedBox(height: 16.px),
+                    SizedBox(height: 12.px),
                     IconTextRow(
                       theme: theme,
                       title: 'Hide Iftar & Sahri Time',
@@ -153,7 +161,7 @@ class SettingsPage extends StatelessWidget {
                         presenter.toggleHideIftaarTime();
                       },
                     ),
-                    SizedBox(height: 16.px),
+                    SizedBox(height: 12.px),
                     Padding(
                       padding: EdgeInsets.only(
                         top: 22.px,
@@ -179,7 +187,7 @@ class SettingsPage extends StatelessWidget {
                       hasSwitch: false,
                       titleFontSize: 14,
                     ),
-                    SizedBox(height: 16.px),
+                    SizedBox(height: 12.px),
                     IconTextRow(
                       theme: theme,
                       title: 'Calculation Method',

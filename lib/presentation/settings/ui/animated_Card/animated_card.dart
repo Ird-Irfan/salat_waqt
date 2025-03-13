@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:salat_waqt/core/config/salat_waqt_screen.dart';
 import 'package:salat_waqt/core/constant/app_contant.dart';
 import 'package:salat_waqt/core/constant/app_text_styles.dart';
@@ -11,12 +10,16 @@ class AnimatedCard extends StatefulWidget {
   final String title;
   final String subtitle;
   final String svgIconPath;
+  final String? selectedTextOne;
+  final String? selectedTextTwo;
   const AnimatedCard({
     super.key,
     required this.title,
     required this.subtitle,
     required this.svgIconPath,
     required this.theme,
+    this.selectedTextOne,
+    this.selectedTextTwo,
   });
 
   @override
@@ -38,7 +41,7 @@ class AnimatedCardState extends State<AnimatedCard> {
       },
       child: Container(
         width: double.infinity,
-        height: _isExpanded ? 265.px : 95.px,
+        height: _isExpanded ? 220.px : 95.px,
         decoration: ShapeDecoration(
           gradient: RadialGradient(
             center: Alignment(0.93, 1.20),
@@ -59,11 +62,7 @@ class AnimatedCardState extends State<AnimatedCard> {
               padding: EdgeInsets.all(20.px),
               child: Row(
                 children: [
-                  SvgPicture.asset(
-                    AppConstant.icWeat,
-                    width: 28.px,
-                    height: 28.px,
-                  ),
+                  SvgIcon(svgPath: widget.svgIconPath, width: 28.px, height: 28.px),
                   SizedBox(width: 16.px),
                   Expanded(
                     flex: 5,
@@ -104,8 +103,8 @@ class AnimatedCardState extends State<AnimatedCard> {
                 flex: 1,
                 child: Column(
                   children: [
-                    buildSelectableText("Hanafi"),
-                    buildSelectableText("SHafi,Maliki,Hambli"),
+                    buildSelectableText(widget.selectedTextOne ?? "Text One"),
+                    buildSelectableText(widget.selectedTextTwo ?? "Text Two"),
                   ],
                 ),
               ),
