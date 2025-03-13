@@ -39,8 +39,8 @@ class AnimatedExpansionState extends State<AnimatedExpansion> {
           center: Alignment(0.93, 1.20),
           radius: 0.72,
           colors: [
-            context.color.bgCardGradient1,
-            context.color.bgCardGradient2,
+            context.color.cardGradientStart,
+            context.color.cardGradientEnd,
           ],
         ),
         shape: RoundedRectangleBorder(

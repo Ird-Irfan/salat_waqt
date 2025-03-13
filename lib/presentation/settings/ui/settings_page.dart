@@ -230,7 +230,7 @@ class CustomAppBar extends StatelessWidget {
           ),
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: Container(color: Colors.black.withOpacity(0.1)),
+            child: Container(color: Colors.black.withOpacityInt(0.1)),
           ),
         ),
       ),
