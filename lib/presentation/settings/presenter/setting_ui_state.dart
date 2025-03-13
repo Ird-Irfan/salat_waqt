@@ -4,8 +4,11 @@ class SettingsUiState extends BaseUiState {
   final bool notificationEnabled;
   final bool darkModeEnabled;
   final bool autoUpdateEnabled;
-
   final bool doNotDisturbEnabled;
+  final bool use24HourFormatEnabled;
+  final bool timeAdjustmentEnabled;
+  final bool hideIftaarTimeEnabled;
+
 
 
 
@@ -16,6 +19,9 @@ class SettingsUiState extends BaseUiState {
     this.darkModeEnabled = false,
     this.autoUpdateEnabled = false,
     this.doNotDisturbEnabled = false,
+    this.use24HourFormatEnabled = false,
+    this.timeAdjustmentEnabled = false,
+    this.hideIftaarTimeEnabled = false,
   });
 
   factory SettingsUiState.empty() {
@@ -26,6 +32,9 @@ class SettingsUiState extends BaseUiState {
       darkModeEnabled: false,
       autoUpdateEnabled: false,
       doNotDisturbEnabled: false,
+      use24HourFormatEnabled: false,
+      timeAdjustmentEnabled: false,
+      hideIftaarTimeEnabled: false,
     );
   }
 
@@ -37,7 +46,10 @@ class SettingsUiState extends BaseUiState {
       darkModeEnabled,
         autoUpdateEnabled,
         doNotDisturbEnabled,
-      ];
+        use24HourFormatEnabled,
+        timeAdjustmentEnabled,
+        hideIftaarTimeEnabled,
+        ];
 
   SettingsUiState copyWith({
     bool? isLoading,
@@ -47,7 +59,8 @@ class SettingsUiState extends BaseUiState {
     bool? autoUpdateEnabled,
     bool? doNotDisturbEnabled,
     bool? use24HourFormatEnabled,
-    bool? selectedJuristic,
+    bool? timeAdjustmentEnabled,
+    bool? hideIftaarTimeEnabled,
   }) {
     return SettingsUiState(
       isLoading: isLoading ?? this.isLoading,
@@ -56,6 +69,9 @@ class SettingsUiState extends BaseUiState {
       darkModeEnabled: darkModeEnabled ?? this.darkModeEnabled,
       autoUpdateEnabled: autoUpdateEnabled ?? this.autoUpdateEnabled,
       doNotDisturbEnabled: doNotDisturbEnabled ?? this.doNotDisturbEnabled,
+      use24HourFormatEnabled: use24HourFormatEnabled ?? this.use24HourFormatEnabled,
+      timeAdjustmentEnabled: timeAdjustmentEnabled ?? this.timeAdjustmentEnabled,
+      hideIftaarTimeEnabled: hideIftaarTimeEnabled ?? this.hideIftaarTimeEnabled,
     );
   }
 }

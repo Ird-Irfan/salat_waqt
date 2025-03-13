@@ -88,8 +88,10 @@ class SettingsPage extends StatelessWidget {
                       title: 'Use 24 Hour Format',
                       subtitle: 'Shown as: 23:44 PM',
                       svgIconPath: AppConstant.ic24Hour,
-                      switchValue: presenter.currentUiState.doNotDisturbEnabled,
-                      onSwitchChanged: (bool) {},
+                      switchValue: presenter.currentUiState.use24HourFormatEnabled,
+                      onSwitchChanged: (bool) {
+                        presenter.toggleUse24HourFormat();
+                      },
                     ),
                     SizedBox(height: 16.px),
                     AnimatedCard(
@@ -113,8 +115,10 @@ class SettingsPage extends StatelessWidget {
                       title: 'Time Adjustments',
                       subtitle: 'Adjust Prayer time Notification',
                       svgIconPath: AppConstant.icClock,
-                      switchValue: presenter.currentUiState.doNotDisturbEnabled,
-                      onSwitchChanged: (bool) {},
+                      switchValue: presenter.currentUiState.timeAdjustmentEnabled,
+                      onSwitchChanged: (bool) {
+                        presenter.toggleTimeAdjustment();
+                      },
                     ),
                     SizedBox(height: 16.px),
                     Padding(
@@ -144,9 +148,11 @@ class SettingsPage extends StatelessWidget {
                       theme: theme,
                       title: 'Hide Iftar & Sahri Time',
                       subtitle: 'Hides from homepage',
-                      svgIconPath: AppConstant.icEye,
-                      switchValue: presenter.currentUiState.doNotDisturbEnabled,
-                      onSwitchChanged: (bool) {},
+                      svgIconPath: AppConstant.icEye, 
+                      switchValue: presenter.currentUiState.hideIftaarTimeEnabled,
+                      onSwitchChanged: (bool) {
+                        presenter.toggleHideIftaarTime();
+                      },
                     ),
                     SizedBox(height: 16.px),
                     Padding(
