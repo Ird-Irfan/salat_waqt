@@ -5,7 +5,9 @@ import 'package:salat_waqt/core/base/base_presenter.dart';
 import 'package:salat_waqt/core/config/salat_waqt_screen.dart';
 import 'package:salat_waqt/core/constant/app_contant.dart';
 import 'package:salat_waqt/core/constant/app_text_styles.dart';
+import 'package:salat_waqt/core/constant/constants.dart';
 import 'package:salat_waqt/core/utility/utility.dart';
+import 'package:salat_waqt/presentation/common/widgets/custom_bottom_sheet.dart';
 import 'package:salat_waqt/presentation/common/widgets/svg_icons.dart';
 import 'package:salat_waqt/presentation/home/presenter/forbidden_time_presenter.dart';
 
@@ -36,8 +38,8 @@ class ForbiddenTime extends StatelessWidget {
                 center: Alignment(0.93, 1.20),
                 radius: 0.72,
                 colors: [
-                  context.color.bgCardGradient1,
-                  context.color.bgCardGradient2,
+                  context.color.cardGradientStart,
+                  context.color.cardGradientEnd,
                 ],
               ),
               shape: RoundedRectangleBorder(
@@ -49,7 +51,7 @@ class ForbiddenTime extends StatelessWidget {
               children: [
                 InkWell(
                   overlayColor: MaterialStateProperty.all(Colors.transparent),
-                splashColor: Colors.transparent,
+                  splashColor: Colors.transparent,
                   onTap: () => presenter.toggleExpanded(),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -151,7 +153,6 @@ class ForbiddenTimeItems extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 16.0),
       child: Column(
-        // spacing: 16.px,
         mainAxisSize: MainAxisSize.min,
         children: [
           ...List.generate(
@@ -166,13 +167,49 @@ class ForbiddenTimeItems extends StatelessWidget {
                     height: 0.5.px,
                   ),
                 ),
-                _buildForbiddenTimeItem(
-                  context,
-                  getIconPath(forbiddenTimes[index]['icon'] ?? 'Fajr'),
-                  forbiddenTimes[index]['name'] ?? '',
-                  index,
-                  theme,
-                  '${forbiddenTimes[index]['startTime']} - ${forbiddenTimes[index]['endTime']}',
+                InkWell(
+                  onTap: () {
+                    CustomBottomSheet.show(
+                      context: context,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 24.px),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              forbiddenTimesList[index].title,
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                color: context.color.cardTitleColor,
+                                fontSize: 24.px,
+                                fontWeight: FontWeight.w400,
+                                fontFamily: AppTextStyles.inter,
+                                letterSpacing: 0.24,
+                              ),
+                            ),
+                            SizedBox(height: 12.px),
+                            Text(
+                              forbiddenTimesList[index].description,
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                color: context.color.cardTitleColor,
+                                fontSize: 16.px,
+                                fontWeight: FontWeight.w400,
+                                fontFamily: AppTextStyles.inter,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                  child: _buildForbiddenTimeItem(
+                    context,
+                    getIconPath(forbiddenTimes[index]['icon'] ?? 'Fajr'),
+                    forbiddenTimes[index]['name'] ?? '',
+                    index,
+                    theme,
+                    '${forbiddenTimes[index]['startTime']} - ${forbiddenTimes[index]['endTime']}',
+                  ),
                 ),
                 SizedBox(height: 12.px),
               ],

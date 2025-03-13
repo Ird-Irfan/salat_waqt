@@ -35,17 +35,14 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
   final Color onBProgressSecondaryColor;
   final Color onBIconSecondaryColor;
   final Color iftaarSunColor;
-  final Color bgCardGradient1;
-  final Color bgCardGradient2;
+  final Color cardGradientStart;
+  final Color cardGradientEnd;
 
   final Color donutRingGradientStartColor;
-  final Color donutRingGradientEndColor;  
+  final Color donutRingGradientEndColor;
 
   final Color donutBottomCircleColor;
 
-  
-
-  
   const SalatCustomTheme({
     required this.primaryColor100,
     required this.primaryColor200,
@@ -68,19 +65,19 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
     required this.primaryBtnTextColor,
     required this.appBarBgColor,
     required this.cardSubtitleColor,
-    required this.collapseBtnColor, 
+    required this.collapseBtnColor,
     required this.cardSiblingBottomBorderColor,
     required this.forbiddenInfoIconColor,
     required this.notificationActiveIconColor,
     required this.notificationInactiveIconColor,
     required this.trackerDonuntRingColor,
     required this.meshCircleColor,
-    required this.onBProgressPrimaryColor,    
+    required this.onBProgressPrimaryColor,
     required this.onBProgressSecondaryColor,
     required this.onBIconSecondaryColor,
     required this.iftaarSunColor,
-    required this.bgCardGradient1,
-    required this.bgCardGradient2,
+    required this.cardGradientStart,
+    required this.cardGradientEnd,
     required this.donutRingGradientStartColor,
     required this.donutRingGradientEndColor,
     required this.donutBottomCircleColor,
@@ -113,15 +110,16 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
     cardSiblingBottomBorderColor: SalatColor.cardSiblingBottomBorderColorLight,
     forbiddenInfoIconColor: SalatColor.forbiddenInfoIconColorLight,
     notificationActiveIconColor: SalatColor.notificationActiveIconColorLight,
-    notificationInactiveIconColor: SalatColor.notificationInactiveIconColorLight,
+    notificationInactiveIconColor:
+        SalatColor.notificationInactiveIconColorLight,
     trackerDonuntRingColor: SalatColor.trackerDonutRingColorLight,
     meshCircleColor: SalatColor.meshCircleColorLight,
     onBProgressPrimaryColor: SalatColor.onBProgressPrimaryColorLight,
     onBProgressSecondaryColor: SalatColor.onBProgressSecondaryColorLight,
     onBIconSecondaryColor: SalatColor.onBIconSecondaryColorLight,
     iftaarSunColor: SalatColor.iftaarSunColorLight,
-    bgCardGradient1: SalatColor.bgCardGradientLight1,
-    bgCardGradient2: SalatColor.bgCardGradientLight2,
+    cardGradientStart: SalatColor.cardGradientStartLight,
+    cardGradientEnd: SalatColor.cardGradientEndLight,
     donutRingGradientStartColor: SalatColor.donutRingGradientStartColorLight,
     donutRingGradientEndColor: SalatColor.donutRingGradientEndColorLight,
     donutBottomCircleColor: SalatColor.donutBottomCircleColorLight,
@@ -161,8 +159,8 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
     onBProgressSecondaryColor: SalatColor.onBProgressSecondaryColorDark,
     onBIconSecondaryColor: SalatColor.onBIconSecondaryColorDark,
     iftaarSunColor: SalatColor.iftaarSunColorDark,
-    bgCardGradient1: SalatColor.bgCardGradientDark1,
-    bgCardGradient2: SalatColor.bgCardGradientDark2,
+    cardGradientStart: SalatColor.cardGradientStartDark,
+    cardGradientEnd: SalatColor.cardGradientEndDark,
     donutRingGradientStartColor: SalatColor.donutRingGradientStartColorDark,
     donutRingGradientEndColor: SalatColor.donutRingGradientEndColorDark,
     donutBottomCircleColor: SalatColor.donutBottomCircleColorDark,
@@ -202,8 +200,8 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
     Color? onBProgressSecondaryColor,
     Color? onBIconSecondaryColor,
     Color? iftaarSunColor,
-    Color? bgCardGradient1,
-    Color? bgCardGradient2,
+    Color? cardGradientStart,
+    Color? cardGradientEnd,
     Color? donutRingGradientStartColor,
     Color? donutRingGradientEndColor,
     Color? donutBottomCircleColor,
@@ -231,21 +229,32 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
       appBarBgColor: appBarBgColor ?? this.appBarBgColor,
       cardSubtitleColor: cardSubtitleColor ?? this.cardSubtitleColor,
       collapseBtnColor: collapseBtnColor ?? this.collapseBtnColor,
-      cardSiblingBottomBorderColor: cardSiblingBottomBorderColor ?? this.cardSiblingBottomBorderColor,
-      forbiddenInfoIconColor: forbiddenInfoIconColor ?? this.forbiddenInfoIconColor,
-      notificationActiveIconColor: notificationActiveIconColor ?? this.notificationActiveIconColor,
-      notificationInactiveIconColor: notificationInactiveIconColor ?? this.notificationInactiveIconColor,
-      trackerDonuntRingColor: trackerDonuntRingColor ?? this.trackerDonuntRingColor,
+      cardSiblingBottomBorderColor:
+          cardSiblingBottomBorderColor ?? this.cardSiblingBottomBorderColor,
+      forbiddenInfoIconColor:
+          forbiddenInfoIconColor ?? this.forbiddenInfoIconColor,
+      notificationActiveIconColor:
+          notificationActiveIconColor ?? this.notificationActiveIconColor,
+      notificationInactiveIconColor:
+          notificationInactiveIconColor ?? this.notificationInactiveIconColor,
+      trackerDonuntRingColor:
+          trackerDonuntRingColor ?? this.trackerDonuntRingColor,
       meshCircleColor: meshCircleColor ?? this.meshCircleColor,
-      onBProgressPrimaryColor: onBProgressPrimaryColor ?? this.onBProgressPrimaryColor,
-      onBProgressSecondaryColor: onBProgressSecondaryColor ?? this.onBProgressSecondaryColor,
-      onBIconSecondaryColor: onBIconSecondaryColor ?? this.onBIconSecondaryColor,
+      onBProgressPrimaryColor:
+          onBProgressPrimaryColor ?? this.onBProgressPrimaryColor,
+      onBProgressSecondaryColor:
+          onBProgressSecondaryColor ?? this.onBProgressSecondaryColor,
+      onBIconSecondaryColor:
+          onBIconSecondaryColor ?? this.onBIconSecondaryColor,
       iftaarSunColor: iftaarSunColor ?? this.iftaarSunColor,
-      bgCardGradient1: bgCardGradient1 ?? this.bgCardGradient1,
-      bgCardGradient2: bgCardGradient2 ?? this.bgCardGradient2,
-      donutRingGradientStartColor: donutRingGradientStartColor ?? this.donutRingGradientStartColor,
-      donutRingGradientEndColor: donutRingGradientEndColor ?? this.donutRingGradientEndColor,
-      donutBottomCircleColor: donutBottomCircleColor ?? this.donutBottomCircleColor,
+      cardGradientStart: cardGradientStart ?? this.cardGradientStart,
+      cardGradientEnd: cardGradientEnd ?? this.cardGradientEnd,
+      donutRingGradientStartColor:
+          donutRingGradientStartColor ?? this.donutRingGradientStartColor,
+      donutRingGradientEndColor:
+          donutRingGradientEndColor ?? this.donutRingGradientEndColor,
+      donutBottomCircleColor:
+          donutBottomCircleColor ?? this.donutBottomCircleColor,
     );
   }
 
@@ -273,28 +282,72 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
       sunIconColor: Color.lerp(sunIconColor, other.sunIconColor, t)!,
       fajrIconColor: Color.lerp(fajrIconColor, other.fajrIconColor, t)!,
       inputBoxColor: Color.lerp(inputBoxColor, other.inputBoxColor, t)!,
-      asrIconCloudColor: Color.lerp(asrIconCloudColor, other.asrIconCloudColor, t)!,
-      magribIconCloudColor: Color.lerp(magribIconCloudColor, other.magribIconCloudColor, t)!,
+      asrIconCloudColor:
+          Color.lerp(asrIconCloudColor, other.asrIconCloudColor, t)!,
+      magribIconCloudColor:
+          Color.lerp(magribIconCloudColor, other.magribIconCloudColor, t)!,
       switchGlowColor: Color.lerp(switchGlowColor, other.switchGlowColor, t)!,
-      primaryBtnTextColor: Color.lerp(primaryBtnTextColor, other.primaryBtnTextColor, t)!,
+      primaryBtnTextColor:
+          Color.lerp(primaryBtnTextColor, other.primaryBtnTextColor, t)!,
       appBarBgColor: Color.lerp(appBarBgColor, other.appBarBgColor, t)!,
-      cardSubtitleColor: Color.lerp(cardSubtitleColor, other.cardSubtitleColor, t)!,
-      collapseBtnColor: Color.lerp(collapseBtnColor, other.collapseBtnColor, t)!,
-      cardSiblingBottomBorderColor: Color.lerp(cardSiblingBottomBorderColor, other.cardSiblingBottomBorderColor, t)!,
-      forbiddenInfoIconColor: Color.lerp(forbiddenInfoIconColor, other.forbiddenInfoIconColor, t)!,
-      notificationActiveIconColor: Color.lerp(notificationActiveIconColor, other.notificationActiveIconColor, t)!,
-      notificationInactiveIconColor: Color.lerp(notificationInactiveIconColor, other.notificationInactiveIconColor, t)!,
-      trackerDonuntRingColor: Color.lerp(trackerDonuntRingColor, other.trackerDonuntRingColor, t)!,
+      cardSubtitleColor:
+          Color.lerp(cardSubtitleColor, other.cardSubtitleColor, t)!,
+      collapseBtnColor:
+          Color.lerp(collapseBtnColor, other.collapseBtnColor, t)!,
+      cardSiblingBottomBorderColor:
+          Color.lerp(
+            cardSiblingBottomBorderColor,
+            other.cardSiblingBottomBorderColor,
+            t,
+          )!,
+      forbiddenInfoIconColor:
+          Color.lerp(forbiddenInfoIconColor, other.forbiddenInfoIconColor, t)!,
+      notificationActiveIconColor:
+          Color.lerp(
+            notificationActiveIconColor,
+            other.notificationActiveIconColor,
+            t,
+          )!,
+      notificationInactiveIconColor:
+          Color.lerp(
+            notificationInactiveIconColor,
+            other.notificationInactiveIconColor,
+            t,
+          )!,
+      trackerDonuntRingColor:
+          Color.lerp(trackerDonuntRingColor, other.trackerDonuntRingColor, t)!,
       meshCircleColor: Color.lerp(meshCircleColor, other.meshCircleColor, t)!,
-      onBProgressPrimaryColor: Color.lerp(onBProgressPrimaryColor, other.onBProgressPrimaryColor, t)!,
-      onBProgressSecondaryColor: Color.lerp(onBProgressSecondaryColor, other.onBProgressSecondaryColor, t)!,
-      onBIconSecondaryColor: Color.lerp(onBIconSecondaryColor, other.onBIconSecondaryColor, t)!,
+      onBProgressPrimaryColor:
+          Color.lerp(
+            onBProgressPrimaryColor,
+            other.onBProgressPrimaryColor,
+            t,
+          )!,
+      onBProgressSecondaryColor:
+          Color.lerp(
+            onBProgressSecondaryColor,
+            other.onBProgressSecondaryColor,
+            t,
+          )!,
+      onBIconSecondaryColor:
+          Color.lerp(onBIconSecondaryColor, other.onBIconSecondaryColor, t)!,
       iftaarSunColor: Color.lerp(iftaarSunColor, other.iftaarSunColor, t)!,
-      bgCardGradient1: Color.lerp(bgCardGradient1, other.bgCardGradient1, t)!,
-      bgCardGradient2: Color.lerp(bgCardGradient2, other.bgCardGradient2, t)!,
-      donutRingGradientStartColor: Color.lerp(donutRingGradientStartColor, other.donutRingGradientStartColor, t)!,
-      donutRingGradientEndColor: Color.lerp(donutRingGradientEndColor, other.donutRingGradientEndColor, t)!,
-      donutBottomCircleColor: Color.lerp(donutBottomCircleColor, other.donutBottomCircleColor, t)!,
+      cardGradientStart: Color.lerp(cardGradientStart, other.cardGradientStart, t)!,
+      cardGradientEnd: Color.lerp(cardGradientEnd, other.cardGradientEnd, t)!,
+      donutRingGradientStartColor:
+          Color.lerp(
+            donutRingGradientStartColor,
+            other.donutRingGradientStartColor,
+            t,
+          )!,
+      donutRingGradientEndColor:
+          Color.lerp(
+            donutRingGradientEndColor,
+            other.donutRingGradientEndColor,
+            t,
+          )!,
+      donutBottomCircleColor:
+          Color.lerp(donutBottomCircleColor, other.donutBottomCircleColor, t)!,
     );
   }
 }

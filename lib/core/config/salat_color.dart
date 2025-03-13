@@ -38,13 +38,9 @@ class SalatColor {
   static const Color iftaarSunColorDark = Color(0xFFFED943);
   static const Color donutBottomCircleColorDark = Color(0xFF273C53);
 
-
-
-
   // Gradient Colors dark mode
-  static const Color bgCardGradientDark1 = Color(0xFF121F2E);
-  static const Color bgCardGradientDark2 = Color(0xFF202D3E);
-
+  static const Color cardGradientStartDark = Color(0xFF121F2E);
+  static const Color cardGradientEndDark = Color(0xFF202D3E);
 
   static const Color donutRingGradientStartColorDark = Color(0xFF6FACF2);
   static const Color donutRingGradientEndColorDark = Color(0xFF3288ED);
@@ -96,17 +92,12 @@ class SalatColor {
   static const Color iftaarSunColorLight = Color(0xFFFF954D);
   static const Color donutBottomCircleColorLight = Color(0xFFC9E5D6);
 
-
-
-
   // Gradient Colors light mode
-  static const Color bgCardGradientLight1 = Color(0xFFFFFFFF);
-  static const Color bgCardGradientLight2 = Color(0xFFFFFFFF);
-
+  static const Color cardGradientStartLight = Color(0xFFFFFFFF);
+  static const Color cardGradientEndLight = Color(0xFFFFFFFF);
 
   static const Color donutRingGradientStartColorLight = Color(0xFF55C595);
   static const Color donutRingGradientEndColorLight = Color(0xFF359D9E);
 
   // Gradient Colors light mode
-  
 }

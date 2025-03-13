@@ -7,6 +7,7 @@ import 'package:salat_waqt/core/constant/app_contant.dart';
 import 'package:salat_waqt/core/constant/app_text_styles.dart';
 import 'package:salat_waqt/presentation/home/ui/home_page.dart';
 
+
 class SalatWaqt extends StatefulWidget {
   const SalatWaqt({super.key});
 

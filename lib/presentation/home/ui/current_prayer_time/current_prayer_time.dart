@@ -38,8 +38,8 @@ class CurrentPrayerTime extends StatelessWidget {
               center: Alignment(0.93, 1.20),
               radius: 0.72,
               colors: [
-                context.color.bgCardGradient1,
-                context.color.bgCardGradient2,
+                context.color.cardGradientStart,
+                context.color.cardGradientEnd,
               ],
             ),
             borderRadius: BorderRadius.circular(16.px),

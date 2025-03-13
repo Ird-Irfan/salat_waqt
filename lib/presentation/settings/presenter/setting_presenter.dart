@@ -16,6 +16,27 @@ class SettingsPresenter extends BasePresenter<SettingsUiState> {
     );
   }
 
+  void toggleUse24HourFormat() {
+    final currentState = currentUiState;
+    uiState.value = currentState.copyWith(
+      use24HourFormatEnabled: !currentState.use24HourFormatEnabled,
+    );
+  }
+
+  void toggleTimeAdjustment() {
+    final currentState = currentUiState;
+    uiState.value = currentState.copyWith(
+      timeAdjustmentEnabled: !currentState.timeAdjustmentEnabled,
+    );
+  }
+
+  void toggleHideIftaarTime() {
+    final currentState = currentUiState;
+    uiState.value = currentState.copyWith(
+      hideIftaarTimeEnabled: !currentState.hideIftaarTimeEnabled,
+    );
+  } 
+
   // void toggleUse24HourFormat() {
   //   final currentState = currentUiState;
   //   uiState.value = currentState.copyWith(
