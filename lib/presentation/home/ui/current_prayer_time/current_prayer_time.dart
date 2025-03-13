@@ -286,48 +286,53 @@ class RowItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _buildPrayerTimeItem(
-            name: 'FAJR',
-            time: presenter.currentUiState.prayerTimes?['Fajr'] ?? '',
-            svgPath: AppConstant.icFajr,
-            theme: theme,
-            context: context,
+    return PresentableWidgetBuilder(
+      presenter: presenter,
+      builder: () {
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildPrayerTimeItem(
+                name: 'FAJR',
+                time: presenter.currentUiState.prayerTimes?['Fajr'] ?? '',
+                svgPath: AppConstant.icFajr,
+                theme: theme,
+                context: context,
+              ),
+              _buildPrayerTimeItem(
+                name: 'DUHUR',
+                time: presenter.currentUiState.prayerTimes?['Dhuhr'] ?? '',
+                svgPath: AppConstant.icDuhur,
+                theme: theme,
+                context: context,
+              ),
+              _buildPrayerTimeItem(
+                name: 'ASR',
+                time: presenter.currentUiState.prayerTimes?['Asr'] ?? '',
+                svgPath: AppConstant.icAsr,
+                theme: theme,
+                context: context,
+              ),
+              _buildPrayerTimeItem(
+                name: 'MAGHRIB',
+                time: presenter.currentUiState.prayerTimes?['Maghrib'] ?? '',
+                svgPath: AppConstant.icMaghrib,
+                theme: theme,
+                context: context,
+              ),
+              _buildPrayerTimeItem(
+                name: 'ISHA',
+                time: presenter.currentUiState.prayerTimes?['Isha'] ?? '',
+                svgPath: AppConstant.icIsha,
+                theme: theme,
+                context: context,
+              ),
+            ],
           ),
-          _buildPrayerTimeItem(
-            name: 'DUHUR',
-            time: presenter.currentUiState.prayerTimes?['Dhuhr'] ?? '',
-            svgPath: AppConstant.icDuhur,
-            theme: theme,
-            context: context,
-          ),
-          _buildPrayerTimeItem(
-            name: 'ASR',
-            time: presenter.currentUiState.prayerTimes?['Asr'] ?? '',
-            svgPath: AppConstant.icAsr,
-            theme: theme,
-            context: context,
-          ),
-          _buildPrayerTimeItem(
-            name: 'MAGHRIB',
-            time: presenter.currentUiState.prayerTimes?['Maghrib'] ?? '',
-            svgPath: AppConstant.icMaghrib,
-            theme: theme,
-            context: context,
-          ),
-          _buildPrayerTimeItem(
-            name: 'ISHA',
-            time: presenter.currentUiState.prayerTimes?['Isha'] ?? '',
-            svgPath: AppConstant.icIsha,
-            theme: theme,
-            context: context,
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 

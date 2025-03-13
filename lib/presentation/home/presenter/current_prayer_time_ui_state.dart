@@ -9,6 +9,7 @@ class CurrentPrayerTimeUiState extends BaseUiState {
   final String? nextPrayerTime;
   final String? nextPrayerWaqt;
   final Map<String, bool>? notificationStatus;
+  final bool is24HourFormat;
 
   const CurrentPrayerTimeUiState({
     required super.userMessage,
@@ -21,6 +22,7 @@ class CurrentPrayerTimeUiState extends BaseUiState {
     this.nextPrayerTime,
     this.nextPrayerWaqt,
     this.notificationStatus,
+    this.is24HourFormat = false,
   });
 
   factory CurrentPrayerTimeUiState.empty() {
@@ -35,6 +37,7 @@ class CurrentPrayerTimeUiState extends BaseUiState {
       nextPrayerTime: null,
       nextPrayerWaqt: null,
       notificationStatus: null,
+      is24HourFormat: false,
     );
   }
 
@@ -50,6 +53,7 @@ class CurrentPrayerTimeUiState extends BaseUiState {
     nextPrayerTime,
     nextPrayerWaqt,
     notificationStatus,
+    is24HourFormat,
   ];
 
   CurrentPrayerTimeUiState copyWith({
@@ -63,6 +67,7 @@ class CurrentPrayerTimeUiState extends BaseUiState {
     String? nextPrayerTime,
     String? nextPrayerWaqt,
     Map<String, bool>? notificationStatus,
+    bool? is24HourFormat,
   }) {
     return CurrentPrayerTimeUiState(
       prayerTimes: prayerTimes ?? this.prayerTimes,
@@ -77,6 +82,7 @@ class CurrentPrayerTimeUiState extends BaseUiState {
       nextPrayerTime: nextPrayerTime ?? this.nextPrayerTime,
       nextPrayerWaqt: nextPrayerWaqt ?? this.nextPrayerWaqt,
       notificationStatus: notificationStatus ?? this.notificationStatus,
+      is24HourFormat: is24HourFormat ?? this.is24HourFormat,
     );
   }
 }

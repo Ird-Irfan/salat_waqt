@@ -88,9 +88,10 @@ class SettingsPage extends StatelessWidget {
                       title: 'Use 24 Hour Format',
                       subtitle: 'Shown as: 23:44 PM',
                       svgIconPath: AppConstant.ic24Hour,
-                      switchValue: presenter.currentUiState.use24HourFormatEnabled,
-                      onSwitchChanged: (bool) {
-                        presenter.toggleUse24HourFormat();
+                      switchValue:
+                          presenter.currentUiState.use24HourFormatEnabled,
+                      onSwitchChanged: (value) {
+                        presenter.toggleUse24HourFormat(value);
                       },
                     ),
                     SizedBox(height: 16.px),
@@ -115,9 +116,10 @@ class SettingsPage extends StatelessWidget {
                       title: 'Time Adjustments',
                       subtitle: 'Adjust Prayer time Notification',
                       svgIconPath: AppConstant.icClock,
-                      switchValue: presenter.currentUiState.timeAdjustmentEnabled,
-                      onSwitchChanged: (bool) {
-                        presenter.toggleTimeAdjustment();
+                      switchValue:
+                          presenter.currentUiState.timeAdjustmentEnabled,
+                      onSwitchChanged: (value) {
+                        presenter.toggleTimeAdjustment(value);
                       },
                     ),
                     SizedBox(height: 16.px),
@@ -148,8 +150,9 @@ class SettingsPage extends StatelessWidget {
                       theme: theme,
                       title: 'Hide Iftar & Sahri Time',
                       subtitle: 'Hides from homepage',
-                      svgIconPath: AppConstant.icEye, 
-                      switchValue: presenter.currentUiState.hideIftaarTimeEnabled,
+                      svgIconPath: AppConstant.icEye,
+                      switchValue:
+                          presenter.currentUiState.hideIftaarTimeEnabled,
                       onSwitchChanged: (bool) {
                         presenter.toggleHideIftaarTime();
                       },
