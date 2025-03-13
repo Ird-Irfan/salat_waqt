@@ -9,6 +9,9 @@ class SettingsUiState extends BaseUiState {
   final bool timeAdjustmentEnabled;
   final bool hideIftaarTimeEnabled;
 
+  final bool isExpanded;
+  final bool isDarkMode;
+
 
 
 
@@ -22,6 +25,8 @@ class SettingsUiState extends BaseUiState {
     this.use24HourFormatEnabled = false,
     this.timeAdjustmentEnabled = false,
     this.hideIftaarTimeEnabled = false,
+    this.isExpanded = false,
+    this.isDarkMode = false,
   });
 
   factory SettingsUiState.empty() {
@@ -35,6 +40,8 @@ class SettingsUiState extends BaseUiState {
       use24HourFormatEnabled: false,
       timeAdjustmentEnabled: false,
       hideIftaarTimeEnabled: false,
+      isExpanded: false,
+      isDarkMode: false,
     );
   }
 
@@ -48,7 +55,9 @@ class SettingsUiState extends BaseUiState {
         doNotDisturbEnabled,
         use24HourFormatEnabled,
         timeAdjustmentEnabled,
-        hideIftaarTimeEnabled,
+        hideIftaarTimeEnabled,  
+        isExpanded,
+        isDarkMode,
         ];
 
   SettingsUiState copyWith({
@@ -61,6 +70,8 @@ class SettingsUiState extends BaseUiState {
     bool? use24HourFormatEnabled,
     bool? timeAdjustmentEnabled,
     bool? hideIftaarTimeEnabled,
+    bool? isExpanded,
+    bool? isDarkMode,
   }) {
     return SettingsUiState(
       isLoading: isLoading ?? this.isLoading,
@@ -72,6 +83,8 @@ class SettingsUiState extends BaseUiState {
       use24HourFormatEnabled: use24HourFormatEnabled ?? this.use24HourFormatEnabled,
       timeAdjustmentEnabled: timeAdjustmentEnabled ?? this.timeAdjustmentEnabled,
       hideIftaarTimeEnabled: hideIftaarTimeEnabled ?? this.hideIftaarTimeEnabled,
+      isExpanded: isExpanded ?? this.isExpanded,
+      isDarkMode: isDarkMode ?? this.isDarkMode,
     );
   }
 }

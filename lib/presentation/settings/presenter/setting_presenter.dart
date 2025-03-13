@@ -39,6 +39,22 @@ class SettingsPresenter extends BasePresenter<SettingsUiState> {
     );
   } 
 
+  // Theme expansion toggle function
+  void toggleExpansion() {
+    final currentState = currentUiState;
+    uiState.value = currentState.copyWith(
+      isExpanded: !currentState.isExpanded,
+    );
+  }
+
+  // Theme change function
+  void changeTheme(bool isDarkMode) {
+    final currentState = currentUiState;
+    uiState.value = currentState.copyWith(
+      isDarkMode: isDarkMode,
+    );
+  }
+
   // void toggleUse24HourFormat() {
   //   final currentState = currentUiState;
   //   uiState.value = currentState.copyWith(

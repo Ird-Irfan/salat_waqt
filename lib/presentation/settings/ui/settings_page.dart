@@ -18,7 +18,7 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final SettingsPresenter presenter = locator();
+    final SettingsPresenter presenter = locator<SettingsPresenter>();
     final ThemeData theme = Theme.of(context);
     return Scaffold(
       body: PresentableWidgetBuilder(
@@ -49,7 +49,6 @@ class SettingsPage extends StatelessWidget {
                     ),
                     AnimatedExpansion(
                       theme: theme,
-                      isDarkMode: Get.isDarkMode,
                       onThemeChanged: (isDark) {
                         Get.changeThemeMode(
                           isDark ? ThemeMode.dark : ThemeMode.light,
@@ -63,7 +62,7 @@ class SettingsPage extends StatelessWidget {
                       subtitle: 'Pause All Notifications',
                       svgIconPath: AppConstant.icDnd,
                       switchValue: presenter.currentUiState.doNotDisturbEnabled,
-                      onSwitchChanged: (bool) {
+                      onSwitchChanged: (bool value) {
                         presenter.toggleDoNotDisturb();
                       },
                     ),
@@ -89,7 +88,7 @@ class SettingsPage extends StatelessWidget {
                       subtitle: 'Shown as: 23:44 PM',
                       svgIconPath: AppConstant.ic24Hour,
                       switchValue: presenter.currentUiState.use24HourFormatEnabled,
-                      onSwitchChanged: (bool) {
+                      onSwitchChanged: (bool value) {
                         presenter.toggleUse24HourFormat();
                       },
                     ),
@@ -116,7 +115,7 @@ class SettingsPage extends StatelessWidget {
                       subtitle: 'Adjust Prayer time Notification',
                       svgIconPath: AppConstant.icClock,
                       switchValue: presenter.currentUiState.timeAdjustmentEnabled,
-                      onSwitchChanged: (bool) {
+                      onSwitchChanged: (bool value) {
                         presenter.toggleTimeAdjustment();
                       },
                     ),
@@ -150,7 +149,7 @@ class SettingsPage extends StatelessWidget {
                       subtitle: 'Hides from homepage',
                       svgIconPath: AppConstant.icEye, 
                       switchValue: presenter.currentUiState.hideIftaarTimeEnabled,
-                      onSwitchChanged: (bool) {
+                      onSwitchChanged: (bool value) {
                         presenter.toggleHideIftaarTime();
                       },
                     ),
