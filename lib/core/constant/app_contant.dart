@@ -34,6 +34,7 @@ class AppConstant {
       'assets/svgs/ic_islamic_calender.svg';
   static const String icTheme = 'assets/svgs/ic_theme.svg';
   static const String icWeat = 'assets/svgs/ic_weat.svg';
+  static const String icSelect = 'assets/svgs/ic_select.svg';
 
   static const String icLayer = 'assets/svgs/ic_layer.svg'; 
   static const String icReview = 'assets/svgs/ic_review.svg';

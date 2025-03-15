@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:salat_waqt/core/config/salat_waqt_screen.dart';
 import 'package:salat_waqt/core/constant/app_contant.dart';
 import 'package:salat_waqt/core/constant/app_text_styles.dart';
 import 'package:salat_waqt/core/utility/utility.dart';
 import 'package:salat_waqt/presentation/common/widgets/svg_icons.dart';
 
-class AnimatedCard extends StatelessWidget {
+class AnimatedLangCard extends StatelessWidget {
   final ThemeData theme;
   final String title;
   final String subtitle;
@@ -18,7 +17,7 @@ class AnimatedCard extends StatelessWidget {
   final Function(String) onTextSelect;
   final String? selectedText;
 
-  const AnimatedCard({
+  const AnimatedLangCard({
     super.key,
     required this.title,
     required this.subtitle,
@@ -118,9 +117,10 @@ class AnimatedCard extends StatelessWidget {
                   splashColor: Colors.transparent,
                   onTap: () => onTextSelect(selectedTextOne ?? ""),
                   child: _buildSelectableText(
-                    selectedTextOne ?? "Text One",
-                    selectedText,
-                    context,
+                    text: selectedTextOne ?? "Text One",
+                    selectedText: selectedText,
+                    context: context,
+                    svgPath: AppConstant.icEnglish,
                   ),
                 ),
                 InkWell(
@@ -128,9 +128,10 @@ class AnimatedCard extends StatelessWidget {
                   splashColor: Colors.transparent,
                   onTap: () => onTextSelect(selectedTextTwo ?? ""),
                   child: _buildSelectableText(
-                    selectedTextTwo ?? "Text Two",
-                    selectedText,
-                    context,
+                    text: selectedTextTwo ?? "Text Two",
+                    selectedText: selectedText,
+                    context: context,
+                    svgPath: AppConstant.icBangla,
                   ),
                 ),
               ],
@@ -141,11 +142,12 @@ class AnimatedCard extends StatelessWidget {
     );
   }
 
-  Widget _buildSelectableText(
-    String text,
-    String? selectedText,
-    BuildContext context,
-  ) {
+  Widget _buildSelectableText({
+    required String text,
+    required String? selectedText,
+    required BuildContext context,
+    required String svgPath,
+  }) {
     final bool isSelected = selectedText == text;
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.px, vertical: 8.px),
@@ -168,6 +170,8 @@ class AnimatedCard extends StatelessWidget {
               : null,
       child: Row(
         children: [
+          SvgIcon(svgPath: svgPath, width: 24.px, height: 24.px),
+          SizedBox(width: 16.px),
           Text(
             text,
             style: theme.textTheme.titleMedium?.copyWith(
@@ -179,7 +183,7 @@ class AnimatedCard extends StatelessWidget {
           ),
           Spacer(),
           if (isSelected)
-            SvgPicture.asset(AppConstant.icSelect, width: 13.px, height: 10.px, color: context.color.cardSubtitleColor,),
+            Icon(Icons.check, color: context.color.cardSubtitleColor),
         ],
       ),
     );

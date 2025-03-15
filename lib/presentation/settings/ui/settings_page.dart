@@ -9,6 +9,7 @@ import 'package:salat_waqt/core/utility/utility.dart';
 import 'package:salat_waqt/presentation/settings/presenter/setting_presenter.dart';
 import 'package:salat_waqt/presentation/settings/ui/animated_Card/animated_card.dart';
 import 'package:salat_waqt/presentation/settings/ui/animated_expansion/animated_expansion.dart';
+import 'package:salat_waqt/presentation/settings/ui/animated_lang_card/animated_lang_card.dart';
 import 'package:salat_waqt/presentation/settings/ui/custom_appbar/custom_appbar.dart';
 import 'package:salat_waqt/presentation/settings/ui/icon_text_row/icon_text_row.dart';
 
@@ -55,7 +56,7 @@ class SettingsPage extends StatelessWidget {
                       },
                     ),
                     SizedBox(height: 12.px),
-                    AnimatedCard(
+                    AnimatedLangCard(
                       theme: theme,
                       title: "Select Language",
                       subtitle: "Current: English",
