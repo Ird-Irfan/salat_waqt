@@ -167,12 +167,28 @@ class AnimatedExpansion extends StatelessWidget {
         (title == 'Day Mode' && !isDarkMode);
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      height: 45,
+      padding: EdgeInsets.symmetric(horizontal: 20.px, vertical: 8.px),
+      height: 60.px,
+      decoration:
+          isSelected
+              ? ShapeDecoration(
+                gradient: RadialGradient(
+                  center: Alignment(1.20, 0.93),
+                  radius: 10,
+                  colors: [
+                    context.color.siblingCardActiveGradientStart,
+                    context.color.siblingCardActiveGradientEnd,
+                  ],
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.px),
+                ),
+              )
+              : null,
       child: Row(
         children: [
           SvgIcon(svgPath: svgPath, width: 24.px, height: 24.px),
-          const SizedBox(width: 12),
+          SizedBox(width: 14.px),
           Text(
             title,
             style: theme.textTheme.titleMedium?.copyWith(

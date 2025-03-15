@@ -15,6 +15,12 @@ class SettingsUiState extends BaseUiState {
   final bool isExpandedLang;
   final String? selectedText;
 
+  final bool isExpandedJuristic;
+  final String? selectedJuristic;
+
+  final bool isExpandedRamadan;
+  final String? selectedRamadan;
+
 
 
 
@@ -34,6 +40,10 @@ class SettingsUiState extends BaseUiState {
     this.isDarkMode = false,
     this.selectedText,
     this.isExpandedLang = false,
+    this.isExpandedJuristic = false,
+    this.selectedJuristic,
+    this.isExpandedRamadan = false,
+    this.selectedRamadan,
   });
 
   factory SettingsUiState.empty() {
@@ -51,7 +61,11 @@ class SettingsUiState extends BaseUiState {
       isDarkMode: false,
       selectedText: null,
       isExpandedLang: false,
-    );
+      isExpandedJuristic: false,
+      selectedJuristic: null,
+      isExpandedRamadan: false,
+      selectedRamadan: null,
+      );
   }
 
   @override
@@ -69,6 +83,10 @@ class SettingsUiState extends BaseUiState {
         isDarkMode,
         selectedText,
         isExpandedLang,
+        isExpandedJuristic,
+        selectedJuristic,
+        isExpandedRamadan,
+        selectedRamadan,
         ];
 
   SettingsUiState copyWith({
@@ -85,6 +103,10 @@ class SettingsUiState extends BaseUiState {
     bool? isDarkMode,
     bool? isExpandedLang,
     String? selectedText,
+    bool? isExpandedJuristic,
+    String? selectedJuristic,
+    bool? isExpandedRamadan,
+    String? selectedRamadan,
   }) {
     return SettingsUiState(
       isLoading: isLoading ?? this.isLoading,
@@ -100,6 +122,10 @@ class SettingsUiState extends BaseUiState {
       isDarkMode: isDarkMode ?? this.isDarkMode,
       isExpandedLang: isExpandedLang ?? this.isExpandedLang,
       selectedText: selectedText ?? this.selectedText,  
-    );
+      isExpandedJuristic: isExpandedJuristic ?? this.isExpandedJuristic,
+      selectedJuristic: selectedJuristic ?? this.selectedJuristic,
+      isExpandedRamadan: isExpandedRamadan ?? this.isExpandedRamadan,
+      selectedRamadan: selectedRamadan ?? this.selectedRamadan,
+      );
   }
 }

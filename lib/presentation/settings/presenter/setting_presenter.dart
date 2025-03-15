@@ -75,6 +75,51 @@ class SettingsPresenter extends BasePresenter<SettingsUiState> {
     }
   }
 
+  void toggleExpansionJuristic() {
+    final currentState = currentUiState;
+    uiState.value = currentState.copyWith(
+      isExpandedJuristic: !currentState.isExpandedJuristic,
+    );
+  }
+
+  void selectJuristic(String text) {
+    final currentState = currentUiState;
+    if (currentState.selectedJuristic == text) {
+      uiState.value = currentState.copyWith(
+        selectedJuristic: null,
+      );
+    } else {
+      uiState.value = currentState.copyWith(
+        selectedJuristic: text,
+      );
+    }
+  }
+
+  void toggleExpansionRamadan() {
+    final currentState = currentUiState;
+    uiState.value = currentState.copyWith(
+      isExpandedRamadan: !currentState.isExpandedRamadan,
+    );
+  } 
+
+  void selectRamadan(String text) { 
+    final currentState = currentUiState;
+    if (currentState.selectedRamadan == text) {
+      uiState.value = currentState.copyWith(
+        selectedRamadan: null,
+      );
+    } else {
+      uiState.value = currentState.copyWith(
+        selectedRamadan: text,
+      );
+    }
+  }
+
+
+
+
+
+
   // void toggleUse24HourFormat() {
   //   final currentState = currentUiState;
   //   uiState.value = currentState.copyWith(

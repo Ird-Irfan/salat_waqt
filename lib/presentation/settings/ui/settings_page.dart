@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -57,14 +56,18 @@ class SettingsPage extends StatelessWidget {
                     ),
                     SizedBox(height: 12.px),
                     AnimatedCard(
-                      presenter: presenter,
                       theme: theme,
-                      title: 'Select Language',
-                      subtitle: 'Current: English',
+                      title: "Select Language",
+                      subtitle: "Current: English",
                       svgIconPath: AppConstant.icLanguage,
-                      selectedTextOne: 'English',
+                      isExpanded: presenter.currentUiState.isExpandedLang,
+                      onCardTap: () => presenter.toggleExpansionLang(),
+                      onTextSelect: (text) => presenter.selectText(text),
+                      selectedText: presenter.currentUiState.selectedText,
+                      selectedTextOne: "English",
+                      selectedTextTwo: "Bangla",
                     ),
-                      SizedBox(height: 12.px),
+                    SizedBox(height: 12.px),
                     IconTextRow(
                       theme: theme,
                       title: 'Do Not Disturb',
@@ -96,18 +99,24 @@ class SettingsPage extends StatelessWidget {
                       title: 'Use 24 Hour Format',
                       subtitle: 'Shown as: 23:44 PM',
                       svgIconPath: AppConstant.ic24Hour,
-                      switchValue: presenter.currentUiState.use24HourFormatEnabled,
+                      switchValue:
+                          presenter.currentUiState.use24HourFormatEnabled,
                       onSwitchChanged: (bool value) {
                         presenter.toggleUse24HourFormat();
                       },
                     ),
                     SizedBox(height: 12.px),
                     AnimatedCard(
-                      presenter: presenter,
                       theme: theme,
                       title: 'Juristic Method',
                       subtitle: 'Current: Hanafi',
                       svgIconPath: AppConstant.icCalculator,
+                      isExpanded: presenter.currentUiState.isExpandedJuristic,
+                      onCardTap: () => presenter.toggleExpansionJuristic(),
+                      onTextSelect: (text) => presenter.selectText(text),
+                      selectedText: presenter.currentUiState.selectedText,
+                      selectedTextOne: "Hanafi",
+                      selectedTextTwo: "Shafi",
                     ),
                     SizedBox(height: 12.px),
 
@@ -124,12 +133,13 @@ class SettingsPage extends StatelessWidget {
                       title: 'Time Adjustments',
                       subtitle: 'Adjust Prayer time Notification',
                       svgIconPath: AppConstant.icClock,
-                      switchValue: presenter.currentUiState.timeAdjustmentEnabled,
+                      switchValue:
+                          presenter.currentUiState.timeAdjustmentEnabled,
                       onSwitchChanged: (bool value) {
                         presenter.toggleTimeAdjustment();
                       },
                     ),
-                      SizedBox(height: 12.px),
+                    SizedBox(height: 12.px),
                     Padding(
                       padding: EdgeInsets.only(
                         top: 22.px,
@@ -147,19 +157,25 @@ class SettingsPage extends StatelessWidget {
                       ),
                     ),
                     AnimatedCard(
-                      presenter: presenter,
                       theme: theme,
-                      title: 'Ramadan Calender Type',
+                      title: 'Calender Type',
                       subtitle: 'Current: Bangladesh',
                       svgIconPath: AppConstant.icIslamicCalender,
+                      isExpanded: presenter.currentUiState.isExpandedRamadan,
+                      onCardTap: () => presenter.toggleExpansionRamadan(),
+                      onTextSelect: (text) => presenter.selectRamadan(text),
+                      selectedText: presenter.currentUiState.selectedRamadan,
+                      selectedTextOne: "Bangladesh",
+                      selectedTextTwo: "Umm Al-Qura",
                     ),
                     SizedBox(height: 12.px),
                     IconTextRow(
                       theme: theme,
                       title: 'Hide Iftar & Sahri Time',
                       subtitle: 'Hides from homepage',
-                      svgIconPath: AppConstant.icEye, 
-                      switchValue: presenter.currentUiState.hideIftaarTimeEnabled,
+                      svgIconPath: AppConstant.icEye,
+                      switchValue:
+                          presenter.currentUiState.hideIftaarTimeEnabled,
                       onSwitchChanged: (bool value) {
                         presenter.toggleHideIftaarTime();
                       },
@@ -208,4 +224,3 @@ class SettingsPage extends StatelessWidget {
     );
   }
 }
-
