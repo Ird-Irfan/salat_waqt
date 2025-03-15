@@ -34,7 +34,6 @@ class IconTextRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(16.0),
       decoration: ShapeDecoration(
         gradient: RadialGradient(
           center: Alignment(0.93, 1.20),
@@ -49,7 +48,7 @@ class IconTextRow extends StatelessWidget {
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding:  EdgeInsets.all(18.px),
         child: Row(
           children: [
             SvgPicture.asset(svgIconPath, width: 28.px, height: 28.px),
@@ -69,7 +68,7 @@ class IconTextRow extends StatelessWidget {
                       color: context.color.cardTitleColor,
                     ),
                   ),
-                  SizedBox(height: 4.px),
+                  SizedBox(height: 8.px),
                   Text(
                     subtitle,
                     style: theme.textTheme.labelMedium?.copyWith(

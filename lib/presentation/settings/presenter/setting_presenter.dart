@@ -55,6 +55,26 @@ class SettingsPresenter extends BasePresenter<SettingsUiState> {
     );
   }
 
+  void toggleExpansionLang() {
+    final currentState = currentUiState;
+    uiState.value = currentState.copyWith(
+      isExpandedLang: !currentState.isExpandedLang,
+    );
+  }
+
+  void selectText(String text) {
+    final currentState = currentUiState;
+    if (currentState.selectedText == text) {
+      uiState.value = currentState.copyWith(
+        selectedText: null,
+      );
+    } else {
+      uiState.value = currentState.copyWith(
+        selectedText: text,
+      );
+    }
+  }
+
   // void toggleUse24HourFormat() {
   //   final currentState = currentUiState;
   //   uiState.value = currentState.copyWith(

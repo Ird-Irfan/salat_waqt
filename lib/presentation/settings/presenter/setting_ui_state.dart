@@ -12,6 +12,11 @@ class SettingsUiState extends BaseUiState {
   final bool isExpanded;
   final bool isDarkMode;
 
+  final bool isExpandedLang;
+  final String? selectedText;
+
+
+
 
 
 
@@ -27,6 +32,8 @@ class SettingsUiState extends BaseUiState {
     this.hideIftaarTimeEnabled = false,
     this.isExpanded = false,
     this.isDarkMode = false,
+    this.selectedText,
+    this.isExpandedLang = false,
   });
 
   factory SettingsUiState.empty() {
@@ -42,6 +49,8 @@ class SettingsUiState extends BaseUiState {
       hideIftaarTimeEnabled: false,
       isExpanded: false,
       isDarkMode: false,
+      selectedText: null,
+      isExpandedLang: false,
     );
   }
 
@@ -58,6 +67,8 @@ class SettingsUiState extends BaseUiState {
         hideIftaarTimeEnabled,  
         isExpanded,
         isDarkMode,
+        selectedText,
+        isExpandedLang,
         ];
 
   SettingsUiState copyWith({
@@ -72,6 +83,8 @@ class SettingsUiState extends BaseUiState {
     bool? hideIftaarTimeEnabled,
     bool? isExpanded,
     bool? isDarkMode,
+    bool? isExpandedLang,
+    String? selectedText,
   }) {
     return SettingsUiState(
       isLoading: isLoading ?? this.isLoading,
@@ -85,6 +98,8 @@ class SettingsUiState extends BaseUiState {
       hideIftaarTimeEnabled: hideIftaarTimeEnabled ?? this.hideIftaarTimeEnabled,
       isExpanded: isExpanded ?? this.isExpanded,
       isDarkMode: isDarkMode ?? this.isDarkMode,
+      isExpandedLang: isExpandedLang ?? this.isExpandedLang,
+      selectedText: selectedText ?? this.selectedText,  
     );
   }
 }

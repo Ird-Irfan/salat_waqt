@@ -14,7 +14,8 @@ class CustomSwitch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Transform.scale(
-      scale: 0.85,
+      scale: 0.75,
+      alignment: Alignment.center,
       child: Switch(
         value: switchValue,
         onChanged: onSwitchChanged,

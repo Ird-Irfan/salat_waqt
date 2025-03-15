@@ -5,7 +5,7 @@ import 'package:salat_waqt/core/config/salat_waqt_screen.dart';
 import 'package:salat_waqt/core/config/themes.dart';
 import 'package:salat_waqt/core/constant/app_contant.dart';
 import 'package:salat_waqt/core/constant/app_text_styles.dart';
-import 'package:salat_waqt/presentation/home/ui/home_page.dart';
+import 'package:salat_waqt/presentation/settings/ui/settings_page.dart';
 
 
 class SalatWaqt extends StatefulWidget {
@@ -70,9 +70,10 @@ class _SalatWaqtState extends State<SalatWaqt> {
           title: 'Salat Waqt',
           theme: SalatTheme.getTheme('Light', AppTextStyles.inter, 14),
           darkTheme: SalatTheme.getTheme('Dark', AppTextStyles.inter, 14),
-          themeMode: ThemeMode.system, //use system default, dark, or light
+          themeMode: ThemeMode.dark, //use system default, dark, or light
           // home: const FlashScreen(),
-          home: const HomePage(),
+          // home: const HomePage(),
+          home: const SettingsPage(),
         );
       },
     );

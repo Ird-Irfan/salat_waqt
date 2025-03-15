@@ -168,6 +168,8 @@ class ForbiddenTimeItems extends StatelessWidget {
                   ),
                 ),
                 InkWell(
+                  overlayColor: MaterialStateProperty.all(Colors.transparent),
+                  splashColor: Colors.transparent,
                   onTap: () {
                     CustomBottomSheet.show(
                       context: context,

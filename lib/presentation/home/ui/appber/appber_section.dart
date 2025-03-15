@@ -22,6 +22,8 @@ class AppBarSection extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: Colors.transparent,
       elevation: 0,
       title: InkWell(
+        overlayColor: MaterialStateProperty.all(Colors.transparent),
+        splashColor: Colors.transparent,
         onTap: onLocationTap,
         child: Padding(
           padding: EdgeInsets.only(

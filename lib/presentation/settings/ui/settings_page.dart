@@ -1,4 +1,3 @@
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,6 +10,7 @@ import 'package:salat_waqt/core/utility/utility.dart';
 import 'package:salat_waqt/presentation/settings/presenter/setting_presenter.dart';
 import 'package:salat_waqt/presentation/settings/ui/animated_Card/animated_card.dart';
 import 'package:salat_waqt/presentation/settings/ui/animated_expansion/animated_expansion.dart';
+import 'package:salat_waqt/presentation/settings/ui/custom_appbar/custom_appbar.dart';
 import 'package:salat_waqt/presentation/settings/ui/icon_text_row/icon_text_row.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -57,6 +57,7 @@ class SettingsPage extends StatelessWidget {
                     ),
                     SizedBox(height: 12.px),
                     AnimatedCard(
+                      presenter: presenter,
                       theme: theme,
                       title: 'Select Language',
                       subtitle: 'Current: English',
@@ -102,6 +103,7 @@ class SettingsPage extends StatelessWidget {
                     ),
                     SizedBox(height: 12.px),
                     AnimatedCard(
+                      presenter: presenter,
                       theme: theme,
                       title: 'Juristic Method',
                       subtitle: 'Current: Hanafi',
@@ -145,6 +147,7 @@ class SettingsPage extends StatelessWidget {
                       ),
                     ),
                     AnimatedCard(
+                      presenter: presenter,
                       theme: theme,
                       title: 'Ramadan Calender Type',
                       subtitle: 'Current: Bangladesh',
@@ -206,47 +209,3 @@ class SettingsPage extends StatelessWidget {
   }
 }
 
-class CustomAppBar extends StatelessWidget {
-  const CustomAppBar({super.key, required this.theme});
-
-  final ThemeData theme;
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverAppBar(
-      pinned: true,
-      scrolledUnderElevation: 0,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back),
-        onPressed: () => Navigator.pop(context),
-      ),
-      title: Text(
-        'Preferences',
-        style: theme.textTheme.titleMedium?.copyWith(
-          fontSize: 16.px,
-          fontFamily: AppTextStyles.inter,
-          fontWeight: FontWeight.w500,
-          color: context.color.cardTitleColor,
-        ),
-      ),
-      flexibleSpace: ClipRRect(
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: const Alignment(0.00, -1.00),
-              end: const Alignment(0, 1),
-              colors: [
-                context.color.appBarBgColor.withOpacityInt(0.01),
-                Colors.transparent,
-              ],
-            ),
-          ),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: Container(color: Colors.black.withOpacityInt(0.1)),
-          ),
-        ),
-      ),
-    );
-  }
-}
