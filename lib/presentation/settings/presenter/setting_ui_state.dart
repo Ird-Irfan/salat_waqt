@@ -9,6 +9,20 @@ class SettingsUiState extends BaseUiState {
   final bool timeAdjustmentEnabled;
   final bool hideIftaarTimeEnabled;
 
+  final bool isExpanded;
+  final bool isDarkMode;
+
+  final bool isExpandedLang;
+  final String? selectedText;
+
+  final bool isExpandedJuristic;
+  final String? selectedJuristic;
+
+  final bool isExpandedRamadan;
+  final String? selectedRamadan;
+
+
+
 
 
 
@@ -22,6 +36,14 @@ class SettingsUiState extends BaseUiState {
     this.use24HourFormatEnabled = false,
     this.timeAdjustmentEnabled = false,
     this.hideIftaarTimeEnabled = false,
+    this.isExpanded = false,
+    this.isDarkMode = false,
+    this.selectedText,
+    this.isExpandedLang = false,
+    this.isExpandedJuristic = false,
+    this.selectedJuristic,
+    this.isExpandedRamadan = false,
+    this.selectedRamadan,
   });
 
   factory SettingsUiState.empty() {
@@ -35,7 +57,15 @@ class SettingsUiState extends BaseUiState {
       use24HourFormatEnabled: false,
       timeAdjustmentEnabled: false,
       hideIftaarTimeEnabled: false,
-    );
+      isExpanded: false,
+      isDarkMode: false,
+      selectedText: null,
+      isExpandedLang: false,
+      isExpandedJuristic: false,
+      selectedJuristic: null,
+      isExpandedRamadan: false,
+      selectedRamadan: null,
+      );
   }
 
   @override
@@ -48,7 +78,15 @@ class SettingsUiState extends BaseUiState {
         doNotDisturbEnabled,
         use24HourFormatEnabled,
         timeAdjustmentEnabled,
-        hideIftaarTimeEnabled,
+        hideIftaarTimeEnabled,  
+        isExpanded,
+        isDarkMode,
+        selectedText,
+        isExpandedLang,
+        isExpandedJuristic,
+        selectedJuristic,
+        isExpandedRamadan,
+        selectedRamadan,
         ];
 
   SettingsUiState copyWith({
@@ -61,6 +99,14 @@ class SettingsUiState extends BaseUiState {
     bool? use24HourFormatEnabled,
     bool? timeAdjustmentEnabled,
     bool? hideIftaarTimeEnabled,
+    bool? isExpanded,
+    bool? isDarkMode,
+    bool? isExpandedLang,
+    String? selectedText,
+    bool? isExpandedJuristic,
+    String? selectedJuristic,
+    bool? isExpandedRamadan,
+    String? selectedRamadan,
   }) {
     return SettingsUiState(
       isLoading: isLoading ?? this.isLoading,
@@ -72,6 +118,14 @@ class SettingsUiState extends BaseUiState {
       use24HourFormatEnabled: use24HourFormatEnabled ?? this.use24HourFormatEnabled,
       timeAdjustmentEnabled: timeAdjustmentEnabled ?? this.timeAdjustmentEnabled,
       hideIftaarTimeEnabled: hideIftaarTimeEnabled ?? this.hideIftaarTimeEnabled,
-    );
+      isExpanded: isExpanded ?? this.isExpanded,
+      isDarkMode: isDarkMode ?? this.isDarkMode,
+      isExpandedLang: isExpandedLang ?? this.isExpandedLang,
+      selectedText: selectedText ?? this.selectedText,  
+      isExpandedJuristic: isExpandedJuristic ?? this.isExpandedJuristic,
+      selectedJuristic: selectedJuristic ?? this.selectedJuristic,
+      isExpandedRamadan: isExpandedRamadan ?? this.isExpandedRamadan,
+      selectedRamadan: selectedRamadan ?? this.selectedRamadan,
+      );
   }
 }

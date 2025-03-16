@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -11,6 +9,8 @@ import 'package:salat_waqt/core/utility/utility.dart';
 import 'package:salat_waqt/presentation/settings/presenter/setting_presenter.dart';
 import 'package:salat_waqt/presentation/settings/ui/animated_Card/animated_card.dart';
 import 'package:salat_waqt/presentation/settings/ui/animated_expansion/animated_expansion.dart';
+import 'package:salat_waqt/presentation/settings/ui/animated_lang_card/animated_lang_card.dart';
+import 'package:salat_waqt/presentation/settings/ui/custom_appbar/custom_appbar.dart';
 import 'package:salat_waqt/presentation/settings/ui/icon_text_row/icon_text_row.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -18,7 +18,7 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final SettingsPresenter presenter = locator();
+    final SettingsPresenter presenter = locator<SettingsPresenter>();
     final ThemeData theme = Theme.of(context);
     return Scaffold(
       body: PresentableWidgetBuilder(
@@ -49,21 +49,33 @@ class SettingsPage extends StatelessWidget {
                     ),
                     AnimatedExpansion(
                       theme: theme,
-                      isDarkMode: Get.isDarkMode,
                       onThemeChanged: (isDark) {
                         Get.changeThemeMode(
                           isDark ? ThemeMode.dark : ThemeMode.light,
                         );
                       },
                     ),
-                    SizedBox(height: 16.px),
+                    SizedBox(height: 12.px),
+                    AnimatedLangCard(
+                      theme: theme,
+                      title: "Select Language",
+                      subtitle: "Current: English",
+                      svgIconPath: AppConstant.icLanguage,
+                      isExpanded: presenter.currentUiState.isExpandedLang,
+                      onCardTap: () => presenter.toggleExpansionLang(),
+                      onTextSelect: (text) => presenter.selectText(text),
+                      selectedText: presenter.currentUiState.selectedText,
+                      selectedTextOne: "English",
+                      selectedTextTwo: "Bangla",
+                    ),
+                    SizedBox(height: 12.px),
                     IconTextRow(
                       theme: theme,
                       title: 'Do Not Disturb',
                       subtitle: 'Pause All Notifications',
                       svgIconPath: AppConstant.icDnd,
                       switchValue: presenter.currentUiState.doNotDisturbEnabled,
-                      onSwitchChanged: (bool) {
+                      onSwitchChanged: (bool value) {
                         presenter.toggleDoNotDisturb();
                       },
                     ),
@@ -90,18 +102,24 @@ class SettingsPage extends StatelessWidget {
                       svgIconPath: AppConstant.ic24Hour,
                       switchValue:
                           presenter.currentUiState.use24HourFormatEnabled,
-                      onSwitchChanged: (value) {
-                        presenter.toggleUse24HourFormat(value);
+                      onSwitchChanged: (bool value) {
+                        presenter.toggleUse24HourFormat();
                       },
                     ),
-                    SizedBox(height: 16.px),
+                    SizedBox(height: 12.px),
                     AnimatedCard(
                       theme: theme,
                       title: 'Juristic Method',
                       subtitle: 'Current: Hanafi',
                       svgIconPath: AppConstant.icCalculator,
+                      isExpanded: presenter.currentUiState.isExpandedJuristic,
+                      onCardTap: () => presenter.toggleExpansionJuristic(),
+                      onTextSelect: (text) => presenter.selectText(text),
+                      selectedText: presenter.currentUiState.selectedText,
+                      selectedTextOne: "Hanafi",
+                      selectedTextTwo: "Shafi",
                     ),
-                    SizedBox(height: 16.px),
+                    SizedBox(height: 12.px),
 
                     IconTextRow(
                       theme: theme,
@@ -110,7 +128,7 @@ class SettingsPage extends StatelessWidget {
                       svgIconPath: AppConstant.icCalculator,
                       hasSwitch: false,
                     ),
-                    SizedBox(height: 16.px),
+                    SizedBox(height: 12.px),
                     IconTextRow(
                       theme: theme,
                       title: 'Time Adjustments',
@@ -118,11 +136,11 @@ class SettingsPage extends StatelessWidget {
                       svgIconPath: AppConstant.icClock,
                       switchValue:
                           presenter.currentUiState.timeAdjustmentEnabled,
-                      onSwitchChanged: (value) {
-                        presenter.toggleTimeAdjustment(value);
+                      onSwitchChanged: (bool value) {
+                        presenter.toggleTimeAdjustment();
                       },
                     ),
-                    SizedBox(height: 16.px),
+                    SizedBox(height: 12.px),
                     Padding(
                       padding: EdgeInsets.only(
                         top: 22.px,
@@ -141,11 +159,17 @@ class SettingsPage extends StatelessWidget {
                     ),
                     AnimatedCard(
                       theme: theme,
-                      title: 'Ramadan Calender Type',
+                      title: 'Calender Type',
                       subtitle: 'Current: Bangladesh',
                       svgIconPath: AppConstant.icIslamicCalender,
+                      isExpanded: presenter.currentUiState.isExpandedRamadan,
+                      onCardTap: () => presenter.toggleExpansionRamadan(),
+                      onTextSelect: (text) => presenter.selectRamadan(text),
+                      selectedText: presenter.currentUiState.selectedRamadan,
+                      selectedTextOne: "Bangladesh",
+                      selectedTextTwo: "Umm Al-Qura",
                     ),
-                    SizedBox(height: 16.px),
+                    SizedBox(height: 12.px),
                     IconTextRow(
                       theme: theme,
                       title: 'Hide Iftar & Sahri Time',
@@ -153,11 +177,11 @@ class SettingsPage extends StatelessWidget {
                       svgIconPath: AppConstant.icEye,
                       switchValue:
                           presenter.currentUiState.hideIftaarTimeEnabled,
-                      onSwitchChanged: (bool) {
+                      onSwitchChanged: (bool value) {
                         presenter.toggleHideIftaarTime();
                       },
                     ),
-                    SizedBox(height: 16.px),
+                    SizedBox(height: 12.px),
                     Padding(
                       padding: EdgeInsets.only(
                         top: 22.px,
@@ -183,7 +207,7 @@ class SettingsPage extends StatelessWidget {
                       hasSwitch: false,
                       titleFontSize: 14,
                     ),
-                    SizedBox(height: 16.px),
+                    SizedBox(height: 12.px),
                     IconTextRow(
                       theme: theme,
                       title: 'Calculation Method',
@@ -197,51 +221,6 @@ class SettingsPage extends StatelessWidget {
             ],
           );
         },
-      ),
-    );
-  }
-}
-
-class CustomAppBar extends StatelessWidget {
-  const CustomAppBar({super.key, required this.theme});
-
-  final ThemeData theme;
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverAppBar(
-      pinned: true,
-      scrolledUnderElevation: 0,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back),
-        onPressed: () => Navigator.pop(context),
-      ),
-      title: Text(
-        'Preferences',
-        style: theme.textTheme.titleMedium?.copyWith(
-          fontSize: 16.px,
-          fontFamily: AppTextStyles.inter,
-          fontWeight: FontWeight.w500,
-          color: context.color.cardTitleColor,
-        ),
-      ),
-      flexibleSpace: ClipRRect(
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: const Alignment(0.00, -1.00),
-              end: const Alignment(0, 1),
-              colors: [
-                context.color.appBarBgColor.withOpacityInt(0.01),
-                Colors.transparent,
-              ],
-            ),
-          ),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: Container(color: Colors.black.withOpacityInt(0.1)),
-          ),
-        ),
       ),
     );
   }

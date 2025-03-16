@@ -218,6 +218,11 @@ class SalatTheme {
             SalatColor.donutRingGradientStartColorLight,
         donutRingGradientEndColor: SalatColor.donutRingGradientEndColorLight,
         donutBottomCircleColor: SalatColor.donutBottomCircleColorLight,
+
+        siblingCardActiveGradientStart:
+            SalatColor.siblingCardActiveGradientStartColorLight,
+        siblingCardActiveGradientEnd:
+            SalatColor.siblingCardActiveGradientEndColorLight,
       ),
       SalatCustomTextTheme(
         labelExtraSmall: TextStyle(
@@ -371,6 +376,11 @@ class SalatTheme {
         donutRingGradientStartColor: SalatColor.donutRingGradientStartColorDark,
         donutRingGradientEndColor: SalatColor.donutRingGradientEndColorDark,
         donutBottomCircleColor: SalatColor.donutBottomCircleColorDark,
+
+        siblingCardActiveGradientStart:
+            SalatColor.siblingCardActiveGradientStartColorDark,
+        siblingCardActiveGradientEnd:
+            SalatColor.siblingCardActiveGradientEndColorDark,
       ),
       // SalatCustomTheme.darkTheme,
       SalatCustomTextTheme(

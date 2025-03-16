@@ -21,7 +21,9 @@ class SvgIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return onTap != null
-        ? GestureDetector(
+        ? InkWell(
+          overlayColor: MaterialStateProperty.all(Colors.transparent),
+          splashColor: Colors.transparent,
           onTap: onTap,
           child: SvgPicture.asset(
             svgPath,

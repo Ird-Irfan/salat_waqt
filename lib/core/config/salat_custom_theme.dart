@@ -40,8 +40,10 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
 
   final Color donutRingGradientStartColor;
   final Color donutRingGradientEndColor;
-
   final Color donutBottomCircleColor;
+
+  final Color siblingCardActiveGradientStart;
+  final Color siblingCardActiveGradientEnd;
 
   const SalatCustomTheme({
     required this.primaryColor100,
@@ -81,6 +83,8 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
     required this.donutRingGradientStartColor,
     required this.donutRingGradientEndColor,
     required this.donutBottomCircleColor,
+    required this.siblingCardActiveGradientStart,
+    required this.siblingCardActiveGradientEnd,
   });
 
   // Light Theme
@@ -123,6 +127,8 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
     donutRingGradientStartColor: SalatColor.donutRingGradientStartColorLight,
     donutRingGradientEndColor: SalatColor.donutRingGradientEndColorLight,
     donutBottomCircleColor: SalatColor.donutBottomCircleColorLight,
+    siblingCardActiveGradientStart: SalatColor.siblingCardActiveGradientStartColorLight,
+    siblingCardActiveGradientEnd: SalatColor.siblingCardActiveGradientEndColorLight,
   );
 
   // Dark Theme
@@ -164,6 +170,8 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
     donutRingGradientStartColor: SalatColor.donutRingGradientStartColorDark,
     donutRingGradientEndColor: SalatColor.donutRingGradientEndColorDark,
     donutBottomCircleColor: SalatColor.donutBottomCircleColorDark,
+    siblingCardActiveGradientStart: SalatColor.siblingCardActiveGradientStartColorDark,
+    siblingCardActiveGradientEnd: SalatColor.siblingCardActiveGradientEndColorDark,
   );
 
   @override
@@ -205,6 +213,8 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
     Color? donutRingGradientStartColor,
     Color? donutRingGradientEndColor,
     Color? donutBottomCircleColor,
+    Color? siblingCardActiveGradientStart,
+    Color? siblingCardActiveGradientEnd,
   }) {
     return SalatCustomTheme(
       primaryColor100: primaryColor100 ?? this.primaryColor100,
@@ -255,6 +265,10 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
           donutRingGradientEndColor ?? this.donutRingGradientEndColor,
       donutBottomCircleColor:
           donutBottomCircleColor ?? this.donutBottomCircleColor,
+      siblingCardActiveGradientStart:
+          siblingCardActiveGradientStart ?? this.siblingCardActiveGradientStart,
+      siblingCardActiveGradientEnd:
+          siblingCardActiveGradientEnd ?? this.siblingCardActiveGradientEnd,
     );
   }
 
@@ -348,6 +362,10 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
           )!,
       donutBottomCircleColor:
           Color.lerp(donutBottomCircleColor, other.donutBottomCircleColor, t)!,
+      siblingCardActiveGradientStart:
+          Color.lerp(siblingCardActiveGradientStart, other.siblingCardActiveGradientStart, t)!,
+      siblingCardActiveGradientEnd:
+          Color.lerp(siblingCardActiveGradientEnd, other.siblingCardActiveGradientEnd, t)!,
     );
   }
 }

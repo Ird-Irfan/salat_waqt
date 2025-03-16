@@ -5,7 +5,7 @@ import 'package:salat_waqt/core/config/salat_waqt_screen.dart';
 import 'package:salat_waqt/core/config/themes.dart';
 import 'package:salat_waqt/core/constant/app_contant.dart';
 import 'package:salat_waqt/core/constant/app_text_styles.dart';
-import 'package:salat_waqt/presentation/home/ui/home_page.dart';
+import 'package:salat_waqt/presentation/settings/ui/settings_page.dart';
 
 
 class SalatWaqt extends StatefulWidget {
@@ -22,6 +22,63 @@ class SalatWaqt extends StatefulWidget {
 }
 
 // In salat_waqt.dart
+// class _SalatWaqtState extends State<SalatWaqt> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return ResponsiveSizer(
+//       builder: (context, orientation, deviceType) {
+//         return GetMaterialApp(
+//           navigatorKey: SalatWaqt.navigatorKey,
+//           builder: (context, child) {
+//             return Overlay(
+//               initialEntries: [
+//                 OverlayEntry(
+//                   builder: (context) {
+//                     SalatWaqtScreen.setUp(context);
+//                     // Wrap the Container in a Builder
+//                     return Theme(
+//                       //add this.
+//                       data: Theme.of(context),
+//                       child: Builder(
+//                         builder: (innerContext) {
+//                           // Add the Builder here
+//                           return Container(
+//                             decoration: BoxDecoration(
+//                               image: DecorationImage(
+//                                 image: AssetImage(
+//                                   Get
+//                                           .isDarkMode // This now correctly reflects current theme
+//                                       ? AppConstant.appBgPngDark
+//                                       : AppConstant.appBgPngLight,
+//                                 ),
+//                                 fit: BoxFit.cover,
+//                               ),
+//                             ),
+//                             child: child!,
+//                           );
+//                         },
+//                       ),
+//                     );
+//                   },
+//                 ),
+//               ],
+//             );
+//           },
+//           onInit: () => SalatWaqtScreen.setUp(context),
+//           onReady: () => SalatWaqtScreen.setUp(context),
+//           debugShowCheckedModeBanner: false,
+//           title: 'Salat Waqt',
+//           theme: SalatTheme.getTheme('Light', AppTextStyles.inter, 14),
+//           darkTheme: SalatTheme.getTheme('Dark', AppTextStyles.inter, 14),
+//           themeMode: ThemeMode.dark, //use system default, dark, or light
+//           // home: const FlashScreen(),
+//           // home: const HomePage(),
+//           home: const SettingsPage(),
+//         );
+//       },
+//     );
+//   }
+// }
 class _SalatWaqtState extends State<SalatWaqt> {
   @override
   Widget build(BuildContext context) {
@@ -36,29 +93,25 @@ class _SalatWaqtState extends State<SalatWaqt> {
                   builder: (context) {
                     SalatWaqtScreen.setUp(context);
                     // Wrap the Container in a Builder
-                    return Theme(
-                      //add this.
-                      data: Theme.of(context),
-                      child: Builder(
-                        builder: (innerContext) {
-                          // Add the Builder here
-                          return Container(
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: AssetImage(
-                                  Get
-                                          .isDarkMode // This now correctly reflects current theme
-                                      ? AppConstant.appBgPngDark
-                                      : AppConstant.appBgPngLight,
+                    return Theme(  //add this.
+                        data: Theme.of(context),
+                        child: Builder(
+                          builder: (innerContext) {  // Add the Builder here
+                            return Container(
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: AssetImage(
+                                    Get.isDarkMode  // This now correctly reflects current theme
+                                        ? AppConstant.appBgPngDark
+                                        : AppConstant.appBgPngLight,
+                                  ),
+                                  fit: BoxFit.cover,
                                 ),
-                                fit: BoxFit.cover,
                               ),
-                            ),
-                            child: child!,
-                          );
-                        },
-                      ),
-                    );
+                              child: child!,
+                            );
+                        }));
+                    
                   },
                 ),
               ],
@@ -71,8 +124,7 @@ class _SalatWaqtState extends State<SalatWaqt> {
           theme: SalatTheme.getTheme('Light', AppTextStyles.inter, 14),
           darkTheme: SalatTheme.getTheme('Dark', AppTextStyles.inter, 14),
           themeMode: ThemeMode.system, //use system default, dark, or light
-          // home: const FlashScreen(),
-          home: const HomePage(),
+          home: const SettingsPage(),
         );
       },
     );

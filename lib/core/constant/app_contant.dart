@@ -34,6 +34,7 @@ class AppConstant {
       'assets/svgs/ic_islamic_calender.svg';
   static const String icTheme = 'assets/svgs/ic_theme.svg';
   static const String icWeat = 'assets/svgs/ic_weat.svg';
+  static const String icSelect = 'assets/svgs/ic_select.svg';
 
   static const String icLayer = 'assets/svgs/ic_layer.svg'; 
   static const String icReview = 'assets/svgs/ic_review.svg';
@@ -47,4 +48,9 @@ class AppConstant {
   static const String splashScreenlogo = 'assets/images/splash_screen_logo.png';
   static const String bellring = 'assets/images/bell_ring.png';
   static const String circleBg = 'assets/images/circle_bg.png';
+
+
+  static const String icEnglish = 'assets/svgs/ic_english.svg';
+  static const String icLanguage = 'assets/svgs/ic_language.svg'; 
+  static const String icBangla = 'assets/svgs/ic_bangla.svg';
 }
