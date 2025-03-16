@@ -5,8 +5,7 @@ import 'package:salat_waqt/core/config/salat_waqt_screen.dart';
 import 'package:salat_waqt/core/config/themes.dart';
 import 'package:salat_waqt/core/constant/app_contant.dart';
 import 'package:salat_waqt/core/constant/app_text_styles.dart';
-import 'package:salat_waqt/presentation/settings/ui/settings_page.dart';
-
+import 'package:salat_waqt/presentation/Onboarding/ui/flash_screen/flash_screen.dart';
 
 class SalatWaqt extends StatefulWidget {
   const SalatWaqt({super.key});
@@ -93,25 +92,29 @@ class _SalatWaqtState extends State<SalatWaqt> {
                   builder: (context) {
                     SalatWaqtScreen.setUp(context);
                     // Wrap the Container in a Builder
-                    return Theme(  //add this.
-                        data: Theme.of(context),
-                        child: Builder(
-                          builder: (innerContext) {  // Add the Builder here
-                            return Container(
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: AssetImage(
-                                    Get.isDarkMode  // This now correctly reflects current theme
-                                        ? AppConstant.appBgPngDark
-                                        : AppConstant.appBgPngLight,
-                                  ),
-                                  fit: BoxFit.cover,
+                    return Theme(
+                      //add this.
+                      data: Theme.of(context),
+                      child: Builder(
+                        builder: (innerContext) {
+                          // Add the Builder here
+                          return Container(
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: AssetImage(
+                                  Get
+                                          .isDarkMode // This now correctly reflects current theme
+                                      ? AppConstant.appBgPngDark
+                                      : AppConstant.appBgPngLight,
                                 ),
+                                fit: BoxFit.cover,
                               ),
-                              child: child!,
-                            );
-                        }));
-                    
+                            ),
+                            child: child!,
+                          );
+                        },
+                      ),
+                    );
                   },
                 ),
               ],
@@ -124,7 +127,7 @@ class _SalatWaqtState extends State<SalatWaqt> {
           theme: SalatTheme.getTheme('Light', AppTextStyles.inter, 14),
           darkTheme: SalatTheme.getTheme('Dark', AppTextStyles.inter, 14),
           themeMode: ThemeMode.system, //use system default, dark, or light
-          home: const SettingsPage(),
+          home: const FlashScreen(),
         );
       },
     );

@@ -103,7 +103,7 @@ class SettingsPage extends StatelessWidget {
                       switchValue:
                           presenter.currentUiState.use24HourFormatEnabled,
                       onSwitchChanged: (bool value) {
-                        presenter.toggleUse24HourFormat();
+                        presenter.toggleUse24HourFormat(value);
                       },
                     ),
                     SizedBox(height: 12.px),
@@ -137,7 +137,7 @@ class SettingsPage extends StatelessWidget {
                       switchValue:
                           presenter.currentUiState.timeAdjustmentEnabled,
                       onSwitchChanged: (bool value) {
-                        presenter.toggleTimeAdjustment();
+                        presenter.toggleTimeAdjustment(value);
                       },
                     ),
                     SizedBox(height: 12.px),
