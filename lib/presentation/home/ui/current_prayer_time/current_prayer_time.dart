@@ -32,7 +32,7 @@ class CurrentPrayerTime extends StatelessWidget {
       presenter: presenter,
       builder: () {
         return Container(
-          height: presenter.currentUiState.currentPrayerTimeHeight,
+          height: presenter.currentUiState.currentPrayerTimeHeight.px,
           decoration: BoxDecoration(
             gradient: RadialGradient(
               center: Alignment(0.93, 1.20),
