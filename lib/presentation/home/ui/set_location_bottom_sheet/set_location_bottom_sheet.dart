@@ -213,18 +213,18 @@ class SetLocationBottomSheet extends StatelessWidget {
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: TextStyle(
-          color: context.color.cardTitleColor.withOpacity(0.6),
+          color: context.color.cardTitleColor.withOpacityInt(0.6),
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.px),
           borderSide: BorderSide(
-            color: context.color.cardTitleColor.withOpacity(0.3),
+            color: context.color.cardTitleColor.withOpacityInt(0.3),
           ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.px),
           borderSide: BorderSide(
-            color: context.color.cardTitleColor.withOpacity(0.3),
+            color: context.color.cardTitleColor.withOpacityInt(0.3),
           ),
         ),
         focusedBorder: OutlineInputBorder(
@@ -232,7 +232,7 @@ class SetLocationBottomSheet extends StatelessWidget {
           borderSide: BorderSide(color: context.color.primaryColor500),
         ),
         filled: true,
-        fillColor: context.color.cardGradientStart.withOpacity(0.5),
+        fillColor: context.color.cardGradientStart.withOpacityInt(0.5),
       ),
       dropdownColor: context.color.cardGradientEnd,
       style: TextStyle(color: context.color.cardTitleColor),

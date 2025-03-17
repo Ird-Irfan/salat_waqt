@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:salat_waqt/core/base/base_presenter.dart';
 import 'package:salat_waqt/core/di/service_locator.dart';
 import 'package:salat_waqt/core/external_libs/presentable_widget_builder.dart';
@@ -41,66 +42,51 @@ class HomePage extends StatelessWidget {
       child: Scaffold(
         extendBodyBehindAppBar: true,
         backgroundColor: Colors.transparent,
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(65.px),
+          child: ClipRRect(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment(0.50, 0.00),
+                  end: Alignment(0.50, 1.00),
+                  colors: [
+                    context.color.appBarBgColor.withOpacityInt(0.2),
+                    context.color.appBarBgColor.withOpacityInt(0.0),
+                  ],
+                ),
+              ),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                child: AppBarSection(
+                  onLocationTap: () {
+                    Get.bottomSheet(SetLocationBottomSheet() as Widget);
+                  },
+                  location:
+                      presenter.currentUiState.currentAddress ??
+                      'Dhaka, Bangladesh',
+                  theme: theme,
+                ),
+              ),
+            ),
+          ),
+        ),
         body: PresentableWidgetBuilder(
           presenter: presenter,
           builder: () {
             return CustomScrollView(
               slivers: [
-                SliverAppBar(
-                  pinned: true,
-                  scrolledUnderElevation: 0,
-                  flexibleSpace: ClipRRect(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment(0.00, -1.00),
-                          end: Alignment(0, 1),
-                          colors: [
-                            context.color.appBarBgColor.withOpacityInt(0.01),
-                            Colors.transparent,
-                          ],
-                        ),
-                      ),
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                        child: Container(
-                          color: Colors.black.withOpacityInt(0.1),
-                          child: AppBarSection(
-                            onLocationTap: () {
-                              Get.bottomSheet(
-                                SetLocationBottomSheet() as Widget,
-                              );
-                              // CustomBottomSheet.show(
-                              //   context: context,
-                              //   child: Container(
-                              //     child: _homeBottomContent(
-                              //       theme,
-                              //       context,
-                              //       isSelected,
-                              //     ),
-                              //   ),
-                              // );
-                            },
-                            location:
-                                presenter.currentUiState.currentAddress ?? '',
-                            theme: theme,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
                 SliverToBoxAdapter(
-                  child: Container(
-                    decoration: const BoxDecoration(),
-                    child: SafeArea(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            // Date Display
-                            DateDisplay(
+                  child: SafeArea(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          // Date Display
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 14.px),
+                            child: DateDisplay(
                               theme: theme,
                               englishDate:
                                   presenter.currentUiState.englishDate ?? '',
@@ -108,39 +94,39 @@ class HomePage extends StatelessWidget {
                                   presenter.currentUiState.arabicDate ?? '',
                               presenter: presenter,
                             ),
-                            const SizedBox(height: 20),
-                            // Iftar Time Counter
-                            IftarTimeCounter(theme: theme),
-                            const SizedBox(height: 20),
-                            // Sahri & Iftar Times
-                            SahriIftarTimesSection(
-                              theme: theme,
-                              sahriTime:
-                                  presenter
-                                      .currentUiState
-                                      .prayerTimes?['Sehri'] ??
-                                  '',
-                              iftarTime:
-                                  presenter
-                                      .currentUiState
-                                      .prayerTimes?['Iftar'] ??
-                                  '',
-                            ),
-                            const SizedBox(height: 16),
-                            // Current Prayer Time
-                            CurrentPrayerTime(theme: theme),
-                            const SizedBox(height: 20),
-                            // Sadaqa App Banner
-                            SadaqaAdsBanner(presenter: presenter, theme: theme),
-                            const SizedBox(height: 20),
-                            // Forbidden Times Section
-                            ForbiddenTime(theme: theme),
-                            const SizedBox(height: 20),
-                            // About Us Footer
-                            AboutUsFooter(theme: theme),
-                            const SizedBox(height: 20),
-                          ],
-                        ),
+                          ),
+                          const SizedBox(height: 20),
+                          // Iftar Time Counter
+                          IftarTimeCounter(theme: theme),
+                          const SizedBox(height: 20),
+                          // Sahri & Iftar Times
+                          SahriIftarTimesSection(
+                            theme: theme,
+                            sahriTime:
+                                presenter
+                                    .currentUiState
+                                    .prayerTimes?['Sehri'] ??
+                                '',
+                            iftarTime:
+                                presenter
+                                    .currentUiState
+                                    .prayerTimes?['Iftar'] ??
+                                '',
+                          ),
+                          const SizedBox(height: 16),
+                          // Current Prayer Time
+                          CurrentPrayerTime(theme: theme),
+                          const SizedBox(height: 20),
+                          // Sadaqa App Banner
+                          SadaqaAdsBanner(presenter: presenter, theme: theme),
+                          const SizedBox(height: 20),
+                          // Forbidden Times Section
+                          ForbiddenTime(theme: theme),
+                          const SizedBox(height: 20),
+                          // About Us Footer
+                          AboutUsFooter(theme: theme),
+                          const SizedBox(height: 20),
+                        ],
                       ),
                     ),
                   ),
@@ -152,5 +138,4 @@ class HomePage extends StatelessWidget {
       ),
     );
   }
-
 }

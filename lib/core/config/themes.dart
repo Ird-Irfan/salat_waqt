@@ -463,7 +463,7 @@ class SalatTheme {
     scrollbarTheme: ScrollbarThemeData(
       thumbColor: WidgetStateProperty.all(Colors.white),
     ),
-    appBarTheme: const AppBarTheme(
+    appBarTheme: AppBarTheme(
       backgroundColor: Colors.transparent,
       // shadowColor: Colors.black,
       //backgroundColor: Color(0xff235FA6),

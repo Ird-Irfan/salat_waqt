@@ -19,23 +19,16 @@ class AppBarSection extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.transparent,
+      // backgroundColor: Colors.transparent,
       elevation: 0,
       title: InkWell(
         overlayColor: MaterialStateProperty.all(Colors.transparent),
-        splashColor: Colors.transparent,
+        // splashColor: Colors.transparent,
         onTap: onLocationTap,
-        child: Padding(
-          padding: EdgeInsets.only(
-            left: 16.px,
-            right: 16.px,
-            top: 8.px,
-            bottom: 8.px,
-          ),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20.px),
-            ),
+        child: Container(
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(20.px)),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -45,7 +38,7 @@ class AppBarSection extends StatelessWidget implements PreferredSizeWidget {
                   height: 24.px,
                   color: context.color.cardTitleColor,
                 ),
-                SizedBox(width: 10.px),
+                SizedBox(width: 12.px),
                 Text(
                   location,
                   style: theme.textTheme.titleMedium?.copyWith(
@@ -54,7 +47,7 @@ class AppBarSection extends StatelessWidget implements PreferredSizeWidget {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                SizedBox(width: 4.px),
+                SizedBox(width: 6.px),
                 SvgIcon(
                   svgPath: AppConstant.icArrowDown,
                   width: 16.px,
@@ -69,7 +62,7 @@ class AppBarSection extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         // Switch(value: true, onChanged: (value) {}),
         Padding(
-          padding: EdgeInsets.only(right: 16.px),
+          padding: EdgeInsets.only(right: 20.px),
           child: SvgIcon(
             svgPath: AppConstant.icCategory,
             width: 24.px,
@@ -111,5 +104,5 @@ class AppBarSection extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(74.px);
+  Size get preferredSize => Size.fromHeight(88.px);
 }

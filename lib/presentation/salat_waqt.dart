@@ -20,64 +20,7 @@ class SalatWaqt extends StatefulWidget {
   State<SalatWaqt> createState() => _SalatWaqtState();
 }
 
-// In salat_waqt.dart
-// class _SalatWaqtState extends State<SalatWaqt> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return ResponsiveSizer(
-//       builder: (context, orientation, deviceType) {
-//         return GetMaterialApp(
-//           navigatorKey: SalatWaqt.navigatorKey,
-//           builder: (context, child) {
-//             return Overlay(
-//               initialEntries: [
-//                 OverlayEntry(
-//                   builder: (context) {
-//                     SalatWaqtScreen.setUp(context);
-//                     // Wrap the Container in a Builder
-//                     return Theme(
-//                       //add this.
-//                       data: Theme.of(context),
-//                       child: Builder(
-//                         builder: (innerContext) {
-//                           // Add the Builder here
-//                           return Container(
-//                             decoration: BoxDecoration(
-//                               image: DecorationImage(
-//                                 image: AssetImage(
-//                                   Get
-//                                           .isDarkMode // This now correctly reflects current theme
-//                                       ? AppConstant.appBgPngDark
-//                                       : AppConstant.appBgPngLight,
-//                                 ),
-//                                 fit: BoxFit.cover,
-//                               ),
-//                             ),
-//                             child: child!,
-//                           );
-//                         },
-//                       ),
-//                     );
-//                   },
-//                 ),
-//               ],
-//             );
-//           },
-//           onInit: () => SalatWaqtScreen.setUp(context),
-//           onReady: () => SalatWaqtScreen.setUp(context),
-//           debugShowCheckedModeBanner: false,
-//           title: 'Salat Waqt',
-//           theme: SalatTheme.getTheme('Light', AppTextStyles.inter, 14),
-//           darkTheme: SalatTheme.getTheme('Dark', AppTextStyles.inter, 14),
-//           themeMode: ThemeMode.dark, //use system default, dark, or light
-//           // home: const FlashScreen(),
-//           // home: const HomePage(),
-//           home: const SettingsPage(),
-//         );
-//       },
-//     );
-//   }
-// }
+
 class _SalatWaqtState extends State<SalatWaqt> {
   @override
   Widget build(BuildContext context) {
@@ -111,19 +54,7 @@ class _SalatWaqtState extends State<SalatWaqt> {
                             ),
                             child: child!,
                           ); // Add the Builder here
-                          // return Container(
-                          //   decoration: BoxDecoration(
-                          //     image: DecorationImage(
-                          //       image: AssetImage(
-                          //         Get.isDarkMode  // This now correctly reflects current theme
-                          //             ? AppConstant.appBgPngDark
-                          //             : AppConstant.appBgPngLight,
-                          //       ),
-                          //       fit: BoxFit.cover,
-                          //     ),
-                          //   ),
-                          //   child: child!,
-                          // );
+                          
                         },
                       ),
                     );
@@ -138,7 +69,7 @@ class _SalatWaqtState extends State<SalatWaqt> {
           title: 'Salat Waqt',
           theme: SalatTheme.getTheme('Light', AppTextStyles.inter, 14),
           darkTheme: SalatTheme.getTheme('Dark', AppTextStyles.inter, 14),
-          themeMode: ThemeMode.system, //use system default, dark, or light
+          themeMode: ThemeMode.dark, //use system default, dark, or light
           home: const HomePage(),
         );
       },

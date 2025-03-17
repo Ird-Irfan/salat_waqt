@@ -24,7 +24,7 @@ class SalatColor {
   static const Color switchGlowColorDark = Color(0xFF6FACF2);
   static const Color primaryBTNTextColorDark = Color(0xFFFFFFFF);
   static const Color appbarBGColorDark = Color(0xFF000000);
-  static const Color cardSubtitleColorDark = Color(0xFF7B90A8);
+  static const Color cardSubtitleColorDark = Color(0xFF516378);
   static const Color collapseBTNColorDark = Color(0xFFC1DBFA);
   static const Color cardSiblingBottomBorderColorDark = Color(0xFFFFFFFF);
   static const Color forbiddenInfoIconColorDark = Color(0xFFFFFFFF);
@@ -40,7 +40,7 @@ class SalatColor {
 
   // Gradient Colors dark mode
   static const Color cardGradientStartDark = Color(0xFF121F2E);
-  static const Color cardGradientEndDark = Color(0xFF202D3E);
+  static const Color cardGradientEndDark = Color(0xFF202D3F);
 
   static const Color donutRingGradientStartColorDark = Color(0xFF6FACF2);
   static const Color donutRingGradientEndColorDark = Color(0xFF3288ED);
@@ -81,7 +81,7 @@ class SalatColor {
   static const Color switchGlowColorLight = Color(0xFF68F2B7);
   static const Color primaryBTNTextColorLight = Color(0xFFFFFFFF);
   static const Color appbarBGColorLight = Color(0xFFFFFFFF);
-  static const Color cardSubtitleColorLight = Color(0xFF7C7F7C);
+  static const Color cardSubtitleColorLight = Color(0xFFB0B2B0);
   static const Color collapseBTNColorLight = Color(0xFF7C7F7C);
   static const Color cardSiblingBottomBorderColorLight = Color(0xFF2D3831);
   static const Color forbiddenInfoIconColorLight = Color(0xFF378051);
