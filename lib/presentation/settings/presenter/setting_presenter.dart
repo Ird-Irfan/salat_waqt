@@ -14,6 +14,13 @@ class SettingsPresenter extends BasePresenter<SettingsUiState> {
     required CurrentPrayerTimePresenter currentPrayerTimePresenter,
   }) : _currentPrayerTimePresenter = currentPrayerTimePresenter;
 
+  @override
+  void onInit() {
+    super.onInit();
+    // Initialize with default Hanafi juristic method
+    _currentPrayerTimePresenter.updateJuristicMethod('Hanafi');
+  }
+
   void toggleDoNotDisturb() {
     final currentState = currentUiState;
     uiState.value = currentState.copyWith(

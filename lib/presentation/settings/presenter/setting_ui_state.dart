@@ -21,11 +21,6 @@ class SettingsUiState extends BaseUiState {
   final bool isExpandedRamadan;
   final String? selectedRamadan;
 
-
-
-
-
-
   const SettingsUiState({
     required super.userMessage,
     required super.isLoading,
@@ -62,10 +57,10 @@ class SettingsUiState extends BaseUiState {
       selectedText: null,
       isExpandedLang: false,
       isExpandedJuristic: false,
-      selectedJuristic: null,
+      selectedJuristic: 'Hanafi',
       isExpandedRamadan: false,
       selectedRamadan: null,
-      );
+    );
   }
 
   @override
@@ -73,21 +68,21 @@ class SettingsUiState extends BaseUiState {
     isLoading,
     userMessage,
     notificationEnabled,
-      darkModeEnabled,
-        autoUpdateEnabled,
-        doNotDisturbEnabled,
-        use24HourFormatEnabled,
-        timeAdjustmentEnabled,
-        hideIftaarTimeEnabled,  
-        isExpanded,
-        isDarkMode,
-        selectedText,
-        isExpandedLang,
-        isExpandedJuristic,
-        selectedJuristic,
-        isExpandedRamadan,
-        selectedRamadan,
-        ];
+    darkModeEnabled,
+    autoUpdateEnabled,
+    doNotDisturbEnabled,
+    use24HourFormatEnabled,
+    timeAdjustmentEnabled,
+    hideIftaarTimeEnabled,
+    isExpanded,
+    isDarkMode,
+    selectedText,
+    isExpandedLang,
+    isExpandedJuristic,
+    selectedJuristic,
+    isExpandedRamadan,
+    selectedRamadan,
+  ];
 
   SettingsUiState copyWith({
     bool? isLoading,
@@ -115,17 +110,20 @@ class SettingsUiState extends BaseUiState {
       darkModeEnabled: darkModeEnabled ?? this.darkModeEnabled,
       autoUpdateEnabled: autoUpdateEnabled ?? this.autoUpdateEnabled,
       doNotDisturbEnabled: doNotDisturbEnabled ?? this.doNotDisturbEnabled,
-      use24HourFormatEnabled: use24HourFormatEnabled ?? this.use24HourFormatEnabled,
-      timeAdjustmentEnabled: timeAdjustmentEnabled ?? this.timeAdjustmentEnabled,
-      hideIftaarTimeEnabled: hideIftaarTimeEnabled ?? this.hideIftaarTimeEnabled,
+      use24HourFormatEnabled:
+          use24HourFormatEnabled ?? this.use24HourFormatEnabled,
+      timeAdjustmentEnabled:
+          timeAdjustmentEnabled ?? this.timeAdjustmentEnabled,
+      hideIftaarTimeEnabled:
+          hideIftaarTimeEnabled ?? this.hideIftaarTimeEnabled,
       isExpanded: isExpanded ?? this.isExpanded,
       isDarkMode: isDarkMode ?? this.isDarkMode,
       isExpandedLang: isExpandedLang ?? this.isExpandedLang,
-      selectedText: selectedText ?? this.selectedText,  
+      selectedText: selectedText ?? this.selectedText,
       isExpandedJuristic: isExpandedJuristic ?? this.isExpandedJuristic,
       selectedJuristic: selectedJuristic ?? this.selectedJuristic,
       isExpandedRamadan: isExpandedRamadan ?? this.isExpandedRamadan,
       selectedRamadan: selectedRamadan ?? this.selectedRamadan,
-      );
+    );
   }
 }

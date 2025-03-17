@@ -31,7 +31,8 @@ class PrayerTimeDataSourceImpl implements PrayerTimeDataSource {
 
       // Set calculation parameters for Bangladesh
       final params = CalculationMethod.karachi.getParameters();
-      params.madhab = Madhab.hanafi; // Set Hanafi method for Asr
+      params.madhab =
+          Madhab.hanafi; // Default: Using Hanafi method for Asr calculation
 
       // Create DateComponents from the provided date
       DateTime dateTime = DateTime.parse(date);

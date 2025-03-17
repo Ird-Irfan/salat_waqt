@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:salat_waqt/core/base/base_presenter.dart';
 import 'package:salat_waqt/core/config/salat_waqt_screen.dart';
 import 'package:salat_waqt/core/constant/app_contant.dart';
 import 'package:salat_waqt/core/constant/app_text_styles.dart';
@@ -17,15 +16,14 @@ class CurrentPrayerTime extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final CurrentPrayerTimePresenter presenter = loadPresenter(
-      CurrentPrayerTimePresenter(
-        locationService: locator(),
-        prayerTimeService: locator(),
-        timerService: locator(),
-        logger: locator(),
-        notificationService: locator(),
-      ),
-    );
+    // Use the globally registered singleton instance
+    final CurrentPrayerTimePresenter presenter =
+        locator<CurrentPrayerTimePresenter>();
+
+    // Force reload prayer times when this widget builds
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      presenter.reloadPrayerTimes();
+    });
 
     return PresentableWidgetBuilder(
       presenter: presenter,

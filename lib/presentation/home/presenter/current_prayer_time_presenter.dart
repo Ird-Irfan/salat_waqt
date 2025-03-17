@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:salat_waqt/core/base/base_presenter.dart';
+import 'package:salat_waqt/core/di/service_locator.dart';
 import 'package:salat_waqt/core/services/location_service.dart';
 import 'package:salat_waqt/core/services/logger_service.dart';
 import 'package:salat_waqt/core/services/prayer_time_service.dart';
 import 'package:salat_waqt/core/services/timer_service.dart';
 import 'package:salat_waqt/domain/service/notification_service.dart';
 import 'package:salat_waqt/presentation/home/presenter/current_prayer_time_ui_state.dart';
+import 'package:salat_waqt/presentation/settings/presenter/setting_presenter.dart';
 
 class CurrentPrayerTimePresenter
     extends BasePresenter<CurrentPrayerTimeUiState> {
@@ -98,6 +100,47 @@ class CurrentPrayerTimePresenter
       }
     } catch (e) {
       _logger.e('Error loading prayer times', e);
+    } finally {
+      toggleLoading(loading: false);
+    }
+  }
+
+  // Public method to reload prayer times (can be called when app returns to foreground)
+  Future<void> reloadPrayerTimes() async {
+    try {
+      toggleLoading(loading: true);
+
+      // Get the current juristic method from settings
+      final settingsPresenter = locator<SettingsPresenter>();
+      final selectedJuristic =
+          settingsPresenter.currentUiState.selectedJuristic;
+
+      // Get saved location
+      final (latitude, longitude, _, _) =
+          await _locationService.loadSavedLocation();
+
+      if (latitude != null && longitude != null) {
+        Map<String, String>? times;
+
+        // If a juristic method is selected, use it
+        if (selectedJuristic != null) {
+          times = await _prayerTimeService.loadPrayerTimesWithJuristicMethod(
+            latitude,
+            longitude,
+            selectedJuristic,
+          );
+        } else {
+          // Otherwise use the default method
+          times = await _prayerTimeService.loadPrayerTimes(latitude, longitude);
+        }
+
+        if (times != null) {
+          uiState.value = uiState.value.copyWith(prayerTimes: times);
+          updateCurrentWaqt(currentUiState.is24HourFormat);
+        }
+      }
+    } catch (e) {
+      _logger.e('Error reloading prayer times', e);
     } finally {
       toggleLoading(loading: false);
     }
