@@ -297,7 +297,7 @@ class SalatTheme {
     cardColor: Colors.white,
     iconTheme: const IconThemeData(color: Colors.black87),
     primaryColor: SalatColor.primaryColorLight600,
-    scaffoldBackgroundColor: Colors.white,
+    scaffoldBackgroundColor: Colors.transparent,
     scrollbarTheme: ScrollbarThemeData(
       thumbColor: WidgetStateProperty.all(SalatColor.primaryColorLight600),
     ),
