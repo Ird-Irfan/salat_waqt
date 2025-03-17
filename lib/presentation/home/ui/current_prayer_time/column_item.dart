@@ -124,7 +124,7 @@ class _ColumnItemState extends State<ColumnItem> {
                 prayerName,
                 style: widget.theme.textTheme.labelMedium?.copyWith(
                   fontSize: 16.px,
-                  color: context.color.cardTitleColor,
+                  color: context.color.cardTitleColor.withOpacityInt(0.7),
                   fontFamily: AppTextStyles.inter,
                   fontWeight: FontWeight.w500,
                 ),
@@ -134,7 +134,7 @@ class _ColumnItemState extends State<ColumnItem> {
                 time,
                 style: widget.theme.textTheme.labelMedium?.copyWith(
                   fontSize: 16.px,
-                  color: context.color.cardTitleColor,
+                  color: context.color.cardTitleColor.withOpacityInt(0.7),
                   fontFamily: AppTextStyles.inter,
                   fontWeight: FontWeight.w500,
                 ),

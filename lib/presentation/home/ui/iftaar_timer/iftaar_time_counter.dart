@@ -83,9 +83,9 @@ class IftarTimeCounter extends StatelessWidget {
                 remainingTime ?? '',
                 style: theme.textTheme.titleLarge?.copyWith(
                   color: gradientStartColor,
-                  fontFamily: AppTextStyles.unicaOne,
-                  fontSize: 60.px,
-                  fontWeight: FontWeight.bold,
+                  fontFamily: AppTextStyles.martianMono,
+                  fontSize: 52.px,
+                  fontWeight: FontWeight.w400,
                 ),
               ),
               Text(

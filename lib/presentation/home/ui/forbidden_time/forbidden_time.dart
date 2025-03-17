@@ -272,7 +272,7 @@ class ForbiddenTimeItems extends StatelessWidget {
                       style: theme.textTheme.labelMedium?.copyWith(
                         fontSize: 12.px,
                         fontWeight: FontWeight.w400,
-                        color: context.color.cardTitleColor,
+                        color: context.color.cardSubtitleColor,
                       ),
                     ),
                     SizedBox(height: 6.px),

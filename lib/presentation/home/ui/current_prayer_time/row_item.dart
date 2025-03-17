@@ -73,7 +73,7 @@ class RowItem extends StatelessWidget {
     required BuildContext context,
   }) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 12.px, vertical: 8.px),
+      padding: EdgeInsets.symmetric(horizontal: 11.px, vertical: 8.px),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -94,7 +94,7 @@ class RowItem extends StatelessWidget {
           Text(
             time,
             style: theme.textTheme.labelMedium?.copyWith(
-              fontSize: 13.px,
+              fontSize: 12.px,
               color: context.color.cardTitleColor,
               fontFamily: AppTextStyles.inter,
               fontWeight: FontWeight.w500,

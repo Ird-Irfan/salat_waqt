@@ -28,15 +28,16 @@ class CustomAppBar extends StatelessWidget {
           color: context.color.cardTitleColor,
         ),
       ),
+      toolbarHeight: 65,
       flexibleSpace: ClipRRect(
         child: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              begin: const Alignment(0.00, -1.00),
-              end: const Alignment(0, 1),
+              begin: Alignment(0.50, 0.00),
+              end: Alignment(0.50, 1.00),
               colors: [
-                context.color.appBarBgColor.withOpacityInt(0.01),
-                Colors.transparent,
+                context.color.appBarBgColor.withOpacityInt(0.2),
+                context.color.appBarBgColor.withOpacityInt(0.0),
               ],
             ),
           ),
