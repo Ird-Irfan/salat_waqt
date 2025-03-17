@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:salat_waqt/core/base/base_presenter.dart';
@@ -30,7 +32,7 @@ class CurrentPrayerTime extends StatelessWidget {
       presenter: presenter,
       builder: () {
         return Container(
-          height: presenter.currentUiState.currentPrayerTimeHeight,
+          height: presenter.currentUiState.currentPrayerTimeHeight.px,
           decoration: BoxDecoration(
             gradient: RadialGradient(
               center: Alignment(0.93, 1.20),
@@ -147,7 +149,7 @@ class ColumnItem extends StatelessWidget {
             AppConstant.icFajr,
             'Fajr',
             presenter.currentUiState.prayerTimes?['Fajr'] ?? '',
-            presenter.currentUiState.notificationStatus['Fajr'] ?? false,
+            presenter.currentUiState.notificationStatus?['Fajr'] ?? false,
             () => presenter.togglePrayerNotification('Fajr'),
           ),
           Padding(
@@ -162,7 +164,7 @@ class ColumnItem extends StatelessWidget {
             AppConstant.icDuhur,
             'Dhuhr',
             presenter.currentUiState.prayerTimes?['Dhuhr'] ?? '',
-            presenter.currentUiState.notificationStatus['Dhuhr'] ?? false,
+            presenter.currentUiState.notificationStatus?['Dhuhr'] ?? false,
             () => presenter.togglePrayerNotification('Dhuhr'),
           ),
           Padding(
@@ -177,8 +179,13 @@ class ColumnItem extends StatelessWidget {
             AppConstant.icAsr,
             'Asr',
             presenter.currentUiState.prayerTimes?['Asr'] ?? '',
-            presenter.currentUiState.notificationStatus['Asr'] ?? false,
-            () => presenter.togglePrayerNotification('Asr'),
+            presenter.currentUiState.notificationStatus?['Asr'] ?? false,
+            () async {
+              await presenter.togglePrayerNotification('Asr');
+              log(
+                'Asr: ${presenter.currentUiState.notificationStatus?['Asr']}',
+              );
+            },
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10),
@@ -192,7 +199,7 @@ class ColumnItem extends StatelessWidget {
             AppConstant.icMaghrib,
             'Maghrib',
             presenter.currentUiState.prayerTimes?['Maghrib'] ?? '',
-            presenter.currentUiState.notificationStatus['Maghrib'] ?? false,
+            presenter.currentUiState.notificationStatus?['Maghrib'] ?? false,
             () => presenter.togglePrayerNotification('Maghrib'),
           ),
           Padding(
@@ -207,7 +214,7 @@ class ColumnItem extends StatelessWidget {
             AppConstant.icIsha,
             'Isha',
             presenter.currentUiState.prayerTimes?['Isha'] ?? '',
-            presenter.currentUiState.notificationStatus['Isha'] ?? false,
+            presenter.currentUiState.notificationStatus?['Isha'] ?? false,
             () => presenter.togglePrayerNotification('Isha'),
           ),
           // SizedBox(height: 26.px),
@@ -279,48 +286,53 @@ class RowItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _buildPrayerTimeItem(
-            name: 'FAJR',
-            time: presenter.currentUiState.prayerTimes?['Fajr'] ?? '',
-            svgPath: AppConstant.icFajr,
-            theme: theme,
-            context: context,
+    return PresentableWidgetBuilder(
+      presenter: presenter,
+      builder: () {
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildPrayerTimeItem(
+                name: 'FAJR',
+                time: presenter.currentUiState.prayerTimes?['Fajr'] ?? '',
+                svgPath: AppConstant.icFajr,
+                theme: theme,
+                context: context,
+              ),
+              _buildPrayerTimeItem(
+                name: 'DUHUR',
+                time: presenter.currentUiState.prayerTimes?['Dhuhr'] ?? '',
+                svgPath: AppConstant.icDuhur,
+                theme: theme,
+                context: context,
+              ),
+              _buildPrayerTimeItem(
+                name: 'ASR',
+                time: presenter.currentUiState.prayerTimes?['Asr'] ?? '',
+                svgPath: AppConstant.icAsr,
+                theme: theme,
+                context: context,
+              ),
+              _buildPrayerTimeItem(
+                name: 'MAGHRIB',
+                time: presenter.currentUiState.prayerTimes?['Maghrib'] ?? '',
+                svgPath: AppConstant.icMaghrib,
+                theme: theme,
+                context: context,
+              ),
+              _buildPrayerTimeItem(
+                name: 'ISHA',
+                time: presenter.currentUiState.prayerTimes?['Isha'] ?? '',
+                svgPath: AppConstant.icIsha,
+                theme: theme,
+                context: context,
+              ),
+            ],
           ),
-          _buildPrayerTimeItem(
-            name: 'DUHUR',
-            time: presenter.currentUiState.prayerTimes?['Dhuhr'] ?? '',
-            svgPath: AppConstant.icDuhur,
-            theme: theme,
-            context: context,
-          ),
-          _buildPrayerTimeItem(
-            name: 'ASR',
-            time: presenter.currentUiState.prayerTimes?['Asr'] ?? '',
-            svgPath: AppConstant.icAsr,
-            theme: theme,
-            context: context,
-          ),
-          _buildPrayerTimeItem(
-            name: 'MAGHRIB',
-            time: presenter.currentUiState.prayerTimes?['Maghrib'] ?? '',
-            svgPath: AppConstant.icMaghrib,
-            theme: theme,
-            context: context,
-          ),
-          _buildPrayerTimeItem(
-            name: 'ISHA',
-            time: presenter.currentUiState.prayerTimes?['Isha'] ?? '',
-            svgPath: AppConstant.icIsha,
-            theme: theme,
-            context: context,
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 

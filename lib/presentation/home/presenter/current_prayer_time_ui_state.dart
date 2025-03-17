@@ -8,7 +8,8 @@ class CurrentPrayerTimeUiState extends BaseUiState {
   final String? currentTime;
   final String? nextPrayerTime;
   final String? nextPrayerWaqt;
-  final Map<String, bool> notificationStatus;
+  final Map<String, bool>? notificationStatus;
+  final bool is24HourFormat;
 
   const CurrentPrayerTimeUiState({
     required super.userMessage,
@@ -20,13 +21,8 @@ class CurrentPrayerTimeUiState extends BaseUiState {
     this.currentTime,
     this.nextPrayerTime,
     this.nextPrayerWaqt,
-    this.notificationStatus = const {
-      'Fajr': false,
-      'Dhuhr': false,
-      'Asr': false,
-      'Maghrib': false,
-      'Isha': false,
-    },
+    this.notificationStatus,
+    this.is24HourFormat = false,
   });
 
   factory CurrentPrayerTimeUiState.empty() {
@@ -40,13 +36,8 @@ class CurrentPrayerTimeUiState extends BaseUiState {
       currentTime: null,
       nextPrayerTime: null,
       nextPrayerWaqt: null,
-      notificationStatus: {
-        'Fajr': false,
-        'Dhuhr': false,
-        'Asr': false,
-        'Maghrib': false,
-        'Isha': false,
-      },
+      notificationStatus: null,
+      is24HourFormat: false,
     );
   }
 
@@ -62,6 +53,7 @@ class CurrentPrayerTimeUiState extends BaseUiState {
     nextPrayerTime,
     nextPrayerWaqt,
     notificationStatus,
+    is24HourFormat,
   ];
 
   CurrentPrayerTimeUiState copyWith({
@@ -75,6 +67,7 @@ class CurrentPrayerTimeUiState extends BaseUiState {
     String? nextPrayerTime,
     String? nextPrayerWaqt,
     Map<String, bool>? notificationStatus,
+    bool? is24HourFormat,
   }) {
     return CurrentPrayerTimeUiState(
       prayerTimes: prayerTimes ?? this.prayerTimes,
@@ -89,6 +82,7 @@ class CurrentPrayerTimeUiState extends BaseUiState {
       nextPrayerTime: nextPrayerTime ?? this.nextPrayerTime,
       nextPrayerWaqt: nextPrayerWaqt ?? this.nextPrayerWaqt,
       notificationStatus: notificationStatus ?? this.notificationStatus,
+      is24HourFormat: is24HourFormat ?? this.is24HourFormat,
     );
   }
 }

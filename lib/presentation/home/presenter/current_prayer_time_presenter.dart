@@ -57,7 +57,7 @@ class CurrentPrayerTimePresenter
   Future<void> _initializeData() async {
     await _loadPrayerTimes();
     _startTimer();
-    updateCurrentWaqt();
+    updateCurrentWaqt(currentUiState.is24HourFormat);
     await _loadNotificationStatuses();
   }
 
@@ -106,7 +106,7 @@ class CurrentPrayerTimePresenter
   // Start timer to update time
   void _startTimer() {
     _timerService.startPeriodicTimer(() {
-      updateCurrentWaqt();
+      updateCurrentWaqt(currentUiState.is24HourFormat);
     });
   }
 
@@ -122,15 +122,25 @@ class CurrentPrayerTimePresenter
   }
 
   // Update current waqt (prayer time)
-  void updateCurrentWaqt() {
+  void updateCurrentWaqt(bool value) {
+    uiState.value = uiState.value.copyWith(is24HourFormat: value);
     if (currentUiState.prayerTimes == null) return;
 
     try {
       final now = DateTime.now();
       // Format time in 12-hour format with AM/PM
       final hour =
-          now.hour > 12 ? now.hour - 12 : (now.hour == 0 ? 12 : now.hour);
-      final amPm = now.hour >= 12 ? 'PM' : 'AM';
+          currentUiState.is24HourFormat
+              ? now.hour
+              : now.hour > 12
+              ? now.hour - 12
+              : (now.hour == 0 ? 12 : now.hour);
+      final amPm =
+          currentUiState.is24HourFormat
+              ? ''
+              : now.hour >= 12
+              ? 'PM'
+              : 'AM';
       final currentTime =
           "${hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')} $amPm";
       final prayerTimes = currentUiState.prayerTimes!;
@@ -269,7 +279,7 @@ class CurrentPrayerTimePresenter
 
       // Update UI state
       final updatedNotificationStatus = Map<String, bool>.from(
-        currentUiState.notificationStatus,
+        currentUiState.notificationStatus ?? {},
       );
       updatedNotificationStatus[prayerName] = isEnabled;
 
