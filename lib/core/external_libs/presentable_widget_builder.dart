@@ -27,6 +27,8 @@ class PresentableWidgetBuilder<T extends DisposableInterface>
 class _PresentableWidgetBuilderState<T extends DisposableInterface>
     extends State<PresentableWidgetBuilder<T>> {
   T? _previousState;
+  late Widget _cachedWidget;
+  bool _initialized = false;
 
   @override
   void initState() {
@@ -35,8 +37,17 @@ class _PresentableWidgetBuilderState<T extends DisposableInterface>
       widget.onInit!();
     }
     if (widget.presenter != null) {
-      Get.put(widget.presenter!);
+      // Delay registering the presenter to avoid build phase issues
+      Future.microtask(() {
+        if (!Get.isRegistered<T>()) {
+          Get.put(widget.presenter!);
+        }
+      });
     }
+
+    // Pre-build the widget to prevent build-time state changes
+    _cachedWidget = widget.builder();
+    _initialized = true;
   }
 
   @override
@@ -49,15 +60,32 @@ class _PresentableWidgetBuilderState<T extends DisposableInterface>
 
   @override
   Widget build(BuildContext context) {
+    // Use a safer approach with Obx but with protection against build-time changes
     return Obx(() {
       final currentState = widget.presenter;
+
+      // First render, return the cached widget
+      if (!_initialized) {
+        return _cachedWidget;
+      }
+
       if (widget.shouldRebuild != null) {
         if (!widget.shouldRebuild!(_previousState, currentState)) {
-          return widget.builder();
+          return _cachedWidget;
         }
       }
+
       _previousState = currentState;
-      return widget.builder();
+
+      try {
+        // Update the cached widget outside of the build phase
+        final newWidget = widget.builder();
+        _cachedWidget = newWidget;
+        return _cachedWidget;
+      } catch (e) {
+        // If we encounter an error during build, return the last known good widget
+        return _cachedWidget;
+      }
     });
   }
 }

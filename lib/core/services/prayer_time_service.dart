@@ -88,6 +88,38 @@ class PrayerTimeService {
     return formattedTimes;
   }
 
+  // Reformat prayer times based on 24-hour format preference
+  Map<String, String> reformatPrayerTimes(Map<String, String> times, bool use24HourFormat) {
+    Map<String, String> reformattedTimes = {};
+    times.forEach((prayer, time) {
+      try {
+        // Check if the time string is already in the desired format
+        bool isAlready24Hour = !time.toLowerCase().contains('am') && !time.toLowerCase().contains('pm');
+        
+        // If current format matches desired format, no conversion needed
+        if (isAlready24Hour == use24HourFormat) {
+          reformattedTimes[prayer] = time;
+        } else {
+          // Parse the time string based on its current format
+          DateTime prayerTime;
+          if (isAlready24Hour) {
+            // Convert from 24-hour to 12-hour format
+            prayerTime = DateFormat('HH:mm').parse(time);
+            reformattedTimes[prayer] = DateFormat('h:mm a').format(prayerTime);
+          } else {
+            // Convert from 12-hour to 24-hour format
+            prayerTime = DateFormat('h:mm a').parse(time);
+            reformattedTimes[prayer] = DateFormat('HH:mm').format(prayerTime);
+          }
+        }
+      } catch (e) {
+        _logger.e('Error reformatting time for $prayer', e);
+        reformattedTimes[prayer] = time; // Keep original if there's an error
+      }
+    });
+    return reformattedTimes;
+  }
+
   // Add special times like Iftar and Sehri
   void _addSpecialTimes(Map<String, String> formattedTimes) {
     // Add Iftar time (same as Maghrib)
@@ -98,9 +130,24 @@ class PrayerTimeService {
     // Calculate Sehri time (20 minutes before Fajr)
     if (formattedTimes.containsKey('Fajr')) {
       try {
-        DateTime fajrTime = DateFormat('h:mm a').parse(formattedTimes['Fajr']!);
+        // Parse time string to DateTime, handling both formats
+        DateTime fajrTime;
+        String fajrTimeStr = formattedTimes['Fajr']!;
+        
+        if (fajrTimeStr.toLowerCase().contains('am') || fajrTimeStr.toLowerCase().contains('pm')) {
+          fajrTime = DateFormat('h:mm a').parse(fajrTimeStr);
+        } else {
+          fajrTime = DateFormat('HH:mm').parse(fajrTimeStr);
+        }
+        
         DateTime sehriTime = fajrTime.subtract(Duration(minutes: 20));
-        formattedTimes['Sehri'] = DateFormat('h:mm a').format(sehriTime);
+        
+        // Format in the same format as the input
+        if (fajrTimeStr.toLowerCase().contains('am') || fajrTimeStr.toLowerCase().contains('pm')) {
+          formattedTimes['Sehri'] = DateFormat('h:mm a').format(sehriTime);
+        } else {
+          formattedTimes['Sehri'] = DateFormat('HH:mm').format(sehriTime);
+        }
       } catch (e) {
         _logger.e('Error calculating Sehri time', e);
         // Don't throw here, just skip Sehri time if there's an error
@@ -113,9 +160,17 @@ class PrayerTimeService {
     if (timeString == null) return null;
 
     try {
-      // Parse the time string (e.g., "5:30 AM")
+      // Parse the time string - try both formats
       DateTime now = DateTime.now();
-      DateTime parsedTime = DateFormat('h:mm a').parse(timeString);
+      DateTime parsedTime;
+      
+      // Check if the time string includes AM/PM (12-hour format)
+      if (timeString.toLowerCase().contains('am') || timeString.toLowerCase().contains('pm')) {
+        parsedTime = DateFormat('h:mm a').parse(timeString);
+      } else {
+        // Assume 24-hour format
+        parsedTime = DateFormat('HH:mm').parse(timeString);
+      }
 
       // Combine with today's date
       return DateTime(
@@ -126,7 +181,7 @@ class PrayerTimeService {
         parsedTime.minute,
       );
     } catch (e) {
-      _logger.e('Error parsing time', e);
+      _logger.e('Error parsing time: $timeString', e);
       return null;
     }
   }

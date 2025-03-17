@@ -9,10 +9,24 @@ import 'package:salat_waqt/core/config/salat_waqt_screen.dart';
 import 'package:salat_waqt/presentation/common/widgets/svg_icons.dart';
 import 'package:salat_waqt/presentation/home/presenter/current_prayer_time_presenter.dart';
 
-class ColumnItem extends StatelessWidget {
+class ColumnItem extends StatefulWidget {
   final ThemeData theme;
   final CurrentPrayerTimePresenter presenter;
   const ColumnItem({super.key, required this.theme, required this.presenter});
+
+  @override
+  State<ColumnItem> createState() => _ColumnItemState();
+}
+
+class _ColumnItemState extends State<ColumnItem> {
+  @override
+  void initState() {
+    super.initState();
+    // Delay reload to avoid build phase issues
+    Future.microtask(() {
+      widget.presenter.reloadPrayerTimes();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +37,10 @@ class ColumnItem extends StatelessWidget {
           _buildPrayerRow(
             AppConstant.icFajr,
             'Fajr',
-            presenter.currentUiState.prayerTimes?['Fajr'] ?? '',
-            presenter.currentUiState.notificationStatus?['Fajr'] ?? false,
-            () => presenter.togglePrayerNotification('Fajr'),
+            widget.presenter.currentUiState.prayerTimes?['Fajr'] ?? '',
+            widget.presenter.currentUiState.notificationStatus?['Fajr'] ??
+                false,
+            () => widget.presenter.togglePrayerNotification('Fajr'),
           ),
           Divider(
             color: context.color.cardSiblingBottomBorderColor.withOpacityInt(
@@ -35,9 +50,10 @@ class ColumnItem extends StatelessWidget {
           _buildPrayerRow(
             AppConstant.icDuhur,
             'Dhuhr',
-            presenter.currentUiState.prayerTimes?['Dhuhr'] ?? '',
-            presenter.currentUiState.notificationStatus?['Dhuhr'] ?? false,
-            () => presenter.togglePrayerNotification('Dhuhr'),
+            widget.presenter.currentUiState.prayerTimes?['Dhuhr'] ?? '',
+            widget.presenter.currentUiState.notificationStatus?['Dhuhr'] ??
+                false,
+            () => widget.presenter.togglePrayerNotification('Dhuhr'),
           ),
           Divider(
             color: context.color.cardSiblingBottomBorderColor.withOpacityInt(
@@ -47,12 +63,12 @@ class ColumnItem extends StatelessWidget {
           _buildPrayerRow(
             AppConstant.icAsr,
             'Asr',
-            presenter.currentUiState.prayerTimes?['Asr'] ?? '',
-            presenter.currentUiState.notificationStatus?['Asr'] ?? false,
+            widget.presenter.currentUiState.prayerTimes?['Asr'] ?? '',
+            widget.presenter.currentUiState.notificationStatus?['Asr'] ?? false,
             () async {
-              await presenter.togglePrayerNotification('Asr');
+              await widget.presenter.togglePrayerNotification('Asr');
               log(
-                'Asr: ${presenter.currentUiState.notificationStatus?['Asr']}',
+                'Asr: ${widget.presenter.currentUiState.notificationStatus?['Asr']}',
               );
             },
           ),
@@ -64,9 +80,10 @@ class ColumnItem extends StatelessWidget {
           _buildPrayerRow(
             AppConstant.icMaghrib,
             'Maghrib',
-            presenter.currentUiState.prayerTimes?['Maghrib'] ?? '',
-            presenter.currentUiState.notificationStatus?['Maghrib'] ?? false,
-            () => presenter.togglePrayerNotification('Maghrib'),
+            widget.presenter.currentUiState.prayerTimes?['Maghrib'] ?? '',
+            widget.presenter.currentUiState.notificationStatus?['Maghrib'] ??
+                false,
+            () => widget.presenter.togglePrayerNotification('Maghrib'),
           ),
           Divider(
             color: context.color.cardSiblingBottomBorderColor.withOpacityInt(
@@ -76,9 +93,10 @@ class ColumnItem extends StatelessWidget {
           _buildPrayerRow(
             AppConstant.icIsha,
             'Isha',
-            presenter.currentUiState.prayerTimes?['Isha'] ?? '',
-            presenter.currentUiState.notificationStatus?['Isha'] ?? false,
-            () => presenter.togglePrayerNotification('Isha'),
+            widget.presenter.currentUiState.prayerTimes?['Isha'] ?? '',
+            widget.presenter.currentUiState.notificationStatus?['Isha'] ??
+                false,
+            () => widget.presenter.togglePrayerNotification('Isha'),
           ),
         ],
       ),
@@ -103,7 +121,7 @@ class ColumnItem extends StatelessWidget {
               SizedBox(width: 10.px),
               Text(
                 prayerName,
-                style: theme.textTheme.labelMedium?.copyWith(
+                style: widget.theme.textTheme.labelMedium?.copyWith(
                   fontSize: 16.px,
                   color: context.color.cardTitleColor,
                   fontFamily: AppTextStyles.inter,
@@ -113,7 +131,7 @@ class ColumnItem extends StatelessWidget {
               const Spacer(),
               Text(
                 time,
-                style: theme.textTheme.labelMedium?.copyWith(
+                style: widget.theme.textTheme.labelMedium?.copyWith(
                   fontSize: 16.px,
                   color: context.color.cardTitleColor,
                   fontFamily: AppTextStyles.inter,
