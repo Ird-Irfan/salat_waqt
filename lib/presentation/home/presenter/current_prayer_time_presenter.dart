@@ -45,7 +45,8 @@ class CurrentPrayerTimePresenter
   @override
   void onInit() {
     super.onInit();
-    _initializeData();
+    // Use microtask to defer state updates until after the current build phase
+    Future.microtask(() => _initializeData());
   }
 
   @override
@@ -149,7 +150,8 @@ class CurrentPrayerTimePresenter
   // Start timer to update time
   void _startTimer() {
     _timerService.startPeriodicTimer(() {
-      updateCurrentWaqt(currentUiState.is24HourFormat);
+      // Use scheduleMicrotask to avoid updating state during build phase
+      Future.microtask(() => updateCurrentWaqt(currentUiState.is24HourFormat));
     });
   }
 
@@ -166,7 +168,11 @@ class CurrentPrayerTimePresenter
 
   // Update current waqt (prayer time)
   void updateCurrentWaqt(bool value) {
-    uiState.value = uiState.value.copyWith(is24HourFormat: value);
+    // Only update format if it changed to avoid unnecessary rebuilds
+    if (currentUiState.is24HourFormat != value) {
+      uiState.value = uiState.value.copyWith(is24HourFormat: value);
+    }
+
     if (currentUiState.prayerTimes == null) return;
 
     try {

@@ -10,29 +10,39 @@ import 'package:salat_waqt/presentation/home/presenter/current_prayer_time_prese
 import 'package:salat_waqt/presentation/home/ui/current_prayer_time/column_item.dart';
 import 'package:salat_waqt/presentation/home/ui/current_prayer_time/row_item.dart';
 
-class CurrentPrayerTime extends StatelessWidget {
+class CurrentPrayerTime extends StatefulWidget {
   final ThemeData theme;
+
   const CurrentPrayerTime({super.key, required this.theme});
 
   @override
-  Widget build(BuildContext context) {
-    // Use the globally registered singleton instance
-    final CurrentPrayerTimePresenter presenter =
-        locator<CurrentPrayerTimePresenter>();
+  State<CurrentPrayerTime> createState() => _CurrentPrayerTimeState();
+}
 
-    // Force reload prayer times when this widget builds
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      presenter.reloadPrayerTimes();
+class _CurrentPrayerTimeState extends State<CurrentPrayerTime> {
+  late final CurrentPrayerTimePresenter _presenter;
+
+  @override
+  void initState() {
+    super.initState();
+    _presenter = locator<CurrentPrayerTimePresenter>();
+
+    // Delay reload to avoid build phase issues
+    Future.microtask(() {
+      _presenter.reloadPrayerTimes();
     });
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return PresentableWidgetBuilder(
-      presenter: presenter,
+      presenter: _presenter,
       builder: () {
         return Container(
-          height: presenter.currentUiState.currentPrayerTimeHeight.px,
+          height: _presenter.currentUiState.currentPrayerTimeHeight.px,
           decoration: BoxDecoration(
             gradient: RadialGradient(
-              center: Alignment(0.93, 1.20),
+              center: const Alignment(0.93, 1.20),
               radius: 0.72,
               colors: [
                 context.color.cardGradientStart,
@@ -51,9 +61,9 @@ class CurrentPrayerTime extends StatelessWidget {
                   bottom: 12.px,
                 ),
                 child: InkWell(
-                  overlayColor: WidgetStateProperty.all(Colors.transparent),
+                  overlayColor: MaterialStateProperty.all(Colors.transparent),
                   splashColor: Colors.transparent,
-                  onTap: () => presenter.toggleCurrentPrayerTimeExpansion(),
+                  onTap: () => _presenter.toggleCurrentPrayerTimeExpansion(),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -64,28 +74,31 @@ class CurrentPrayerTime extends StatelessWidget {
                             children: [
                               Text(
                                 'CURRENT WAQT • ',
-                                style: theme.textTheme.labelMedium?.copyWith(
-                                  fontSize: 13.px,
-                                  color: context.color.cardTitleColor,
-                                  fontFamily: AppTextStyles.inter,
-                                  fontWeight: FontWeight.w400,
-                                ),
+                                style: widget.theme.textTheme.labelMedium
+                                    ?.copyWith(
+                                      fontSize: 13.px,
+                                      color: context.color.cardTitleColor,
+                                      fontFamily: AppTextStyles.inter,
+                                      fontWeight: FontWeight.w400,
+                                    ),
                               ),
                               Text(
-                                presenter.currentUiState.currentWaqt ?? '--:--',
-                                style: theme.textTheme.labelMedium?.copyWith(
-                                  fontSize: 14.px,
-                                  color: context.color.cardTitleColor,
-                                  fontFamily: AppTextStyles.inter,
-                                  fontWeight: FontWeight.w700,
-                                ),
+                                _presenter.currentUiState.currentWaqt ??
+                                    '--:--',
+                                style: widget.theme.textTheme.labelMedium
+                                    ?.copyWith(
+                                      fontSize: 14.px,
+                                      color: context.color.cardTitleColor,
+                                      fontFamily: AppTextStyles.inter,
+                                      fontWeight: FontWeight.w700,
+                                    ),
                               ),
                             ],
                           ),
                           SizedBox(height: 8.px),
                           Text(
-                            '${presenter.currentUiState.currentTime} - ${presenter.currentUiState.nextPrayerTime}',
-                            style: theme.textTheme.labelMedium?.copyWith(
+                            '${_presenter.currentUiState.currentTime} - ${_presenter.currentUiState.nextPrayerTime}',
+                            style: widget.theme.textTheme.labelMedium?.copyWith(
                               fontSize: 18.px,
                               fontWeight: FontWeight.w500,
                               color: context.color.cardTitleColor,
@@ -97,7 +110,9 @@ class CurrentPrayerTime extends StatelessWidget {
                       AnimatedRotation(
                         duration: const Duration(milliseconds: 300),
                         turns:
-                            presenter.currentUiState.isCurrentPrayerTimeExpanded
+                            _presenter
+                                    .currentUiState
+                                    .isCurrentPrayerTimeExpanded
                                 ? 0.5
                                 : 0,
                         child: SvgIcon(
@@ -120,9 +135,9 @@ class CurrentPrayerTime extends StatelessWidget {
               AnimatedSwitcher(
                 duration: const Duration(milliseconds: 600),
                 child:
-                    presenter.currentUiState.isCurrentPrayerTimeExpanded
-                        ? ColumnItem(theme: theme, presenter: presenter)
-                        : RowItem(theme: theme, presenter: presenter),
+                    _presenter.currentUiState.isCurrentPrayerTimeExpanded
+                        ? ColumnItem(theme: widget.theme, presenter: _presenter)
+                        : RowItem(theme: widget.theme, presenter: _presenter),
               ),
             ],
           ),
