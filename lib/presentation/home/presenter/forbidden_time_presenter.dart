@@ -7,6 +7,7 @@ import 'package:salat_waqt/core/di/service_locator.dart';
 import 'package:salat_waqt/core/services/logger_service.dart';
 import 'package:salat_waqt/core/services/prayer_time_service.dart';
 import 'package:salat_waqt/presentation/home/presenter/home_presenter.dart';
+import 'package:salat_waqt/presentation/settings/presenter/setting_presenter.dart';
 
 class ForbiddenTimePresenter extends BasePresenter
     with GetSingleTickerProviderStateMixin {
@@ -23,6 +24,7 @@ class ForbiddenTimePresenter extends BasePresenter
   );
   final PrayerTimeService _prayerTimeService = locator();
   final LoggerService _logger = locator();
+  final SettingsPresenter _settingsPresenter = locator();
 
   // State variables
   final _forbiddenTimes = Rxn<List<Map<String, String>>>();
@@ -42,6 +44,8 @@ class ForbiddenTimePresenter extends BasePresenter
   bool get isInForbiddenTime => _isInForbiddenTime.value;
   String? get currentForbiddenPeriod => _currentForbiddenPeriod.value;
   String? get currentForbiddenTimeRange => _currentForbiddenTimeRange.value;
+  // Get the 24-hour format setting from SettingsPresenter
+  bool get is24HourFormat => _settingsPresenter.currentUiState.use24HourFormatEnabled;
 
   @override
   void onInit() {
@@ -60,6 +64,14 @@ class ForbiddenTimePresenter extends BasePresenter
 
     // Start the timer
     _startForbiddenTimesTimer();
+    
+    // Listen for changes in 24-hour format setting
+    ever(_settingsPresenter.uiState, (_) {
+      if (forbiddenTimes != null && forbiddenTimes!.isNotEmpty) {
+        // Recalculate forbidden times to update the format
+        _updateForbiddenTimesStatus();
+      }
+    });
   }
 
   @override
@@ -153,6 +165,9 @@ class ForbiddenTimePresenter extends BasePresenter
   ) {
     try {
       List<Map<String, String>> forbiddenTimes = [];
+      
+      // Use the appropriate time format based on settings
+      String timeFormat = is24HourFormat ? 'HH:mm' : 'h:mm a';
 
       // 1. From sunrise until 10 minutes after sunrise
       if (prayerTimes.containsKey('Sunrise')) {
@@ -163,11 +178,13 @@ class ForbiddenTimePresenter extends BasePresenter
         if (sunriseTime != null) {
           // End time is 10 minutes after sunrise
           DateTime endTime = sunriseTime.add(Duration(minutes: 10));
-          String endTimeStr = DateFormat('h:mm a').format(endTime);
+          String endTimeStr = DateFormat(timeFormat).format(endTime);
 
           forbiddenTimes.add({
             'name': 'Morning',
-            'startTime': prayerTimes['Sunrise']!,
+            'startTime': is24HourFormat 
+                ? _formatTo24Hour(prayerTimes['Sunrise']!) 
+                : prayerTimes['Sunrise']!,
             'endTime': endTimeStr,
             'icon': 'Fajr',
           });
@@ -186,8 +203,8 @@ class ForbiddenTimePresenter extends BasePresenter
           DateTime zenithTime = dhuhrTime.subtract(Duration(minutes: 5));
           DateTime startTime = zenithTime.subtract(Duration(minutes: 10));
 
-          String formattedStartTime = DateFormat('h:mm a').format(startTime);
-          String formattedZenithTime = DateFormat('h:mm a').format(zenithTime);
+          String formattedStartTime = DateFormat(timeFormat).format(startTime);
+          String formattedZenithTime = DateFormat(timeFormat).format(zenithTime);
 
           forbiddenTimes.add({
             'name': 'Noon',
@@ -207,12 +224,14 @@ class ForbiddenTimePresenter extends BasePresenter
         if (maghribTime != null) {
           // Start time is 10 minutes before Maghrib (sunset)
           DateTime startTime = maghribTime.subtract(Duration(minutes: 10));
-          String startTimeStr = DateFormat('h:mm a').format(startTime);
+          String startTimeStr = DateFormat(timeFormat).format(startTime);
 
           forbiddenTimes.add({
             'name': 'Evening',
             'startTime': startTimeStr,
-            'endTime': prayerTimes['Maghrib']!,
+            'endTime': is24HourFormat 
+                ? _formatTo24Hour(prayerTimes['Maghrib']!) 
+                : prayerTimes['Maghrib']!,
             'icon': 'Asr',
           });
         }
@@ -222,6 +241,22 @@ class ForbiddenTimePresenter extends BasePresenter
     } catch (e) {
       _logger.e('Error calculating forbidden times', e);
       return [];
+    }
+  }
+  
+  // Helper method to convert a time string to 24-hour format
+  String _formatTo24Hour(String timeString) {
+    try {
+      if (timeString.toLowerCase().contains('am') || timeString.toLowerCase().contains('pm')) {
+        // Convert from 12-hour to 24-hour format
+        DateTime parsedTime = DateFormat('h:mm a').parse(timeString);
+        return DateFormat('HH:mm').format(parsedTime);
+      }
+      // Already in 24-hour format
+      return timeString;
+    } catch (e) {
+      _logger.e('Error formatting time to 24-hour: $timeString', e);
+      return timeString;
     }
   }
 
@@ -237,25 +272,7 @@ class ForbiddenTimePresenter extends BasePresenter
 
   // Helper method to parse time string to DateTime
   DateTime? parseTime(String? timeString) {
-    if (timeString == null) return null;
-
-    try {
-      // Parse the time string (e.g., "5:30 AM")
-      DateTime now = DateTime.now();
-      DateTime parsedTime = DateFormat('h:mm a').parse(timeString);
-
-      // Combine with today's date
-      return DateTime(
-        now.year,
-        now.month,
-        now.day,
-        parsedTime.hour,
-        parsedTime.minute,
-      );
-    } catch (e) {
-      _logger.e('Error parsing time: $e');
-      return null;
-    }
+    return _prayerTimeService.parseTime(timeString);
   }
 
   String getTimeRangeDisplay() {

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:salat_waqt/core/base/base_presenter.dart';
+import 'package:salat_waqt/core/di/service_locator.dart';
 import 'package:salat_waqt/core/services/date_service.dart';
 import 'package:salat_waqt/core/services/location_service.dart';
 import 'package:salat_waqt/core/services/logger_service.dart';
@@ -10,6 +11,7 @@ import 'package:salat_waqt/core/services/prayer_time_service.dart';
 import 'package:salat_waqt/core/services/preferences_service.dart';
 import 'package:salat_waqt/core/services/timer_service.dart';
 import 'package:salat_waqt/presentation/home/presenter/home_ui_state.dart';
+import 'package:salat_waqt/presentation/settings/presenter/setting_presenter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomePresenter extends BasePresenter<HomeUiState> {
@@ -26,6 +28,8 @@ class HomePresenter extends BasePresenter<HomeUiState> {
   final DateService _dateService;
   final TimerService _timerService;
   final LoggerService _logger;
+  // Use settings presenter to get 24-hour format preference
+  late final SettingsPresenter _settingsPresenter;
 
   // Constructor
   HomePresenter({
@@ -45,7 +49,39 @@ class HomePresenter extends BasePresenter<HomeUiState> {
   @override
   void onInit() {
     super.onInit();
+    _settingsPresenter = locator();
     _initializeData();
+    
+    // Listen for changes in 24-hour format setting
+    ever(_settingsPresenter.uiState, (_) {
+      // Reformat prayer times when 24-hour setting changes
+      if (currentUiState.prayerTimes != null) {
+        _reformatPrayerTimesFor24Hour();
+      }
+    });
+  }
+  
+  // Format prayer times based on 24-hour format setting
+  void _reformatPrayerTimesFor24Hour() {
+    if (currentUiState.prayerTimes == null) return;
+    
+    try {
+      final is24Hour = _settingsPresenter.currentUiState.use24HourFormatEnabled;
+      final reformattedTimes = _prayerTimeService.reformatPrayerTimes(
+        Map<String, String>.from(currentUiState.prayerTimes!),
+        is24Hour
+      );
+      
+      uiState.value = uiState.value.copyWith(
+        prayerTimes: reformattedTimes
+      );
+      
+      // Update dependent times
+      updateCurrentWaqt();
+      _updateRemainingTime();
+    } catch (e) {
+      _logger.e('Error reformatting prayer times for 24-hour format', e);
+    }
   }
 
   @override
