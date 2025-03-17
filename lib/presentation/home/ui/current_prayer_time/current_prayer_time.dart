@@ -61,7 +61,7 @@ class _CurrentPrayerTimeState extends State<CurrentPrayerTime> {
                   bottom: 12.px,
                 ),
                 child: InkWell(
-                  overlayColor: MaterialStateProperty.all(Colors.transparent),
+                  overlayColor: WidgetStateProperty.all(Colors.transparent),
                   splashColor: Colors.transparent,
                   onTap: () => _presenter.toggleCurrentPrayerTimeExpansion(),
                   child: Row(
