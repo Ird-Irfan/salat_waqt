@@ -22,7 +22,7 @@ class CurrentPrayerTimeUiState extends BaseUiState {
     this.nextPrayerTime,
     this.nextPrayerWaqt,
     this.notificationStatus,
-    this.is24HourFormat = false,
+    this.is24HourFormat = true,
   });
 
   factory CurrentPrayerTimeUiState.empty() {
