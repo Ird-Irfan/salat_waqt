@@ -21,16 +21,18 @@ class DateDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(20.px),
-      decoration: BoxDecoration(
+      decoration: ShapeDecoration(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.px),
+        ),
         gradient: RadialGradient(
-          center: Alignment(0.93, -1.50),
-          radius: 1.20,
+          center: Alignment(0.97, -1.20),
+          radius: 1,
           colors: [
             context.color.cardGradientEnd,
             context.color.cardGradientStart,
           ],
         ),
-        borderRadius: BorderRadius.all(Radius.circular(16.px)),
       ),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 8.px),

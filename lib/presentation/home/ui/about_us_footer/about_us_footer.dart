@@ -13,16 +13,18 @@ class AboutUsFooter extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
+      decoration: ShapeDecoration(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.px),
+        ),
         gradient: RadialGradient(
-          center: Alignment(0.93, 1.20),
-          radius: 0.72,
+          center: Alignment(0.97, -1.20),
+          radius: 1,
           colors: [
-            context.color.cardGradientStart,
             context.color.cardGradientEnd,
+            context.color.cardGradientStart,
           ],
         ),
-        borderRadius: BorderRadius.circular(16.px),
       ),
       child: Row(
         children: [

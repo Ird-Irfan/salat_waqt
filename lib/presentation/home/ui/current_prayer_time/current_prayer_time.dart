@@ -30,16 +30,18 @@ class CurrentPrayerTime extends StatelessWidget {
       builder: () {
         return Container(
           height: presenter.currentUiState.currentPrayerTimeHeight.px,
-          decoration: BoxDecoration(
+          decoration: ShapeDecoration(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.px),
+            ),
             gradient: RadialGradient(
-              center: Alignment(0.93, 1.20),
-              radius: 0.72,
+              center: Alignment(0.97, -1.20),
+              radius: 1,
               colors: [
-                context.color.cardGradientStart,
                 context.color.cardGradientEnd,
+                context.color.cardGradientStart,
               ],
             ),
-            borderRadius: BorderRadius.circular(16.px),
           ),
           child: Column(
             children: [
@@ -65,7 +67,7 @@ class CurrentPrayerTime extends StatelessWidget {
                               Text(
                                 'CURRENT WAQT • ',
                                 style: theme.textTheme.labelMedium?.copyWith(
-                                  fontSize: 13.px,
+                                  fontSize: 14.px,
                                   color: context.color.cardTitleColor,
                                   fontFamily: AppTextStyles.inter,
                                   fontWeight: FontWeight.w400,

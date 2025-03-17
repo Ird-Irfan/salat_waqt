@@ -28,11 +28,11 @@ class SahriIftarTimesSection extends StatelessWidget {
             svgPath: AppConstant.icSahri,
           ),
         ),
-        SizedBox(width: 12),
+        SizedBox(width: 16.px),
         Expanded(
           child: TimeInfoCard(
             theme: theme,
-            title: 'IFTAAR LAST TIME',
+            title: 'IFTAAR TIME',
             time: iftarTime,
             svgPath: AppConstant.icIftaar,
           ),
@@ -58,44 +58,50 @@ class TimeInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(20.px),
-      decoration: BoxDecoration(
-        gradient: RadialGradient(
-          center: Alignment(0.93, 1.20),
-          radius: 0.72,
-          colors: [
-            context.color.cardGradientStart,
-            context.color.cardGradientEnd,
-          ],
+    return IntrinsicHeight(
+      child: IntrinsicWidth(
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 20.px, vertical: 16.px),
+          decoration: ShapeDecoration(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.px),
+            ),
+            gradient: RadialGradient(
+              center: Alignment(0.97, -1.20),
+              radius: 1,
+              colors: [
+                context.color.cardGradientEnd,
+                context.color.cardGradientStart,
+              ],
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SvgPicture.asset(svgPath, width: 40.px, height: 34.px),
+              SizedBox(height: 24.px),
+              Text(
+                title,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  color: context.color.cardSubtitleColor,
+                  fontFamily: AppTextStyles.inter,
+                  fontWeight: FontWeight.w400,
+                  fontSize: 14.px,
+                ),
+              ),
+              SizedBox(height: 8.px),
+              Text(
+                time,
+                style: theme.textTheme.titleLarge?.copyWith(
+                  color: context.color.cardTitleColor,
+                  fontFamily: AppTextStyles.inter,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 18.px,
+                ),
+              ),
+            ],
+          ),
         ),
-        borderRadius: BorderRadius.circular(16.px),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SvgPicture.asset(svgPath, width: 40.px, height: 34.px),
-          SizedBox(height: 24.px),
-          Text(
-            title,
-            style: theme.textTheme.titleMedium?.copyWith(
-              color: context.color.cardSubtitleColor,
-              fontFamily: AppTextStyles.inter,
-              fontWeight: FontWeight.w400,
-              fontSize: 14.px,
-            ),
-          ),
-          SizedBox(height: 8.px),
-          Text(
-            time,
-            style: theme.textTheme.titleLarge?.copyWith(
-              color: context.color.cardTitleColor,
-              fontFamily: AppTextStyles.inter,
-              fontWeight: FontWeight.w500,
-              fontSize: 18.px,
-            ),
-          ),
-        ],
       ),
     );
   }
