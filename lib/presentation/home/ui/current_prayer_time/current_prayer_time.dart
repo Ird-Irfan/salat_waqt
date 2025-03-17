@@ -68,7 +68,7 @@ class CurrentPrayerTime extends StatelessWidget {
                                 'CURRENT WAQT • ',
                                 style: theme.textTheme.labelMedium?.copyWith(
                                   fontSize: 14.px,
-                                  color: context.color.cardTitleColor,
+                                  color: context.color.cardSubtitleColor,
                                   fontFamily: AppTextStyles.inter,
                                   fontWeight: FontWeight.w400,
                                 ),
@@ -77,7 +77,7 @@ class CurrentPrayerTime extends StatelessWidget {
                                 presenter.currentUiState.currentWaqt ?? '--:--',
                                 style: theme.textTheme.labelMedium?.copyWith(
                                   fontSize: 14.px,
-                                  color: context.color.cardTitleColor,
+                                  color: context.color.cardSubtitleColor,
                                   fontFamily: AppTextStyles.inter,
                                   fontWeight: FontWeight.w700,
                                 ),
