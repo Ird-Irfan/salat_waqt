@@ -110,12 +110,13 @@ class SettingsPage extends StatelessWidget {
                     AnimatedCard(
                       theme: theme,
                       title: 'Juristic Method',
-                      subtitle: 'Current: Hanafi',
+                      subtitle:
+                          'Current: ${presenter.currentUiState.selectedJuristic ?? "Hanafi"}',
                       svgIconPath: AppConstant.icCalculator,
                       isExpanded: presenter.currentUiState.isExpandedJuristic,
                       onCardTap: () => presenter.toggleExpansionJuristic(),
-                      onTextSelect: (text) => presenter.selectText(text),
-                      selectedText: presenter.currentUiState.selectedText,
+                      onTextSelect: (text) => presenter.selectJuristic(text),
+                      selectedText: presenter.currentUiState.selectedJuristic,
                       selectedTextOne: "Hanafi",
                       selectedTextTwo: "Shafi",
                     ),

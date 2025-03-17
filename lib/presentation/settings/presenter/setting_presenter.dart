@@ -14,6 +14,13 @@ class SettingsPresenter extends BasePresenter<SettingsUiState> {
     required CurrentPrayerTimePresenter currentPrayerTimePresenter,
   }) : _currentPrayerTimePresenter = currentPrayerTimePresenter;
 
+  @override
+  void onInit() {
+    super.onInit();
+    // Initialize with default Hanafi juristic method
+    _currentPrayerTimePresenter.updateJuristicMethod('Hanafi');
+  }
+
   void toggleDoNotDisturb() {
     final currentState = currentUiState;
     uiState.value = currentState.copyWith(
@@ -44,17 +51,13 @@ class SettingsPresenter extends BasePresenter<SettingsUiState> {
   // Theme expansion toggle function
   void toggleExpansion() {
     final currentState = currentUiState;
-    uiState.value = currentState.copyWith(
-      isExpanded: !currentState.isExpanded,
-    );
+    uiState.value = currentState.copyWith(isExpanded: !currentState.isExpanded);
   }
 
   // Theme change function
   void changeTheme(bool isDarkMode) {
     final currentState = currentUiState;
-    uiState.value = currentState.copyWith(
-      isDarkMode: isDarkMode,
-    );
+    uiState.value = currentState.copyWith(isDarkMode: isDarkMode);
   }
 
   void toggleExpansionLang() {
@@ -67,13 +70,9 @@ class SettingsPresenter extends BasePresenter<SettingsUiState> {
   void selectText(String text) {
     final currentState = currentUiState;
     if (currentState.selectedText == text) {
-      uiState.value = currentState.copyWith(
-        selectedText: null,
-      );
+      uiState.value = currentState.copyWith(selectedText: null);
     } else {
-      uiState.value = currentState.copyWith(
-        selectedText: text,
-      );
+      uiState.value = currentState.copyWith(selectedText: text);
     }
   }
 
@@ -87,13 +86,14 @@ class SettingsPresenter extends BasePresenter<SettingsUiState> {
   void selectJuristic(String text) {
     final currentState = currentUiState;
     if (currentState.selectedJuristic == text) {
-      uiState.value = currentState.copyWith(
-        selectedJuristic: null,
-      );
+      uiState.value = currentState.copyWith(selectedJuristic: null);
     } else {
       uiState.value = currentState.copyWith(
         selectedJuristic: text,
+        isExpandedJuristic: false,
       );
+
+      _currentPrayerTimePresenter.updateJuristicMethod(text);
     }
   }
 
@@ -102,25 +102,16 @@ class SettingsPresenter extends BasePresenter<SettingsUiState> {
     uiState.value = currentState.copyWith(
       isExpandedRamadan: !currentState.isExpandedRamadan,
     );
-  } 
-
-  void selectRamadan(String text) { 
-    final currentState = currentUiState;
-    if (currentState.selectedRamadan == text) {
-      uiState.value = currentState.copyWith(
-        selectedRamadan: null,
-      );
-    } else {
-      uiState.value = currentState.copyWith(
-        selectedRamadan: text,
-      );
-    }
   }
 
-
-
-
-
+  void selectRamadan(String text) {
+    final currentState = currentUiState;
+    if (currentState.selectedRamadan == text) {
+      uiState.value = currentState.copyWith(selectedRamadan: null);
+    } else {
+      uiState.value = currentState.copyWith(selectedRamadan: text);
+    }
+  }
 
   // void toggleUse24HourFormat() {
   //   final currentState = currentUiState;

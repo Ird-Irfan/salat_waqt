@@ -39,6 +39,39 @@ class PrayerTimeService {
     }
   }
 
+  // Load prayer times with a specific juristic method
+  Future<Map<String, String>?> loadPrayerTimesWithJuristicMethod(
+    double latitude,
+    double longitude,
+    String juristicMethod,
+  ) async {
+    String date = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    try {
+      // Convert juristic method string to Madhab enum
+      String madhab =
+          juristicMethod.toLowerCase() == 'hanafi' ? 'hanafi' : 'shafi';
+
+      var times = await _getPrayerTimesUseCase.executeWithMadhab(
+        latitude,
+        longitude,
+        date,
+        madhab,
+      );
+
+      if (times.isEmpty) {
+        throw Exception('Failed to load prayer times');
+      }
+
+      Map<String, String> formattedTimes = _formatPrayerTimes(times);
+      _addSpecialTimes(formattedTimes);
+
+      return formattedTimes;
+    } catch (e) {
+      _logger.e('Error loading prayer times with juristic method', e);
+      return null;
+    }
+  }
+
   // Format prayer times
   Map<String, String> _formatPrayerTimes(Map<String, dynamic> times) {
     Map<String, String> formattedTimes = {};
