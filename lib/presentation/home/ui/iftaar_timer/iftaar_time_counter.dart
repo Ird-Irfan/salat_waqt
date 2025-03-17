@@ -45,64 +45,61 @@ class IftarTimeCounter extends StatelessWidget {
     final gradientStartColor = context.color.donutRingGradientStartColor;
     final gradientEndColor = context.color.donutRingGradientEndColor;
 
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: RepaintBoundary(
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            // Use a simpler custom paint instead of CircularProgressIndicator for better performance
-            FutureBuilder<ui.Image>(
-              future: _loadImage('assets/images/circle_bg.png'),
-              builder: (context, snapshot) {
-                return CustomPaint(
-                  size: Size(294.px, 294.px),
-                  painter: CircularProgressPainter(
-                    progressValue: progressValue,
-                    gradientStartColor: gradientStartColor,
-                    gradientEndColor: gradientEndColor,
-                    backgroundColor: context.color.donutBottomCircleColor,
-                    strokeWidth: 20,
-                    backgroundImage: snapshot.data,
-                  ),
-                );
-              },
-            ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  '${presenter.currentUiState.nextPrayerName} time',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    color: context.color.cardTitleColor,
-                    fontFamily: AppTextStyles.inter,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 20.px,
-                  ),
+    return RepaintBoundary(
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          // Use a simpler custom paint instead of CircularProgressIndicator for better performance
+          FutureBuilder<ui.Image>(
+            future: _loadImage('assets/images/circle_bg.png'),
+            builder: (context, snapshot) {
+              return CustomPaint(
+                size: Size(294.px, 294.px),
+                painter: CircularProgressPainter(
+                  progressValue: progressValue,
+                  gradientStartColor: gradientStartColor,
+                  gradientEndColor: gradientEndColor,
+                  backgroundColor: context.color.donutBottomCircleColor,
+                  strokeWidth: 20,
+                  backgroundImage: snapshot.data,
                 ),
-                Text(
-                  remainingTime ?? '',
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    color: gradientStartColor,
-                    fontFamily: AppTextStyles.unicaOne,
-                    fontSize: 60.px,
-                    fontWeight: FontWeight.bold,
-                  ),
+              );
+            },
+          ),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                '${presenter.currentUiState.nextPrayerName} time',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  color: context.color.cardTitleColor,
+                  fontFamily: AppTextStyles.inter,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 20.px,
                 ),
-                Text(
-                  'Remaining',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    color: context.color.cardTitleColor,
-                    fontFamily: AppTextStyles.inter,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 20.px,
-                  ),
+              ),
+              Text(
+                remainingTime ?? '',
+                style: theme.textTheme.titleLarge?.copyWith(
+                  color: gradientStartColor,
+                  fontFamily: AppTextStyles.unicaOne,
+                  fontSize: 60.px,
+                  fontWeight: FontWeight.bold,
                 ),
-              ],
-            ),
-          ],
-        ),
+              ),
+              Text(
+                'Remaining',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  color: context.color.cardTitleColor,
+                  fontFamily: AppTextStyles.inter,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 20.px,
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

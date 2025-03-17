@@ -156,11 +156,9 @@ class CurrentPrayerTimePresenter
   // Toggle expansion of prayer time widget
   void toggleCurrentPrayerTimeExpansion() {
     final bool newExpandedState = !currentUiState.isCurrentPrayerTimeExpanded;
-    final double newHeight = newExpandedState ? 400.0 : 210.0;
 
     uiState.value = uiState.value.copyWith(
       isCurrentPrayerTimeExpanded: newExpandedState,
-      currentPrayerTimeHeight: newHeight,
     );
   }
 

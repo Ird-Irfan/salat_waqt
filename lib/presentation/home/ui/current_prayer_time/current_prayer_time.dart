@@ -28,8 +28,9 @@ class CurrentPrayerTime extends StatelessWidget {
     return PresentableWidgetBuilder(
       presenter: presenter,
       builder: () {
-        return Container(
-          height: presenter.currentUiState.currentPrayerTimeHeight.px,
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 600),
+          curve: Curves.easeInOut,
           decoration: ShapeDecoration(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16.px),
@@ -44,6 +45,7 @@ class CurrentPrayerTime extends StatelessWidget {
             ),
           ),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
                 padding: EdgeInsets.only(
@@ -118,13 +120,15 @@ class CurrentPrayerTime extends StatelessWidget {
                 color: context.color.cardSiblingBottomBorderColor
                     .withOpacityInt(0.05),
               ),
-              SizedBox(height: 16.px),
               AnimatedSwitcher(
                 duration: const Duration(milliseconds: 600),
                 child:
                     presenter.currentUiState.isCurrentPrayerTimeExpanded
                         ? ColumnItem(theme: theme, presenter: presenter)
-                        : RowItem(theme: theme, presenter: presenter),
+                        : Padding(
+                          padding: EdgeInsets.symmetric(vertical: 20.px),
+                          child: RowItem(theme: theme, presenter: presenter),
+                        ),
               ),
             ],
           ),

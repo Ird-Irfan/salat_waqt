@@ -18,6 +18,7 @@ class ColumnItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           _buildPrayerRow(
             AppConstant.icFajr,
@@ -26,12 +27,9 @@ class ColumnItem extends StatelessWidget {
             presenter.currentUiState.notificationStatus?['Fajr'] ?? false,
             () => presenter.togglePrayerNotification('Fajr'),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: Divider(
-              color: context.color.cardSiblingBottomBorderColor.withOpacityInt(
-                0.05,
-              ),
+          Divider(
+            color: context.color.cardSiblingBottomBorderColor.withOpacityInt(
+              0.05,
             ),
           ),
           _buildPrayerRow(
@@ -41,12 +39,9 @@ class ColumnItem extends StatelessWidget {
             presenter.currentUiState.notificationStatus?['Dhuhr'] ?? false,
             () => presenter.togglePrayerNotification('Dhuhr'),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: Divider(
-              color: context.color.cardSiblingBottomBorderColor.withOpacityInt(
-                0.05,
-              ),
+          Divider(
+            color: context.color.cardSiblingBottomBorderColor.withOpacityInt(
+              0.05,
             ),
           ),
           _buildPrayerRow(
@@ -61,12 +56,9 @@ class ColumnItem extends StatelessWidget {
               );
             },
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: Divider(
-              color: context.color.cardSiblingBottomBorderColor.withOpacityInt(
-                0.05,
-              ),
+          Divider(
+            color: context.color.cardSiblingBottomBorderColor.withOpacityInt(
+              0.05,
             ),
           ),
           _buildPrayerRow(
@@ -76,12 +68,9 @@ class ColumnItem extends StatelessWidget {
             presenter.currentUiState.notificationStatus?['Maghrib'] ?? false,
             () => presenter.togglePrayerNotification('Maghrib'),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: Divider(
-              color: context.color.cardSiblingBottomBorderColor.withOpacityInt(
-                0.05,
-              ),
+          Divider(
+            color: context.color.cardSiblingBottomBorderColor.withOpacityInt(
+              0.05,
             ),
           ),
           _buildPrayerRow(
@@ -106,7 +95,7 @@ class ColumnItem extends StatelessWidget {
     return Builder(
       builder: (context) {
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: EdgeInsets.all(16),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [

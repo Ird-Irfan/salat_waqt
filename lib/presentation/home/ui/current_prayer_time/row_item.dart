@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:salat_waqt/core/constant/app_contant.dart';
 import 'package:salat_waqt/core/constant/app_text_styles.dart';
 import 'package:salat_waqt/core/config/salat_waqt_screen.dart';
 import 'package:salat_waqt/core/utility/utility.dart';
 import 'package:salat_waqt/core/external_libs/presentable_widget_builder.dart';
-import 'package:salat_waqt/presentation/common/widgets/svg_icons.dart';
 import 'package:salat_waqt/presentation/home/presenter/current_prayer_time_presenter.dart';
 
 class RowItem extends StatelessWidget {
@@ -21,6 +21,7 @@ class RowItem extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisSize: MainAxisSize.min,
             children: [
               _buildPrayerTimeItem(
                 name: 'FAJR',
@@ -72,7 +73,7 @@ class RowItem extends StatelessWidget {
     required BuildContext context,
   }) {
     return Padding(
-      padding: EdgeInsets.all(8.px),
+      padding: EdgeInsets.symmetric(horizontal: 12.px, vertical: 8.px),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -84,11 +85,12 @@ class RowItem extends StatelessWidget {
               color: context.color.cardSubtitleColor,
               fontFamily: AppTextStyles.inter,
               fontWeight: FontWeight.w400,
+              letterSpacing: 0.5,
             ),
           ),
           SizedBox(height: 10.px),
-          SvgIcon(svgPath: svgPath, height: 22.px, width: 22.px),
-          SizedBox(height: 12.px),
+          SvgPicture.asset(svgPath, height: 28.px, width: 30.px),
+          SizedBox(height: 10.px),
           Text(
             time,
             style: theme.textTheme.labelMedium?.copyWith(

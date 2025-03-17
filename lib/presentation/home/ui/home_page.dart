@@ -81,6 +81,7 @@ class HomePage extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: Column(
+                        spacing: 32.px,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           // Date Display
@@ -95,10 +96,8 @@ class HomePage extends StatelessWidget {
                               presenter: presenter,
                             ),
                           ),
-                          const SizedBox(height: 20),
                           // Iftar Time Counter
                           IftarTimeCounter(theme: theme),
-                          const SizedBox(height: 20),
                           // Sahri & Iftar Times
                           SahriIftarTimesSection(
                             theme: theme,
@@ -113,19 +112,14 @@ class HomePage extends StatelessWidget {
                                     .prayerTimes?['Iftar'] ??
                                 '',
                           ),
-                          const SizedBox(height: 16),
                           // Current Prayer Time
                           CurrentPrayerTime(theme: theme),
-                          const SizedBox(height: 20),
                           // Sadaqa App Banner
                           SadaqaAdsBanner(presenter: presenter, theme: theme),
-                          const SizedBox(height: 20),
                           // Forbidden Times Section
                           ForbiddenTime(theme: theme),
-                          const SizedBox(height: 20),
                           // About Us Footer
                           AboutUsFooter(theme: theme),
-                          const SizedBox(height: 20),
                         ],
                       ),
                     ),
