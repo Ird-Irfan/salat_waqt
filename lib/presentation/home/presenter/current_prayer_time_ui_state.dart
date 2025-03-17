@@ -10,6 +10,11 @@ class CurrentPrayerTimeUiState extends BaseUiState {
   final String? nextPrayerWaqt;
   final Map<String, bool>? notificationStatus;
   final bool is24HourFormat;
+  final String? fajrTime;
+  final String? duhurTime;
+  final String? asrTime;
+  final String? maghribTime;
+  final String? ishaTime;
 
   const CurrentPrayerTimeUiState({
     required super.userMessage,
@@ -23,6 +28,11 @@ class CurrentPrayerTimeUiState extends BaseUiState {
     this.nextPrayerWaqt,
     this.notificationStatus,
     this.is24HourFormat = true,
+    this.fajrTime,
+    this.duhurTime,
+    this.asrTime,
+    this.maghribTime,
+    this.ishaTime,
   });
 
   factory CurrentPrayerTimeUiState.empty() {
@@ -38,6 +48,11 @@ class CurrentPrayerTimeUiState extends BaseUiState {
       nextPrayerWaqt: null,
       notificationStatus: null,
       is24HourFormat: false,
+      fajrTime: null,
+      duhurTime: null,
+      asrTime: null,
+      maghribTime: null,
+      ishaTime: null,
     );
   }
 
@@ -54,6 +69,11 @@ class CurrentPrayerTimeUiState extends BaseUiState {
     nextPrayerWaqt,
     notificationStatus,
     is24HourFormat,
+    fajrTime,
+    duhurTime,
+    asrTime,
+    maghribTime,
+    ishaTime,
   ];
 
   CurrentPrayerTimeUiState copyWith({
@@ -68,6 +88,11 @@ class CurrentPrayerTimeUiState extends BaseUiState {
     String? nextPrayerWaqt,
     Map<String, bool>? notificationStatus,
     bool? is24HourFormat,
+    String? fajrTime,
+    String? duhurTime,
+    String? asrTime,
+    String? maghribTime,
+    String? ishaTime,
   }) {
     return CurrentPrayerTimeUiState(
       prayerTimes: prayerTimes ?? this.prayerTimes,
@@ -83,6 +108,11 @@ class CurrentPrayerTimeUiState extends BaseUiState {
       nextPrayerWaqt: nextPrayerWaqt ?? this.nextPrayerWaqt,
       notificationStatus: notificationStatus ?? this.notificationStatus,
       is24HourFormat: is24HourFormat ?? this.is24HourFormat,
+      fajrTime: fajrTime ?? this.fajrTime,
+      duhurTime: duhurTime ?? this.duhurTime,
+      asrTime: asrTime ?? this.asrTime,
+      maghribTime: maghribTime ?? this.maghribTime,
+      ishaTime: ishaTime ?? this.ishaTime,
     );
   }
 }
