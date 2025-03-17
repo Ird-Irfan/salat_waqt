@@ -98,6 +98,7 @@ class _ColumnItemState extends State<ColumnItem> {
                 false,
             () => widget.presenter.togglePrayerNotification('Isha'),
           ),
+          SizedBox(height: 10.px),
         ],
       ),
     );
@@ -113,7 +114,7 @@ class _ColumnItemState extends State<ColumnItem> {
     return Builder(
       builder: (context) {
         return Padding(
-          padding: EdgeInsets.all(16),
+          padding: EdgeInsets.symmetric(horizontal: 20.px, vertical: 16.px),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [

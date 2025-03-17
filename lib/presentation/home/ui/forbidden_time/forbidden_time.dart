@@ -31,7 +31,9 @@ class ForbiddenTime extends StatelessWidget {
       return AnimatedBuilder(
         animation: presenter.animationController,
         builder: (context, child) {
-          return Container(
+          return AnimatedContainer(
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeInOut,
             padding: EdgeInsets.all(20.px),
             decoration: ShapeDecoration(
               shape: RoundedRectangleBorder(

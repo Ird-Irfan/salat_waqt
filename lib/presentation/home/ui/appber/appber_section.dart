@@ -19,7 +19,6 @@ class AppBarSection extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      // backgroundColor: Colors.transparent,
       elevation: 0,
       title: InkWell(
         overlayColor: MaterialStateProperty.all(Colors.transparent),

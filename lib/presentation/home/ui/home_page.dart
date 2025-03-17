@@ -120,6 +120,7 @@ class HomePage extends StatelessWidget {
                           ForbiddenTime(theme: theme),
                           // About Us Footer
                           AboutUsFooter(theme: theme),
+                          SizedBox(height: 20.px),
                         ],
                       ),
                     ),

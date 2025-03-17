@@ -308,7 +308,7 @@ class SalatTheme {
       // foregroundColor: Color(0xff477848),
       // iconTheme: IconThemeData(color: Colors.black87),
       // elevation: 0,
-      // scrolledUnderElevation: 0,
+      scrolledUnderElevation: 0,
     ),
     textTheme: SalatTextTheme.baseTextTheme.apply(
       bodyColor: Colors.black87,
@@ -470,7 +470,7 @@ class SalatTheme {
       // foregroundColor: Color(0xff477848),
       // iconTheme: IconThemeData(color: Colors.white),
       // elevation: 0,
-      // scrolledUnderElevation: 0,
+      scrolledUnderElevation: 0,
     ),
     // primaryColor: SalatColor.primaryColorDark500,
     scaffoldBackgroundColor: Colors.transparent,
