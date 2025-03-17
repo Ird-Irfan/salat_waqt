@@ -293,6 +293,36 @@ class CurrentPrayerTimePresenter
     }
   }
 
+  // Update prayer times based on selected juristic method
+  Future<void> updateJuristicMethod(String method) async {
+    toggleLoading(loading: true);
+    try {
+      // Get saved location
+      final (latitude, longitude, _, _) =
+          await _locationService.loadSavedLocation();
+
+      if (latitude != null && longitude != null) {
+        // Update prayer times with the selected juristic method
+        var times = await _prayerTimeService.loadPrayerTimesWithJuristicMethod(
+          latitude,
+          longitude,
+          method,
+        );
+
+        if (times != null) {
+          uiState.value = uiState.value.copyWith(prayerTimes: times);
+          updateCurrentWaqt(currentUiState.is24HourFormat);
+        } else {
+          throw Exception('Failed to load prayer times');
+        }
+      }
+    } catch (e) {
+      _logger.e('Error updating juristic method', e);
+    } finally {
+      toggleLoading(loading: false);
+    }
+  }
+
   // BasePresenter overrides
   @override
   Future<void> addUserMessage(String message) async {

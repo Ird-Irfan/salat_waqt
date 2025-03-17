@@ -12,4 +12,18 @@ class GetPrayerTimesUseCase {
   ) async {
     return await repository.getPrayerTimes(latitude, longitude, date);
   }
+
+  Future<Map<String, dynamic>> executeWithMadhab(
+    double latitude,
+    double longitude,
+    String date,
+    String madhab,
+  ) async {
+    return await repository.getPrayerTimesWithMadhab(
+      latitude,
+      longitude,
+      date,
+      madhab,
+    );
+  }
 }

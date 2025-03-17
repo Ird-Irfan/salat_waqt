@@ -14,4 +14,19 @@ class PrayerTimeRepositoryImpl implements PrayerTimeRepository {
   ) async {
     return await prayerTimeDataSource.getPrayerTimes(latitude, longitude, date);
   }
+
+  @override
+  Future<Map<String, dynamic>> getPrayerTimesWithMadhab(
+    double latitude,
+    double longitude,
+    String date,
+    String madhab,
+  ) async {
+    return await prayerTimeDataSource.getPrayerTimesWithMadhab(
+      latitude,
+      longitude,
+      date,
+      madhab,
+    );
+  }
 }

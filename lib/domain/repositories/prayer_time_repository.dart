@@ -4,4 +4,11 @@ abstract class PrayerTimeRepository {
     double longitude,
     String date,
   );
+
+  Future<Map<String, dynamic>> getPrayerTimesWithMadhab(
+    double latitude,
+    double longitude,
+    String date,
+    String madhab,
+  );
 }
