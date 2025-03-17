@@ -17,6 +17,7 @@ import 'package:salat_waqt/presentation/home/ui/iftaar_timer/iftaar_time_counter
 import 'package:salat_waqt/presentation/home/ui/sadaka_app_banner/sadaka_app_banner.dart';
 import 'package:salat_waqt/presentation/home/ui/sahri_Iftaar_time_section/sahri_iftar_times_section.dart';
 import 'package:salat_waqt/presentation/home/ui/set_location_bottom_sheet/set_location_bottom_sheet.dart';
+import 'package:salat_waqt/presentation/settings/presenter/setting_presenter.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -34,6 +35,7 @@ class HomePage extends StatelessWidget {
         logger: locator(),
       ),
     );
+    final SettingsPresenter settingsPresenter = locator<SettingsPresenter>();
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -96,22 +98,24 @@ class HomePage extends StatelessWidget {
                               presenter: presenter,
                             ),
                           ),
-                          // Iftar Time Counter
-                          IftarTimeCounter(theme: theme),
-                          // Sahri & Iftar Times
-                          SahriIftarTimesSection(
-                            theme: theme,
-                            sahriTime:
-                                presenter
-                                    .currentUiState
-                                    .prayerTimes?['Sehri'] ??
-                                '',
-                            iftarTime:
-                                presenter
-                                    .currentUiState
-                                    .prayerTimes?['Iftar'] ??
-                                '',
-                          ),
+                          // Iftar Time Counter - Only show if hideIftaarTimeEnabled is false
+                          if (!settingsPresenter.currentUiState.hideIftaarTimeEnabled)
+                            IftarTimeCounter(theme: theme),
+                          // Sahri & Iftar Times - Only show if hideIftaarTimeEnabled is false
+                          if (!settingsPresenter.currentUiState.hideIftaarTimeEnabled)
+                            SahriIftarTimesSection(
+                              theme: theme,
+                              sahriTime:
+                                  presenter
+                                      .currentUiState
+                                      .prayerTimes?['Sehri'] ??
+                                  '',
+                              iftarTime:
+                                  presenter
+                                      .currentUiState
+                                      .prayerTimes?['Iftar'] ??
+                                  '',
+                            ),
                           // Current Prayer Time
                           CurrentPrayerTime(theme: theme),
                           // Sadaqa App Banner
