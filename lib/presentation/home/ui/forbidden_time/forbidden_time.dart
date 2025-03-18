@@ -31,7 +31,9 @@ class ForbiddenTime extends StatelessWidget {
       return AnimatedBuilder(
         animation: presenter.animationController,
         builder: (context, child) {
-          return Container(
+          return AnimatedContainer(
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeInOut,
             padding: EdgeInsets.all(20.px),
             decoration: ShapeDecoration(
               shape: RoundedRectangleBorder(
@@ -270,7 +272,7 @@ class ForbiddenTimeItems extends StatelessWidget {
                       style: theme.textTheme.labelMedium?.copyWith(
                         fontSize: 12.px,
                         fontWeight: FontWeight.w400,
-                        color: context.color.cardTitleColor,
+                        color: context.color.cardSubtitleColor,
                       ),
                     ),
                     SizedBox(height: 6.px),

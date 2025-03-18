@@ -45,13 +45,16 @@ class IftarTimeCounter extends StatelessWidget {
     final gradientStartColor = context.color.donutRingGradientStartColor;
     final gradientEndColor = context.color.donutRingGradientEndColor;
 
+    // Choose background image based on theme
+    final String backgroundImagePath = _getBackgroundImagePath(context);
+
     return RepaintBoundary(
       child: Stack(
         alignment: Alignment.center,
         children: [
           // Use a simpler custom paint instead of CircularProgressIndicator for better performance
           FutureBuilder<ui.Image>(
-            future: _loadImage('assets/images/circle_bg.png'),
+            future: _loadImage(backgroundImagePath),
             builder: (context, snapshot) {
               return CustomPaint(
                 size: Size(294.px, 294.px),
@@ -83,9 +86,9 @@ class IftarTimeCounter extends StatelessWidget {
                 remainingTime ?? '',
                 style: theme.textTheme.titleLarge?.copyWith(
                   color: gradientStartColor,
-                  fontFamily: AppTextStyles.unicaOne,
-                  fontSize: 60.px,
-                  fontWeight: FontWeight.bold,
+                  fontFamily: AppTextStyles.martianMono,
+                  fontSize: 52.px,
+                  fontWeight: FontWeight.w400,
                 ),
               ),
               Text(
@@ -120,6 +123,14 @@ class IftarTimeCounter extends StatelessWidget {
 
     stream.addListener(listener);
     return completer.future;
+  }
+
+  String _getBackgroundImagePath(BuildContext context) {
+    // Return different background image based on the theme brightness
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    return isDarkMode
+        ? 'assets/images/circle_bg.png'
+        : 'assets/images/circle_bg_light.png';
   }
 }
 

@@ -140,8 +140,8 @@ class CurrentPrayerTimePresenter
           // Format times based on 24-hour preference
           if (currentUiState.is24HourFormat) {
             times = _prayerTimeService.reformatPrayerTimes(
-              times, 
-              currentUiState.is24HourFormat
+              times,
+              currentUiState.is24HourFormat,
             );
           }
           uiState.value = uiState.value.copyWith(prayerTimes: times);
@@ -177,13 +177,14 @@ class CurrentPrayerTimePresenter
     // Only update format if it changed to avoid unnecessary rebuilds
     if (currentUiState.is24HourFormat != value) {
       uiState.value = uiState.value.copyWith(is24HourFormat: value);
-      
+
       // Reformat prayer times based on the new 24-hour format preference
       if (currentUiState.prayerTimes != null) {
-        Map<String, String> reformattedTimes = _prayerTimeService.reformatPrayerTimes(
-          Map<String, String>.from(currentUiState.prayerTimes!),
-          value
-        );
+        Map<String, String> reformattedTimes = _prayerTimeService
+            .reformatPrayerTimes(
+              Map<String, String>.from(currentUiState.prayerTimes!),
+              value,
+            );
         uiState.value = uiState.value.copyWith(prayerTimes: reformattedTimes);
       }
     }
@@ -205,9 +206,10 @@ class CurrentPrayerTimePresenter
               : now.hour >= 12
               ? 'PM'
               : 'AM';
-      final currentTime = currentUiState.is24HourFormat
-          ? "${hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}"
-          : "${hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')} $amPm";
+      final currentTime =
+          currentUiState.is24HourFormat
+              ? "${hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}"
+              : "${hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')} $amPm";
       final prayerTimes = currentUiState.prayerTimes!;
 
       // Convert prayer times to DateTime objects
@@ -273,12 +275,13 @@ class CurrentPrayerTimePresenter
         nextPrayer = tomorrowPrayerTimes.first;
         nextPrayerTime = prayerTimes[nextPrayer.key];
       }
-      
+
       // Ensure nextPrayerTime is correctly formatted for 24-hour setting
       if (nextPrayerTime != null && currentUiState.is24HourFormat) {
         try {
           // Check if the time is already in 24-hour format or 12-hour format
-          if (nextPrayerTime.toLowerCase().contains('am') || nextPrayerTime.toLowerCase().contains('pm')) {
+          if (nextPrayerTime.toLowerCase().contains('am') ||
+              nextPrayerTime.toLowerCase().contains('pm')) {
             // It's in 12-hour format, convert to 24-hour
             DateTime parsedTime = DateFormat('h:mm a').parse(nextPrayerTime);
             nextPrayerTime = DateFormat('HH:mm').format(parsedTime);
@@ -393,11 +396,11 @@ class CurrentPrayerTimePresenter
           // Format times based on 24-hour preference
           if (currentUiState.is24HourFormat) {
             times = _prayerTimeService.reformatPrayerTimes(
-              times, 
-              currentUiState.is24HourFormat
+              times,
+              currentUiState.is24HourFormat,
             );
           }
-          
+
           uiState.value = uiState.value.copyWith(prayerTimes: times);
           updateCurrentWaqt(currentUiState.is24HourFormat);
         } else {

@@ -75,7 +75,7 @@ class SadaqaAdsBanner extends StatelessWidget {
                       fontFamily: AppTextStyles.inter,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 12),
                   Row(
                     children: [
                       Text(
@@ -86,7 +86,7 @@ class SadaqaAdsBanner extends StatelessWidget {
                           color: context.color.cardTitleColor,
                         ),
                       ),
-                      SizedBox(width: 10.px),
+                      SizedBox(width: 8.px),
                       SvgPicture.asset(
                         AppConstant.icRightArrowForward,
                         width: 24.px,

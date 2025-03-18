@@ -6,6 +6,7 @@ class AppTextStyles {
   static const String inter = 'Inter';
   static const String unicaOne = 'UnicaOne-Regular';
   static const String alinurProttyoee = 'AlinurProttyoee';
+  static const String martianMono = 'MartianMono';
   // Common text sizes
   static const double smallSize = 12.0;
   static const double mediumSize = 14.0;
