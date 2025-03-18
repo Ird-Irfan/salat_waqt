@@ -69,7 +69,7 @@ class _SalatWaqtState extends State<SalatWaqt> {
           title: 'Salat Waqt',
           theme: SalatTheme.getTheme('Light', AppTextStyles.inter, 14),
           darkTheme: SalatTheme.getTheme('Dark', AppTextStyles.inter, 14),
-          themeMode: ThemeMode.dark, //use system default, dark, or light
+          themeMode: ThemeMode.system, //use system default, dark, or light
           home: const HomePage(),
         );
       },
