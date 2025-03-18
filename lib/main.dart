@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:salat_waqt/core/di/service_locator.dart';
 import 'package:salat_waqt/domain/service/notification_service.dart';
 import 'package:salat_waqt/presentation/salat_waqt.dart';
+import 'package:salat_waqt/presentation/settings/presenter/setting_presenter.dart';
 
 void main() async {
   // Initialize Flutter binding
@@ -11,6 +12,9 @@ void main() async {
 
   // Initialize services
   await _initServiceLocator();
+
+  // Initialize settings
+  await _initSettings();
 
   // Request notification permissions
   await _requestNotificationPermission();
@@ -37,6 +41,12 @@ Future<void> _initServiceLocator() async {
   );
 
   await ServiceLocator.setUp();
+}
+
+Future<void> _initSettings() async {
+  // Ensure settings are loaded before the app starts
+  final settingsPresenter = locator<SettingsPresenter>();
+  await settingsPresenter.initAsync();
 }
 
 Future<void> _requestNotificationPermission() async {

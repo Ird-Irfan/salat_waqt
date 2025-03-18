@@ -13,52 +13,35 @@ class SettingsPresenter extends BasePresenter<SettingsUiState> {
   final CurrentPrayerTimePresenter _currentPrayerTimePresenter;
   final DateService _dateService = locator<DateService>();
   final PreferencesService _preferencesService = PreferencesService.instance;
-  
+
   bool _isInitialized = false;
   bool get isInitialized => _isInitialized;
 
   // Construct
   SettingsPresenter({
     required CurrentPrayerTimePresenter currentPrayerTimePresenter,
-      }) : _currentPrayerTimePresenter = currentPrayerTimePresenter;
+  }) : _currentPrayerTimePresenter = currentPrayerTimePresenter;
 
-  @override
-  void onInit() {
-    super.onInit();
-    // Load saved settings when presenter is initialized
-    // We'll use a separate initAsync method to properly await results
-    _loadSettingsSync();
-  }
-  
-  // Synchronous initialization that sets defaults but doesn't await results
-  void _loadSettingsSync() {
-    // Initialize with default values in case preferences aren't loaded yet
-    final defaultState = SettingsUiState.empty().copyWith(
-      selectedJuristic: 'Hanafi',
-      selectedRamadan: 'Bangladesh',
-    );
-    uiState.value = defaultState;
-  }
-  
-  // This method should be called during app startup to ensure settings 
+  // This method should be called during app startup to ensure settings
   // are loaded before the home page is displayed
   Future<void> initAsync() async {
     if (_isInitialized) return;
-    
+
     await _loadSavedSettings();
     _isInitialized = true;
   }
-  
+
   Future<void> _loadSavedSettings() async {
     final doNotDisturb = await _preferencesService.isDoNotDisturbEnabled();
-    final use24HourFormat = await _preferencesService.isUse24HourFormatEnabled();
+    final use24HourFormat =
+        await _preferencesService.isUse24HourFormatEnabled();
     final timeAdjustment = await _preferencesService.isTimeAdjustmentEnabled();
     final hideIftarTime = await _preferencesService.isHideIftarTimeEnabled();
     final isDarkMode = await _preferencesService.isDarkModeEnabled();
     final selectedJuristic = await _preferencesService.getSelectedJuristic();
     final selectedRamadan = await _preferencesService.getSelectedRamadan();
     final selectedLanguage = await _preferencesService.getSelectedLanguage();
-    
+
     // Update UI state with loaded settings
     uiState.value = currentUiState.copyWith(
       doNotDisturbEnabled: doNotDisturb,
@@ -70,19 +53,21 @@ class SettingsPresenter extends BasePresenter<SettingsUiState> {
       selectedRamadan: selectedRamadan,
       selectedText: selectedLanguage,
     );
-    
+
     // Initialize services with loaded settings
-    _currentPrayerTimePresenter.updateJuristicMethod(selectedJuristic ?? 'Hanafi');
+    _currentPrayerTimePresenter.updateJuristicMethod(
+      selectedJuristic ?? 'Hanafi',
+    );
     _dateService.setCalendarType(selectedRamadan ?? 'Bangladesh');
     _currentPrayerTimePresenter.updateCurrentWaqt(use24HourFormat);
   }
-  
+
   Future<void> _saveSettings() async {
     final state = currentUiState;
     await _preferencesService.saveAllSettings(
       doNotDisturb: state.doNotDisturbEnabled,
       use24HourFormat: state.use24HourFormatEnabled,
-      timeAdjustment: state.timeAdjustmentEnabled, 
+      timeAdjustment: state.timeAdjustmentEnabled,
       hideIftarTime: state.hideIftaarTimeEnabled,
       selectedJuristic: state.selectedJuristic ?? 'Hanafi',
       selectedRamadan: state.selectedRamadan ?? 'Bangladesh',
@@ -190,7 +175,7 @@ class SettingsPresenter extends BasePresenter<SettingsUiState> {
         selectedRamadan: text,
         isExpandedRamadan: false,
       );
-      
+
       // Update the date service with the selected calendar type
       _dateService.setCalendarType(text);
       _preferencesService.setSelectedRamadan(text);

@@ -5,7 +5,9 @@ import 'package:salat_waqt/core/config/salat_waqt_screen.dart';
 import 'package:salat_waqt/core/config/themes.dart';
 import 'package:salat_waqt/core/constant/app_contant.dart';
 import 'package:salat_waqt/core/constant/app_text_styles.dart';
+import 'package:salat_waqt/core/di/service_locator.dart';
 import 'package:salat_waqt/presentation/home/ui/home_page.dart';
+import 'package:salat_waqt/presentation/settings/presenter/setting_presenter.dart';
 
 class SalatWaqt extends StatefulWidget {
   const SalatWaqt({super.key});
@@ -20,8 +22,27 @@ class SalatWaqt extends StatefulWidget {
   State<SalatWaqt> createState() => _SalatWaqtState();
 }
 
-
 class _SalatWaqtState extends State<SalatWaqt> {
+  late ThemeMode _themeMode;
+
+  @override
+  void initState() {
+    super.initState();
+    // Get initial theme mode from settings
+    final settingsPresenter = locator<SettingsPresenter>();
+    _themeMode =
+        settingsPresenter.currentUiState.isDarkMode
+            ? ThemeMode.dark
+            : ThemeMode.light;
+
+    // Listen for theme changes
+    ever(settingsPresenter.uiState, (state) {
+      setState(() {
+        _themeMode = state.isDarkMode ? ThemeMode.dark : ThemeMode.light;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return ResponsiveSizer(
@@ -54,7 +75,6 @@ class _SalatWaqtState extends State<SalatWaqt> {
                             ),
                             child: child!,
                           ); // Add the Builder here
-                          
                         },
                       ),
                     );
@@ -69,7 +89,7 @@ class _SalatWaqtState extends State<SalatWaqt> {
           title: 'Salat Waqt',
           theme: SalatTheme.getTheme('Light', AppTextStyles.inter, 14),
           darkTheme: SalatTheme.getTheme('Dark', AppTextStyles.inter, 14),
-          themeMode: ThemeMode.dark, //use system default, dark, or light
+          themeMode: _themeMode,
           home: const HomePage(),
         );
       },
