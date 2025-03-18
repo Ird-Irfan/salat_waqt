@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -21,207 +23,233 @@ class SettingsPage extends StatelessWidget {
     final SettingsPresenter presenter = locator<SettingsPresenter>();
     final ThemeData theme = Theme.of(context);
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.transparent,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(88.px),
+        child: ClipRRect(child: SettingsAppBar(theme: theme)),
+      ),
       body: PresentableWidgetBuilder(
         presenter: presenter,
         builder: () {
-          return CustomScrollView(
-            slivers: [
-              CustomAppBar(theme: theme),
-              SliverPadding(
-                padding: EdgeInsets.all(16.px),
-                sliver: SliverList(
-                  delegate: SliverChildListDelegate([
-                    Padding(
-                      padding: EdgeInsets.only(
-                        top: 8.px,
-                        bottom: 9.px,
-                        left: 8.px,
-                      ),
-                      child: Text(
-                        'GENERAL',
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontSize: 14.px,
-                          fontFamily: AppTextStyles.inter,
-                          fontWeight: FontWeight.w300,
-                          color: context.color.cardSubtitleColor,
-                        ),
-                      ),
+          return SingleChildScrollView(
+            padding: EdgeInsets.only(
+              left: 16.px,
+              right: 16.px,
+              bottom: 16.px,
+              top: 110.px,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(top: 8.px, bottom: 9.px, left: 8.px),
+                  child: Text(
+                    'GENERAL',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontSize: 14.px,
+                      fontFamily: AppTextStyles.inter,
+                      fontWeight: FontWeight.w300,
+                      color: context.color.cardSubtitleColor,
                     ),
-                    AnimatedExpansion(
-                      theme: theme,
-                      onThemeChanged: (isDark) {
-                        Get.changeThemeMode(
-                          isDark ? ThemeMode.dark : ThemeMode.light,
-                        );
-                      },
-                    ),
-                    SizedBox(height: 12.px),
-                    AnimatedLangCard(
-                      theme: theme,
-                      title: "Select Language",
-                      subtitle: "Current: English",
-                      svgIconPath: AppConstant.icLanguage,
-                      isExpanded: presenter.currentUiState.isExpandedLang,
-                      onCardTap: () => presenter.toggleExpansionLang(),
-                      onTextSelect: (text) => presenter.selectText(text),
-                      selectedText: presenter.currentUiState.selectedText,
-                      selectedTextOne: "English",
-                      selectedTextTwo: "Bangla",
-                    ),
-                    SizedBox(height: 12.px),
-                    IconTextRow(
-                      theme: theme,
-                      title: 'Do Not Disturb',
-                      subtitle: 'Pause All Notifications',
-                      svgIconPath: AppConstant.icDnd,
-                      switchValue: presenter.currentUiState.doNotDisturbEnabled,
-                      onSwitchChanged: (bool value) {
-                        presenter.toggleDoNotDisturb();
-                      },
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        top: 22.px,
-                        bottom: 8.px,
-                        left: 8.px,
-                      ),
-                      child: Text(
-                        'PRAYER TIMES',
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontSize: 14.px,
-                          fontFamily: AppTextStyles.inter,
-                          fontWeight: FontWeight.w400,
-                          color: context.color.cardSubtitleColor,
-                        ),
-                      ),
-                    ),
-                    IconTextRow(
-                      theme: theme,
-                      title: 'Use 24 Hour Format',
-                      subtitle: 'Shown as: 23:44 PM',
-                      svgIconPath: AppConstant.ic24Hour,
-                      switchValue:
-                          presenter.currentUiState.use24HourFormatEnabled,
-                      onSwitchChanged: (bool value) {
-                        presenter.toggleUse24HourFormat(value);
-                      },
-                    ),
-                    SizedBox(height: 12.px),
-                    AnimatedCard(
-                      theme: theme,
-                      title: 'Juristic Method',
-                      subtitle:
-                          'Current: ${presenter.currentUiState.selectedJuristic ?? "Hanafi"}',
-                      svgIconPath: AppConstant.icCalculator,
-                      isExpanded: presenter.currentUiState.isExpandedJuristic,
-                      onCardTap: () => presenter.toggleExpansionJuristic(),
-                      onTextSelect: (text) => presenter.selectJuristic(text),
-                      selectedText: presenter.currentUiState.selectedJuristic,
-                      selectedTextOne: "Hanafi",
-                      selectedTextTwo: "Shafi",
-                    ),
-                    SizedBox(height: 12.px),
-
-                    IconTextRow(
-                      theme: theme,
-                      title: 'Calculation Method',
-                      subtitle: 'Current: Moonsighting Comitte...',
-                      svgIconPath: AppConstant.icCalculator,
-                      hasSwitch: false,
-                    ),
-                    SizedBox(height: 12.px),
-                    IconTextRow(
-                      theme: theme,
-                      title: 'Time Adjustments',
-                      subtitle: 'Adjust Prayer time Notification',
-                      svgIconPath: AppConstant.icClock,
-                      switchValue:
-                          presenter.currentUiState.timeAdjustmentEnabled,
-                      onSwitchChanged: (bool value) {
-                        presenter.toggleTimeAdjustment(value);
-                      },
-                    ),
-                    SizedBox(height: 12.px),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        top: 22.px,
-                        bottom: 8.px,
-                        left: 8.px,
-                      ),
-                      child: Text(
-                        'RAMADAN TIMES',
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontSize: 14.px,
-                          fontFamily: AppTextStyles.inter,
-                          fontWeight: FontWeight.w400,
-                          color: context.color.cardSubtitleColor,
-                        ),
-                      ),
-                    ),
-                    AnimatedCard(
-                      theme: theme,
-                      title: 'Calender Type',
-                      subtitle: 'Current: Bangladesh',
-                      svgIconPath: AppConstant.icIslamicCalender,
-                      isExpanded: presenter.currentUiState.isExpandedRamadan,
-                      onCardTap: () => presenter.toggleExpansionRamadan(),
-                      onTextSelect: (text) => presenter.selectRamadan(text),
-                      selectedText: presenter.currentUiState.selectedRamadan,
-                      selectedTextOne: "Bangladesh",
-                      selectedTextTwo: "Umm Al-Qura",
-                    ),
-                    SizedBox(height: 12.px),
-                    IconTextRow(
-                      theme: theme,
-                      title: 'Hide Iftar & Sahri Time',
-                      subtitle: 'Hides from homepage',
-                      svgIconPath: AppConstant.icEye,
-                      switchValue:
-                          presenter.currentUiState.hideIftaarTimeEnabled,
-                      onSwitchChanged: (bool value) {
-                        presenter.toggleHideIftaarTime();
-                      },
-                    ),
-                    SizedBox(height: 12.px),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        top: 22.px,
-                        bottom: 8.px,
-                        left: 8.px,
-                      ),
-                      child: Text(
-                        'RAMADAN TIMES',
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontSize: 14.px,
-                          fontFamily: AppTextStyles.inter,
-                          fontWeight: FontWeight.w400,
-                          color: context.color.cardSubtitleColor,
-                        ),
-                      ),
-                    ),
-
-                    IconTextRow(
-                      theme: theme,
-                      title: 'About Us',
-                      subtitle: 'www.irdfoundation.com',
-                      svgIconPath: AppConstant.icLayer,
-                      hasSwitch: false,
-                      titleFontSize: 14,
-                    ),
-                    SizedBox(height: 12.px),
-                    IconTextRow(
-                      theme: theme,
-                      title: 'Calculation Method',
-                      subtitle: 'Current: Moonsighting Comitte...',
-                      svgIconPath: AppConstant.icReview,
-                      hasSwitch: false,
-                    ),
-                  ]),
+                  ),
                 ),
-              ),
-            ],
+                AnimatedExpansion(
+                  theme: theme,
+                  onThemeChanged: (isDark) {
+                    Get.changeThemeMode(
+                      isDark ? ThemeMode.dark : ThemeMode.light,
+                    );
+                  },
+                ),
+                SizedBox(height: 12.px),
+                AnimatedLangCard(
+                  theme: theme,
+                  title: "Select Language",
+                  subtitle: "Current: English",
+                  svgIconPath: AppConstant.icLanguage,
+                  isExpanded: presenter.currentUiState.isExpandedLang,
+                  onCardTap: () => presenter.toggleExpansionLang(),
+                  onTextSelect: (text) => presenter.selectText(text),
+                  selectedText: presenter.currentUiState.selectedText,
+                  selectedTextOne: "English",
+                  selectedTextTwo: "Bangla",
+                ),
+                SizedBox(height: 12.px),
+                IconTextRow(
+                  theme: theme,
+                  title: 'Do Not Disturb',
+                  subtitle: 'Pause All Notifications',
+                  svgIconPath: AppConstant.icDnd,
+                  switchValue: presenter.currentUiState.doNotDisturbEnabled,
+                  onSwitchChanged: (bool value) {
+                    presenter.toggleDoNotDisturb();
+                  },
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                    top: 22.px,
+                    bottom: 8.px,
+                    left: 8.px,
+                  ),
+                  child: Text(
+                    'PRAYER TIMES',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontSize: 14.px,
+                      fontFamily: AppTextStyles.inter,
+                      fontWeight: FontWeight.w400,
+                      color: context.color.cardSubtitleColor,
+                    ),
+                  ),
+                ),
+                IconTextRow(
+                  theme: theme,
+                  title: 'Use 24 Hour Format',
+                  subtitle: 'Shown as: 23:44 PM',
+                  svgIconPath: AppConstant.ic24Hour,
+                  switchValue: presenter.currentUiState.use24HourFormatEnabled,
+                  onSwitchChanged: (bool value) {
+                    presenter.toggleUse24HourFormat(value);
+                  },
+                ),
+                SizedBox(height: 12.px),
+                AnimatedCard(
+                  theme: theme,
+                  title: 'Juristic Method',
+                  subtitle:
+                      'Current: ${presenter.currentUiState.selectedJuristic ?? "Hanafi"}',
+                  svgIconPath: AppConstant.icCalculator,
+                  isExpanded: presenter.currentUiState.isExpandedJuristic,
+                  onCardTap: () => presenter.toggleExpansionJuristic(),
+                  onTextSelect: (text) => presenter.selectJuristic(text),
+                  selectedText: presenter.currentUiState.selectedJuristic,
+                  selectedTextOne: "Hanafi",
+                  selectedTextTwo: "Shafi",
+                ),
+                SizedBox(height: 12.px),
+
+                IconTextRow(
+                  theme: theme,
+                  title: 'Calculation Method',
+                  subtitle: 'Current: Moonsighting Comitte...',
+                  svgIconPath: AppConstant.icCalculator,
+                  hasSwitch: false,
+                ),
+                SizedBox(height: 12.px),
+                IconTextRow(
+                  theme: theme,
+                  title: 'Time Adjustments',
+                  subtitle: 'Adjust Prayer time Notification',
+                  svgIconPath: AppConstant.icClock,
+                  switchValue: presenter.currentUiState.timeAdjustmentEnabled,
+                  onSwitchChanged: (bool value) {
+                    presenter.toggleTimeAdjustment(value);
+                  },
+                ),
+                SizedBox(height: 12.px),
+                Padding(
+                  padding: EdgeInsets.only(
+                    top: 22.px,
+                    bottom: 8.px,
+                    left: 8.px,
+                  ),
+                  child: Text(
+                    'RAMADAN TIMES',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontSize: 14.px,
+                      fontFamily: AppTextStyles.inter,
+                      fontWeight: FontWeight.w400,
+                      color: context.color.cardSubtitleColor,
+                    ),
+                  ),
+                ),
+                AnimatedCard(
+                  theme: theme,
+                  title: 'Calender Type',
+                  subtitle: 'Current: Bangladesh',
+                  svgIconPath: AppConstant.icIslamicCalender,
+                  isExpanded: presenter.currentUiState.isExpandedRamadan,
+                  onCardTap: () => presenter.toggleExpansionRamadan(),
+                  onTextSelect: (text) => presenter.selectRamadan(text),
+                  selectedText: presenter.currentUiState.selectedRamadan,
+                  selectedTextOne: "Bangladesh",
+                  selectedTextTwo: "Umm Al-Qura",
+                ),
+                SizedBox(height: 12.px),
+                IconTextRow(
+                  theme: theme,
+                  title: 'Hide Iftar & Sahri Time',
+                  subtitle: 'Hides from homepage',
+                  svgIconPath: AppConstant.icEye,
+                  switchValue: presenter.currentUiState.hideIftaarTimeEnabled,
+                  onSwitchChanged: (bool value) {
+                    presenter.toggleHideIftaarTime();
+                  },
+                ),
+                SizedBox(height: 12.px),
+                Padding(
+                  padding: EdgeInsets.only(
+                    top: 22.px,
+                    bottom: 8.px,
+                    left: 8.px,
+                  ),
+                  child: Text(
+                    'RAMADAN TIMES',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontSize: 14.px,
+                      fontFamily: AppTextStyles.inter,
+                      fontWeight: FontWeight.w400,
+                      color: context.color.cardSubtitleColor,
+                    ),
+                  ),
+                ),
+
+                IconTextRow(
+                  theme: theme,
+                  title: 'About Us',
+                  subtitle: 'www.irdfoundation.com',
+                  svgIconPath: AppConstant.icLayer,
+                  hasSwitch: false,
+                  titleFontSize: 14,
+                ),
+                SizedBox(height: 12.px),
+                IconTextRow(
+                  theme: theme,
+                  title: 'Calculation Method',
+                  subtitle: 'Current: Moonsighting Comitte...',
+                  svgIconPath: AppConstant.icReview,
+                  hasSwitch: false,
+                ),
+              ],
+            ),
           );
         },
+      ),
+    );
+  }
+}
+
+class SettingsAppBar extends StatelessWidget {
+  const SettingsAppBar({super.key, required this.theme});
+
+  final ThemeData theme;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment(0.50, 0.00),
+          end: Alignment(0.50, 1.00),
+          colors: [
+            context.color.appBarBgColor.withOpacityInt(0.2),
+            context.color.appBarBgColor.withOpacityInt(0.0),
+          ],
+        ),
+      ),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+        child: CustomAppBar(theme: theme),
       ),
     );
   }
