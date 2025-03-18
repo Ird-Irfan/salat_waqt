@@ -51,31 +51,38 @@ class HomePresenter extends BasePresenter<HomeUiState> {
     super.onInit();
     _settingsPresenter = locator();
     _initializeData();
-    
-    // Listen for changes in 24-hour format setting
+
+    // Listen for changes in settings
     ever(_settingsPresenter.uiState, (_) {
       // Reformat prayer times when 24-hour setting changes
       if (currentUiState.prayerTimes != null) {
         _reformatPrayerTimesFor24Hour();
       }
+
+      // Update dates when calendar type changes
+      if (currentUiState.calendarType != _settingsPresenter.currentUiState.selectedRamadan) {
+        // Initialize calendar type from settings on first run
+        _updateDates();
+        uiState.value = uiState.value.copyWith(
+          calendarType: _settingsPresenter.currentUiState.selectedRamadan,
+        );
+      }
     });
   }
-  
+
   // Format prayer times based on 24-hour format setting
   void _reformatPrayerTimesFor24Hour() {
     if (currentUiState.prayerTimes == null) return;
-    
+
     try {
       final is24Hour = _settingsPresenter.currentUiState.use24HourFormatEnabled;
       final reformattedTimes = _prayerTimeService.reformatPrayerTimes(
         Map<String, String>.from(currentUiState.prayerTimes!),
-        is24Hour
+        is24Hour,
       );
-      
-      uiState.value = uiState.value.copyWith(
-        prayerTimes: reformattedTimes
-      );
-      
+
+      uiState.value = uiState.value.copyWith(prayerTimes: reformattedTimes);
+
       // Update dependent times
       updateCurrentWaqt();
       _updateRemainingTime();
@@ -101,10 +108,21 @@ class HomePresenter extends BasePresenter<HomeUiState> {
 
   // Update dates (English and Hijri)
   void _updateDates() {
+    // Make sure the DateService has the latest calendar type
+    if (_settingsPresenter.currentUiState.selectedRamadan != null) {
+      _dateService.setCalendarType(_settingsPresenter.currentUiState.selectedRamadan!);
+    }
+    
     uiState.value = uiState.value.copyWith(
       englishDate: _dateService.getEnglishDate(),
       arabicDate: _dateService.getArabicDate(),
+      calendarType: _settingsPresenter.currentUiState.selectedRamadan,
     );
+  }
+
+  // Public method to force date update
+  void forceUpdateDates() {
+    _updateDates();
   }
 
   // Start timer to update remaining time
@@ -535,11 +553,12 @@ class HomePresenter extends BasePresenter<HomeUiState> {
     _dateService.setEnglishDate(nextDate);
     _updateDates();
   }
-  
+
   // Handle date selection from date picker
   Future<void> selectDate(DateTime selectedDate) async {
     // Convert DateTime to string format expected by _dateService
-    String formattedDate = "${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}";
+    String formattedDate =
+        "${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}";
     _dateService.setEnglishDate(formattedDate);
     _updateDates();
   }

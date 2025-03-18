@@ -27,6 +27,16 @@ class PreferencesService {
   static const String _keyLatitude = 'latitude';
   static const String _keyLongitude = 'longitude';
   static const String _keyDefaultLocation = 'default_location';
+  
+  // Settings keys
+  static const String _keyDoNotDisturb = 'do_not_disturb';
+  static const String _keyUse24HourFormat = 'use_24_hour_format';
+  static const String _keyTimeAdjustment = 'time_adjustment';
+  static const String _keyHideIftarTime = 'hide_iftar_time';
+  static const String _keySelectedLanguage = 'selected_language';
+  static const String _keySelectedJuristic = 'selected_juristic';
+  static const String _keySelectedRamadan = 'selected_ramadan';
+  static const String _keyIsDarkMode = 'is_dark_mode';
 
   // Methods for first run state
   Future<bool> isFirstRun() async {
@@ -129,6 +139,112 @@ class PreferencesService {
   Future<bool> hasLocationConfigured() async {
     _assertInit();
     return _preferences!.containsKey(_keyLocationEnabled);
+  }
+
+  // Settings page methods
+  Future<bool> isDoNotDisturbEnabled() async {
+    _assertInit();
+    return _preferences!.getBool(_keyDoNotDisturb) ?? false;
+  }
+
+  Future<void> setDoNotDisturb(bool value) async {
+    _assertInit();
+    await _preferences!.setBool(_keyDoNotDisturb, value);
+  }
+
+  Future<bool> isUse24HourFormatEnabled() async {
+    _assertInit();
+    return _preferences!.getBool(_keyUse24HourFormat) ?? false;
+  }
+
+  Future<void> setUse24HourFormat(bool value) async {
+    _assertInit();
+    await _preferences!.setBool(_keyUse24HourFormat, value);
+  }
+
+  Future<bool> isTimeAdjustmentEnabled() async {
+    _assertInit();
+    return _preferences!.getBool(_keyTimeAdjustment) ?? false;
+  }
+
+  Future<void> setTimeAdjustment(bool value) async {
+    _assertInit();
+    await _preferences!.setBool(_keyTimeAdjustment, value);
+  }
+
+  Future<bool> isHideIftarTimeEnabled() async {
+    _assertInit();
+    return _preferences!.getBool(_keyHideIftarTime) ?? false;
+  }
+
+  Future<void> setHideIftarTime(bool value) async {
+    _assertInit();
+    await _preferences!.setBool(_keyHideIftarTime, value);
+  }
+
+  Future<String?> getSelectedLanguage() async {
+    _assertInit();
+    return _preferences!.getString(_keySelectedLanguage);
+  }
+
+  Future<void> setSelectedLanguage(String language) async {
+    _assertInit();
+    await _preferences!.setString(_keySelectedLanguage, language);
+  }
+
+  Future<String?> getSelectedJuristic() async {
+    _assertInit();
+    return _preferences!.getString(_keySelectedJuristic) ?? 'Hanafi';
+  }
+
+  Future<void> setSelectedJuristic(String juristic) async {
+    _assertInit();
+    await _preferences!.setString(_keySelectedJuristic, juristic);
+  }
+
+  Future<String?> getSelectedRamadan() async {
+    _assertInit();
+    return _preferences!.getString(_keySelectedRamadan) ?? 'Bangladesh';
+  }
+
+  Future<void> setSelectedRamadan(String ramadan) async {
+    _assertInit();
+    await _preferences!.setString(_keySelectedRamadan, ramadan);
+  }
+
+  Future<bool> isDarkModeEnabled() async {
+    _assertInit();
+    return _preferences!.getBool(_keyIsDarkMode) ?? false;
+  }
+
+  Future<void> setDarkMode(bool value) async {
+    _assertInit();
+    await _preferences!.setBool(_keyIsDarkMode, value);
+  }
+
+  // Save all settings at once
+  Future<void> saveAllSettings({
+    required bool doNotDisturb,
+    required bool use24HourFormat,
+    required bool timeAdjustment,
+    required bool hideIftarTime,
+    required String selectedJuristic,
+    required String selectedRamadan,
+    required bool isDarkMode,
+    String? selectedLanguage,
+  }) async {
+    _assertInit();
+    await _preferences!.setBool(_keyDoNotDisturb, doNotDisturb);
+    await _preferences!.setBool(_keyUse24HourFormat, use24HourFormat);
+    await _preferences!.setBool(_keyTimeAdjustment, timeAdjustment);
+    await _preferences!.setBool(_keyHideIftarTime, hideIftarTime);
+    await _preferences!.setBool(_keyIsDarkMode, isDarkMode);
+    await _preferences!.setString(_keySelectedJuristic, selectedJuristic);
+    await _preferences!.setString(_keySelectedRamadan, selectedRamadan);
+    
+    if (selectedLanguage != null) {
+      await _preferences!.setString(_keySelectedLanguage, selectedLanguage);
+    }
   }
 
   // Clear all preferences (for logout or reset)

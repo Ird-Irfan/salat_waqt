@@ -142,7 +142,9 @@ class ServiceLocator {
       () => ForbiddenTimePresenter(),
     );
     _serviceLocator.registerLazySingleton<SettingsPresenter>(
-      () => SettingsPresenter(currentPrayerTimePresenter: locator()),
+      () => SettingsPresenter(
+        currentPrayerTimePresenter: locator(),
+      ),
     );
   }
 }

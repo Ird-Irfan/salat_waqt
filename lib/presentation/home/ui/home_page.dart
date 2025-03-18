@@ -91,11 +91,6 @@ class HomePage extends StatelessWidget {
                             padding: EdgeInsets.symmetric(horizontal: 14.px),
                             child: DateDisplay(
                               theme: theme,
-                              englishDate:
-                                  presenter.currentUiState.englishDate ?? '',
-                              arabicDate:
-                                  presenter.currentUiState.arabicDate ?? '',
-                              presenter: presenter,
                             ),
                           ),
                           // Iftar Time Counter - Only show if hideIftaarTimeEnabled is false

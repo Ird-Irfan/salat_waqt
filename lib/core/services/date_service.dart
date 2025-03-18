@@ -4,6 +4,19 @@ import 'package:hijri/hijri_calendar.dart';
 class DateService {
   // Current date offset in days (0 = today, -1 = yesterday, 1 = tomorrow)
   int _currentDateOffset = 0;
+  
+  // Calendar type: 'Bangladesh' or 'Umm Al-Qura'
+  String _calendarType = 'Bangladesh';
+  
+  // Set calendar type
+  void setCalendarType(String type) {
+    _calendarType = type;
+  }
+  
+  // Get calendar type
+  String getCalendarType() {
+    return _calendarType;
+  }
 
   // Get formatted English date
   String getEnglishDate() {
@@ -16,10 +29,20 @@ class DateService {
     DateTime adjustedDate = DateTime.now().add(
       Duration(days: _currentDateOffset),
     );
-    HijriCalendar hijri = HijriCalendar.fromDate(
-      adjustedDate.subtract(Duration(days: 1)),
-    );
-    return hijri.toFormat("dd MMMM yyyy");
+    
+    // For Bangladesh, show normal Hijri date
+    // For Umm Al-Qura, subtract 1 day from the Hijri date
+    if (_calendarType == 'Bangladesh') {
+      // Bangladesh shows the standard date
+     HijriCalendar hijri = HijriCalendar.fromDate(
+        adjustedDate.subtract(Duration(days: 1)),
+      );
+      return hijri.toFormat("dd MMMM yyyy");
+    } else {
+      // Umm Al-Qura subtracts one day
+      HijriCalendar hijri = HijriCalendar.fromDate(adjustedDate);
+      return hijri.toFormat("dd MMMM yyyy");
+    }
   }
 
   // Get current date in format yyyy-MM-dd

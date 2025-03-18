@@ -25,6 +25,7 @@ class HomeUiState extends BaseUiState {
   final bool isInForbiddenTime;
   final String? currentForbiddenPeriod;
   final String? currentForbiddenTimeRange;
+  final String? calendarType;
 
   const HomeUiState({
     required super.userMessage,
@@ -51,6 +52,7 @@ class HomeUiState extends BaseUiState {
     this.isInForbiddenTime = false,
     this.currentForbiddenPeriod,
     this.currentForbiddenTimeRange,
+    this.calendarType,
   });
 
   factory HomeUiState.empty() {
@@ -79,6 +81,7 @@ class HomeUiState extends BaseUiState {
       isInForbiddenTime: false,
       currentForbiddenPeriod: null,
       currentForbiddenTimeRange: null,
+      calendarType: 'Bangladesh',
     );
   }
 
@@ -107,6 +110,7 @@ class HomeUiState extends BaseUiState {
     isInForbiddenTime,
     currentForbiddenPeriod,
     currentForbiddenTimeRange,
+    calendarType,
   ];
 
   HomeUiState copyWith({
@@ -134,6 +138,7 @@ class HomeUiState extends BaseUiState {
     bool? isInForbiddenTime,
     String? currentForbiddenPeriod,
     String? currentForbiddenTimeRange,
+    String? calendarType,
   }) {
     return HomeUiState(
       currentAddress: currentAddress ?? this.currentAddress,
@@ -165,6 +170,7 @@ class HomeUiState extends BaseUiState {
           currentForbiddenPeriod ?? this.currentForbiddenPeriod,
       currentForbiddenTimeRange:
           currentForbiddenTimeRange ?? this.currentForbiddenTimeRange,
+      calendarType: calendarType ?? this.calendarType,
     );
   }
 }

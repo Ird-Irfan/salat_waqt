@@ -59,7 +59,7 @@ class SettingsUiState extends BaseUiState {
       isExpandedJuristic: false,
       selectedJuristic: 'Hanafi',
       isExpandedRamadan: false,
-      selectedRamadan: null,
+      selectedRamadan: 'Bangladesh',
     );
   }
 

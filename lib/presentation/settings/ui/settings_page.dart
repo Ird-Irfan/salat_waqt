@@ -161,7 +161,7 @@ class SettingsPage extends StatelessWidget {
                     AnimatedCard(
                       theme: theme,
                       title: 'Calender Type',
-                      subtitle: 'Current: Bangladesh',
+                      subtitle: presenter.currentUiState.selectedRamadan ?? "Bangladesh",
                       svgIconPath: AppConstant.icIslamicCalender,
                       isExpanded: presenter.currentUiState.isExpandedRamadan,
                       onCardTap: () => presenter.toggleExpansionRamadan(),
