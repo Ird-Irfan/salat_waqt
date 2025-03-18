@@ -535,4 +535,12 @@ class HomePresenter extends BasePresenter<HomeUiState> {
     _dateService.setEnglishDate(nextDate);
     _updateDates();
   }
+  
+  // Handle date selection from date picker
+  Future<void> selectDate(DateTime selectedDate) async {
+    // Convert DateTime to string format expected by _dateService
+    String formattedDate = "${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}";
+    _dateService.setEnglishDate(formattedDate);
+    _updateDates();
+  }
 }

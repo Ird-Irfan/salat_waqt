@@ -41,7 +41,7 @@ class DateDisplay extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             InkWell(
-              overlayColor: MaterialStateProperty.all(Colors.transparent),
+              overlayColor: WidgetStateProperty.all(Colors.transparent),
               splashColor: Colors.transparent,
               onTap: () {
                 presenter.previousDate();
@@ -53,29 +53,64 @@ class DateDisplay extends StatelessWidget {
                 color: context.color.cardTitleColor,
               ),
             ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  presenter.currentUiState.arabicDate ?? '',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    color: context.color.cardTitleColor,
-                    fontSize: 18.px,
-                    fontWeight: FontWeight.w500,
-                    fontFamily: AppTextStyles.inter,
+            InkWell(
+              overlayColor: WidgetStateProperty.all(Colors.transparent),
+              splashColor: Colors.transparent,
+              onTap: () {
+                showDatePicker(
+                  context: context,
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime(2000),
+                  lastDate: DateTime(2100),
+                  builder: (context, child) {
+                    return Theme(
+                      data: Theme.of(context).copyWith(
+                        datePickerTheme: DatePickerThemeData(
+                          backgroundColor: context.color.appBarBgColor,
+                          dayForegroundColor: WidgetStateProperty.all(
+                            Colors.amberAccent,
+                          ),
+                          dayOverlayColor: WidgetStateProperty.all(
+                            Colors.amberAccent,
+                          ),
+                          yearForegroundColor: WidgetStateProperty.all(
+                            Colors.amberAccent,
+                          ),
+                        ),
+                      ),
+                      child: child!,
+                    );
+                  },
+                ).then((selectedDate) {
+                  if (selectedDate != null) {
+                    presenter.selectDate(selectedDate);
+                  }
+                });
+              },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    presenter.currentUiState.arabicDate ?? '',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      color: context.color.cardTitleColor,
+                      fontSize: 18.px,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: AppTextStyles.inter,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  presenter.currentUiState.englishDate ?? '',
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: context.color.cardSubtitleColor,
-                    fontSize: 14.px,
-                    fontWeight: FontWeight.w400,
-                    fontFamily: AppTextStyles.inter,
+                  const SizedBox(height: 8),
+                  Text(
+                    presenter.currentUiState.englishDate ?? '',
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: context.color.cardSubtitleColor,
+                      fontSize: 14.px,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: AppTextStyles.inter,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             InkWell(
               overlayColor: MaterialStateProperty.all(Colors.transparent),
