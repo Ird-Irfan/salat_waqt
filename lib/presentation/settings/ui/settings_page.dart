@@ -26,7 +26,9 @@ class SettingsPage extends StatelessWidget {
         builder: () {
           return CustomScrollView(
             slivers: [
-              CustomAppBar(theme: theme),
+              SliverToBoxAdapter(
+                child: CustomAppBar(theme: theme),
+              ),
               SliverPadding(
                 padding: EdgeInsets.all(16.px),
                 sliver: SliverList(
