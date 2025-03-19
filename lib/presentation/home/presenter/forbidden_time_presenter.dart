@@ -20,6 +20,7 @@ class ForbiddenTimePresenter extends BasePresenter
       timerService: locator(),
       preferencesService: locator(),
       logger: locator(),
+      getCountriesUseCase: locator(),
     ),
   );
   final PrayerTimeService _prayerTimeService = locator();

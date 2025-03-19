@@ -7,15 +7,21 @@ import 'package:salat_waqt/core/services/notification_service_impl.dart';
 import 'package:salat_waqt/core/services/prayer_time_service.dart';
 import 'package:salat_waqt/core/services/preferences_service.dart';
 import 'package:salat_waqt/core/services/timer_service.dart';
+import 'package:salat_waqt/data/data_sources/local/country_local_data_source.dart';
 import 'package:salat_waqt/data/data_sources/remote/location_data_source.dart';
 import 'package:salat_waqt/data/data_sources/remote/prayer_time_data_source.dart';
+import 'package:salat_waqt/data/repositories/country_repository_impl.dart';
 import 'package:salat_waqt/data/repositories/location_repository_impl.dart';
 import 'package:salat_waqt/data/repositories/prayer_time_repository_impl.dart';
+import 'package:salat_waqt/domain/repositories/country_repository.dart';
 import 'package:salat_waqt/domain/repositories/location_repository.dart';
 import 'package:salat_waqt/domain/repositories/prayer_time_repository.dart';
+import 'package:salat_waqt/domain/service/error_message_handler.dart';
+import 'package:salat_waqt/domain/service/error_message_handler_impl.dart';
 import 'package:salat_waqt/domain/service/notification_service.dart';
 import 'package:salat_waqt/domain/usecases/get_address_from_coordinates_usecase.dart';
 import 'package:salat_waqt/domain/usecases/get_coordinates_from_address_usecase.dart';
+import 'package:salat_waqt/domain/usecases/get_countries_usecase.dart';
 import 'package:salat_waqt/domain/usecases/get_current_location_usecase.dart';
 import 'package:salat_waqt/domain/usecases/get_prayer_times_usecase.dart';
 import 'package:salat_waqt/presentation/Onboarding/presenter/flash_screen_presenter.dart';
@@ -50,6 +56,11 @@ class ServiceLocator {
     _serviceLocator.registerSingleton<TimerService>(TimerService());
     _serviceLocator.registerSingleton<LoggerService>(LoggerService());
     _serviceLocator.registerSingleton<DateService>(DateService());
+    
+    // Register ErrorMessageHandler
+    _serviceLocator.registerSingleton<ErrorMessageHandler>(
+      ErrorMessageHandlerImpl(),
+    );
 
     // Initialize notification service
     final notificationServiceImpl = NotificationServiceImpl(
@@ -69,6 +80,9 @@ class ServiceLocator {
     _serviceLocator.registerLazySingleton<PrayerTimeDataSource>(
       () => PrayerTimeDataSourceImpl(),
     );
+    _serviceLocator.registerLazySingleton<CountryLocalDataSource>(
+      () => CountryLocalDataSource(),
+    );
   }
 
   // Register repositories (depend on data sources)
@@ -78,6 +92,9 @@ class ServiceLocator {
     );
     _serviceLocator.registerLazySingleton<PrayerTimeRepository>(
       () => PrayerTimeRepositoryImpl(prayerTimeDataSource: locator()),
+    );
+    _serviceLocator.registerLazySingleton<CountryRepository>(
+      () => CountryRepositoryImpl(locator()),
     );
   }
 
@@ -94,6 +111,12 @@ class ServiceLocator {
     );
     _serviceLocator.registerLazySingleton<GetPrayerTimesUseCase>(
       () => GetPrayerTimesUseCase(repository: locator()),
+    );
+    _serviceLocator.registerLazySingleton<GetCountriesUseCase>(
+      () => GetCountriesUseCase(
+        locator<CountryRepository>(), 
+        locator<ErrorMessageHandler>(),
+      ),
     );
   }
 
@@ -126,6 +149,7 @@ class ServiceLocator {
         timerService: locator(),
         preferencesService: locator(),
         logger: locator(),
+        getCountriesUseCase: locator(),
       ),
     );
 

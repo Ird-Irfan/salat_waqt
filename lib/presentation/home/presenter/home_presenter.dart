@@ -10,6 +10,8 @@ import 'package:salat_waqt/core/services/logger_service.dart';
 import 'package:salat_waqt/core/services/prayer_time_service.dart';
 import 'package:salat_waqt/core/services/preferences_service.dart';
 import 'package:salat_waqt/core/services/timer_service.dart';
+import 'package:salat_waqt/domain/entities/country_entity.dart';
+import 'package:salat_waqt/domain/usecases/get_countries_usecase.dart';
 import 'package:salat_waqt/presentation/home/presenter/home_ui_state.dart';
 import 'package:salat_waqt/presentation/settings/presenter/setting_presenter.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -30,6 +32,7 @@ class HomePresenter extends BasePresenter<HomeUiState> {
   final LoggerService _logger;
   // Use settings presenter to get 24-hour format preference
   late final SettingsPresenter _settingsPresenter;
+  final GetCountriesUseCase _getCountriesUseCase;
 
   // Constructor
   HomePresenter({
@@ -39,11 +42,13 @@ class HomePresenter extends BasePresenter<HomeUiState> {
     required TimerService timerService,
     required PreferencesService preferencesService,
     required LoggerService logger,
+    required GetCountriesUseCase getCountriesUseCase,
   }) : _locationService = locationService,
        _prayerTimeService = prayerTimeService,
        _dateService = dateService,
        _timerService = timerService,
-       _logger = logger;
+       _logger = logger,
+       _getCountriesUseCase = getCountriesUseCase;
 
   // Lifecycle methods
   @override
@@ -90,6 +95,7 @@ class HomePresenter extends BasePresenter<HomeUiState> {
       _logger.e('Error reformatting prayer times for 24-hour format', e);
     }
   }
+
 
   @override
   void onClose() {
@@ -531,6 +537,75 @@ class HomePresenter extends BasePresenter<HomeUiState> {
       _logger.e('Error loading default location', e);
     }
   }
+
+  String showLocationName() {
+    return currentUiState.currentAddress ?? '';
+  }
+
+  
+
+  void showSelectLocationBottomSheet() {
+    // SelectLocationBottomsheet.show(
+    //   context: currentUiState.context!,
+    // );
+  }
+
+  void onManualLocationSelected({required bool isManualLocationSelected}) {
+    uiState.value = currentUiState.copyWith(
+        isManualLocationSelected: isManualLocationSelected);
+  }
+
+  void onUseCurrentLocationSelected() async {
+    onManualLocationSelected(isManualLocationSelected: false);
+    await _loadCurrentLocation();
+  }
+
+  void onSaveLocationSelected() {
+    Get.back();
+    clearControllers();
+  }
+
+  void clearControllers() {
+    // countryController.clear();
+    // cityController.clear();
+  }
+
+  Future<void> get loadCountries => _loadCountries();
+
+  Future<void> _loadCountries() async {
+    await executeTaskWithLoading(() async {
+      await parseDataFromEitherWithUserMessage(
+        task: () => _getCountriesUseCase.execute(),
+        onDataLoaded: (List<CountryNameEntity> countries) {
+          uiState.value = currentUiState.copyWith(countries: countries);
+        },
+      );
+    });
+  }
+
+
+
+  // In settings_page_presenter.dart - Update onCitySearchQueryChanged
+
+  //
+  
+  void onCountrySelected({required CountryNameEntity country}) {
+    clearControllers();
+    uiState.value = currentUiState.copyWith(
+      selectedCountry: country.name,
+      selectedCountryCities: country.cities,
+      selectedCity: '',
+    );
+    // countryController.text = country.name;
+  }
+
+  void onCitySelected({required CityNameEntity city}) {
+    clearControllers();
+    uiState.value = currentUiState.copyWith(
+      selectedCity: city.name,
+    );
+  }
+
 
   Future<void> launchUrls(String url) async {
     if (await launchUrl(Uri.parse(url))) {

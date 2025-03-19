@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:salat_waqt/core/base/base_presenter.dart';
+import 'package:salat_waqt/core/di/service_locator.dart';
 import 'package:salat_waqt/core/utility/utility.dart';
 import 'package:salat_waqt/presentation/common/widgets/custom_divider.dart';
 import 'package:salat_waqt/presentation/home/presenter/bottom_sheet_presenter.dart';
+import 'package:salat_waqt/presentation/home/presenter/home_presenter.dart';
 
 class SetLocationBottomSheet extends StatelessWidget {
   const SetLocationBottomSheet({super.key});
@@ -14,13 +16,18 @@ class SetLocationBottomSheet extends StatelessWidget {
     final BottomSheetPresenter presenter = loadPresenter(
       BottomSheetPresenter(),
     );
+    final HomePresenter homePresenter = locator<HomePresenter>();
+    
+    // Load countries when bottom sheet is opened
+    homePresenter.loadCountries;
+    
     final theme = Theme.of(context);
 
     return Container(
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
-      child: Container(
+      child: Obx(() => Container(
         decoration: BoxDecoration(
           gradient: RadialGradient(
             center: const Alignment(0.93, 1.20),
@@ -59,7 +66,11 @@ class SetLocationBottomSheet extends StatelessWidget {
               presenter: presenter,
               isAutomatic: true,
               title: 'Automatic Selection',
-              subtitle: 'Dhaka, Bangladesh',
+              subtitle: homePresenter.showLocationName(),
+              onTap: () {
+                presenter.setAutomaticSelection(true);
+                homePresenter.onUseCurrentLocationSelected();
+              },
             ),
 
             SizedBox(height: 16.px),
@@ -72,46 +83,32 @@ class SetLocationBottomSheet extends StatelessWidget {
               presenter: presenter,
               isAutomatic: false,
               title: 'Enter Manually',
+              onTap: () {
+                presenter.setAutomaticSelection(false);
+                homePresenter.onManualLocationSelected(isManualLocationSelected: true);
+              },
             ),
 
             SizedBox(height: 16.px),
 
             // Country Dropdown - Only enabled when manual selection is active
-            _buildDropdown(
+            _buildCountryDropdown(
               context: context,
               presenter: presenter,
-              hintText: 'Select Country',
-              items: const [
-                DropdownMenuItem(
-                  value: 'Bangladesh',
-                  child: Text('Bangladesh'),
-                ),
-                DropdownMenuItem(value: 'India', child: Text('India')),
-              ],
-              onChanged: (value) {
-                presenter.selectOption(value ?? '');
-              },
+              homePresenter: homePresenter,
               enabled: !presenter.currentUiState.isAutomaticSelection,
             ),
 
             SizedBox(height: 16.px),
 
-            // City Dropdown - Only enabled when manual selection is active
-            _buildDropdown(
+            // City Dropdown - Only enabled when manual selection is active and country is selected
+            _buildCityDropdown(
               context: context,
               presenter: presenter,
-              hintText: 'Select City',
-              items: const [
-                DropdownMenuItem(value: 'Dhaka', child: Text('Dhaka')),
-                DropdownMenuItem(
-                  value: 'Chittagong',
-                  child: Text('Chittagong'),
-                ),
-              ],
-              onChanged: (value) {
-                presenter.selectOption(value ?? '');
-              },
-              enabled: !presenter.currentUiState.isAutomaticSelection,
+              homePresenter: homePresenter,
+              enabled: !presenter.currentUiState.isAutomaticSelection && 
+                      homePresenter.currentUiState.selectedCountry != null &&
+                      homePresenter.currentUiState.selectedCountry!.isNotEmpty,
             ),
 
             // Buttons
@@ -133,17 +130,25 @@ class SetLocationBottomSheet extends StatelessWidget {
                   text: 'Confirm',
                   isCancel: false,
                   onPressed: () {
-                    presenter.setAutomaticSelection(
-                      !presenter.currentUiState.isAutomaticSelection,
-                    );
-                    Get.back();
+                    if (!presenter.currentUiState.isAutomaticSelection) {
+                      if (homePresenter.currentUiState.selectedCountry != null &&
+                          homePresenter.currentUiState.selectedCity != null) {
+                        // Use selected city/country to change location
+                        final country = homePresenter.currentUiState.selectedCountry;
+                        final city = homePresenter.currentUiState.selectedCity;
+                        if (country != null && city != null) {
+                          homePresenter.changeLocation('$city, $country');
+                        }
+                      }
+                    }
+                    homePresenter.onSaveLocationSelected();
                   },
                 ),
               ],
             ),
           ],
         ),
-      ),
+      )),
     );
   }
 
@@ -153,6 +158,7 @@ class SetLocationBottomSheet extends StatelessWidget {
     required bool isAutomatic,
     required String title,
     String? subtitle,
+    VoidCallback? onTap,
   }) {
     final bool isSelected =
         isAutomatic
@@ -160,7 +166,7 @@ class SetLocationBottomSheet extends StatelessWidget {
             : !presenter.currentUiState.isAutomaticSelection;
 
     return InkWell(
-      onTap: () {
+      onTap: onTap ?? () {
         presenter.setAutomaticSelection(isAutomatic);
       },
       child: Row(
@@ -201,17 +207,17 @@ class SetLocationBottomSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildDropdown({
+  Widget _buildCountryDropdown({
     required BuildContext context,
     required BottomSheetPresenter presenter,
-    required String hintText,
-    required List<DropdownMenuItem<String>> items,
-    required Function(String?) onChanged,
+    required HomePresenter homePresenter,
     required bool enabled,
   }) {
+    final countries = homePresenter.currentUiState.countries ?? [];
+    
     return DropdownButtonFormField<String>(
       decoration: InputDecoration(
-        hintText: hintText,
+        hintText: 'Select Country',
         hintStyle: TextStyle(
           color: context.color.cardTitleColor.withOpacityInt(0.6),
         ),
@@ -236,8 +242,80 @@ class SetLocationBottomSheet extends StatelessWidget {
       ),
       dropdownColor: context.color.cardGradientEnd,
       style: TextStyle(color: context.color.cardTitleColor),
-      items: items,
-      onChanged: enabled ? onChanged : null,
+      value: homePresenter.currentUiState.selectedCountry?.isNotEmpty == true 
+          ? homePresenter.currentUiState.selectedCountry 
+          : null,
+      items: countries.map((country) {
+        return DropdownMenuItem<String>(
+          value: country.name,
+          child: Text(country.name),
+        );
+      }).toList(),
+      onChanged: enabled ? (value) {
+        if (value != null) {
+          final selectedCountry = countries.firstWhere(
+            (country) => country.name == value,
+            orElse: () => countries.first,
+          );
+          homePresenter.onCountrySelected(country: selectedCountry);
+        }
+      } : null,
+    );
+  }
+
+  Widget _buildCityDropdown({
+    required BuildContext context,
+    required BottomSheetPresenter presenter,
+    required HomePresenter homePresenter,
+    required bool enabled,
+  }) {
+    final cities = homePresenter.currentUiState.selectedCountryCities ?? [];
+    
+    return DropdownButtonFormField<String>(
+      decoration: InputDecoration(
+        hintText: 'Select City',
+        hintStyle: TextStyle(
+          color: context.color.cardTitleColor.withOpacityInt(0.6),
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.px),
+          borderSide: BorderSide(
+            color: context.color.cardTitleColor.withOpacityInt(0.3),
+          ),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.px),
+          borderSide: BorderSide(
+            color: context.color.cardTitleColor.withOpacityInt(0.3),
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.px),
+          borderSide: BorderSide(color: context.color.primaryColor500),
+        ),
+        filled: true,
+        fillColor: context.color.cardGradientStart.withOpacityInt(0.5),
+      ),
+      dropdownColor: context.color.cardGradientEnd,
+      style: TextStyle(color: context.color.cardTitleColor),
+      value: homePresenter.currentUiState.selectedCity?.isNotEmpty == true 
+          ? homePresenter.currentUiState.selectedCity 
+          : null,
+      items: cities.map((city) {
+        return DropdownMenuItem<String>(
+          value: city.name,
+          child: Text(city.name),
+        );
+      }).toList(),
+      onChanged: enabled ? (value) {
+        if (value != null) {
+          final selectedCity = cities.firstWhere(
+            (city) => city.name == value,
+            orElse: () => cities.first,
+          );
+          homePresenter.onCitySelected(city: selectedCity);
+        }
+      } : null,
     );
   }
 

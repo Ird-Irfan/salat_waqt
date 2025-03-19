@@ -1,4 +1,5 @@
 import 'package:salat_waqt/core/base/base_ui_state.dart';
+import 'package:salat_waqt/domain/entities/country_entity.dart';
 
 class HomeUiState extends BaseUiState {
   final String? currentAddress;
@@ -26,6 +27,13 @@ class HomeUiState extends BaseUiState {
   final String? currentForbiddenPeriod;
   final String? currentForbiddenTimeRange;
   final String? calendarType;
+  // Location
+  final String? selectedCountry;
+  final String? selectedCity;
+  final bool? isManualLocationSelected;
+  final List<CountryNameEntity>? countries;
+  final List<CityNameEntity>? selectedCountryCities;
+
 
   const HomeUiState({
     required super.userMessage,
@@ -53,13 +61,18 @@ class HomeUiState extends BaseUiState {
     this.currentForbiddenPeriod,
     this.currentForbiddenTimeRange,
     this.calendarType,
+    this.selectedCountry,
+    this.selectedCity,
+    this.isManualLocationSelected,
+    this.countries,
+    this.selectedCountryCities,
   });
 
   factory HomeUiState.empty() {
     return HomeUiState(
       isLoading: false,
       currentAddress: 'Dhaka',
-      prayerTimes: null,
+      prayerTimes: {},
       locationPermissionGranted: false,
       englishDate: '',
       arabicDate: '',
@@ -67,21 +80,26 @@ class HomeUiState extends BaseUiState {
       defaultLongitude: 90.4125,
       userMessage: '',
       loadingPrayerTimes: false,
-      prayerTimesError: null,
-      nextPrayerName: null,
-      remainingTime: null,
+      prayerTimesError: '',
+      nextPrayerName: '',
+      remainingTime: '',
       progressValue: 0.0,
       nextPrayerTime: '00:00',
       isCurrentPrayerTimeExpanded: false,
       currentPrayerTimeHeight: 236,
       currentWaqt: 'DUHUR',
-      currentTime: null,
-      nextPrayerWaqt: null,
-      forbiddenTimes: null,
+      currentTime: '',
+      nextPrayerWaqt: '',
+      forbiddenTimes: [],
       isInForbiddenTime: false,
-      currentForbiddenPeriod: null,
-      currentForbiddenTimeRange: null,
+      currentForbiddenPeriod: '',
+      currentForbiddenTimeRange: '',
       calendarType: 'Bangladesh',
+      selectedCountry: '',
+      selectedCity: '',
+      isManualLocationSelected: false,
+      countries: [],
+      selectedCountryCities: [],
     );
   }
 
@@ -111,6 +129,11 @@ class HomeUiState extends BaseUiState {
     currentForbiddenPeriod,
     currentForbiddenTimeRange,
     calendarType,
+    selectedCountry,
+    selectedCity,
+    isManualLocationSelected,
+    countries,
+    selectedCountryCities,
   ];
 
   HomeUiState copyWith({
@@ -139,6 +162,11 @@ class HomeUiState extends BaseUiState {
     String? currentForbiddenPeriod,
     String? currentForbiddenTimeRange,
     String? calendarType,
+    String? selectedCountry,
+    String? selectedCity,
+    bool? isManualLocationSelected,
+    List<CountryNameEntity>? countries,
+    List<CityNameEntity>? selectedCountryCities,
   }) {
     return HomeUiState(
       currentAddress: currentAddress ?? this.currentAddress,
@@ -171,6 +199,12 @@ class HomeUiState extends BaseUiState {
       currentForbiddenTimeRange:
           currentForbiddenTimeRange ?? this.currentForbiddenTimeRange,
       calendarType: calendarType ?? this.calendarType,
+      selectedCountry: selectedCountry ?? this.selectedCountry,
+      selectedCity: selectedCity ?? this.selectedCity,
+      isManualLocationSelected:
+          isManualLocationSelected ?? this.isManualLocationSelected,
+      countries: countries ?? this.countries,
+      selectedCountryCities: selectedCountryCities ?? this.selectedCountryCities,
     );
   }
 }

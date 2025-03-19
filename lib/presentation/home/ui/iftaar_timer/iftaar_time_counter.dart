@@ -23,6 +23,7 @@ class IftarTimeCounter extends StatelessWidget {
         timerService: locator(),
         preferencesService: locator(),
         logger: locator(),
+        getCountriesUseCase: locator(),
       ),
     );
     return PresentableWidgetBuilder(

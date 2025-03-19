@@ -33,6 +33,7 @@ class HomePage extends StatelessWidget {
         timerService: locator(),
         preferencesService: locator(),
         logger: locator(),
+        getCountriesUseCase: locator(),
       ),
     );
     final SettingsPresenter settingsPresenter = locator<SettingsPresenter>();
