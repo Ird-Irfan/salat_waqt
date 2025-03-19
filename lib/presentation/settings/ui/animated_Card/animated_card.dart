@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:salat_waqt/core/config/salat_waqt_screen.dart';
 import 'package:salat_waqt/core/constant/app_contant.dart';
 import 'package:salat_waqt/core/constant/app_text_styles.dart';
@@ -42,16 +41,16 @@ class AnimatedCard extends StatelessWidget {
         duration: const Duration(milliseconds: 300),
         width: double.infinity,
         decoration: ShapeDecoration(
-          gradient: RadialGradient(
-            center: Alignment(0.93, 1.20),
-            radius: 0.72,
-            colors: [
-              context.color.cardGradientStart,
-              context.color.cardGradientEnd,
-            ],
-          ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16.px),
+          ),
+          gradient: RadialGradient(
+            center: Alignment(0.97, -1.20),
+            radius: 1,
+            colors: [
+              context.color.cardGradientEnd,
+              context.color.cardGradientStart,
+            ],
           ),
         ),
         child: ClipRect(
@@ -98,14 +97,12 @@ class AnimatedCard extends StatelessWidget {
                         ],
                       ),
                       Spacer(),
-                      Padding(
-                        padding: EdgeInsets.all(12.px),
-                        child: SvgIcon(
-                          svgPath:
-                              isExpanded
-                                  ? AppConstant.icArrowUp
-                                  : AppConstant.icArrowDown,
-                        ),
+                      SvgIcon(
+                        svgPath:
+                            isExpanded
+                                ? AppConstant.icArrowUp
+                                : AppConstant.icArrowDown,
+                        color: context.color.cardTitleColor,
                       ),
                     ],
                   ),
@@ -152,17 +149,16 @@ class AnimatedCard extends StatelessWidget {
       height: 60.px,
       decoration:
           isSelected
-              ? ShapeDecoration(
+              ? BoxDecoration(
                 gradient: RadialGradient(
-                  center: Alignment(1.20, 0.93),
-                  radius: 10,
+                  center: Alignment(0.97, 0.00),
+                  radius: 2.57,
                   colors: [
-                    context.color.siblingCardActiveGradientStart,
-                    context.color.siblingCardActiveGradientEnd,
+                    context.color.siblingCardActiveGradientStart.withOpacity(
+                      0.5,
+                    ),
+                    context.color.siblingCardActiveGradientEnd.withOpacity(0.5),
                   ],
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.px),
                 ),
               )
               : null,
@@ -179,7 +175,7 @@ class AnimatedCard extends StatelessWidget {
           ),
           Spacer(),
           if (isSelected)
-            SvgPicture.asset(AppConstant.icSelect, width: 13.px, height: 10.px, color: context.color.cardSubtitleColor,),
+            SvgIcon(svgPath: AppConstant.icSelect, width: 24.px, height: 24.px),
         ],
       ),
     );

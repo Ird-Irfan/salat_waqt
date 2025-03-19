@@ -40,16 +40,16 @@ class TimeAdjustments extends StatelessWidget {
       duration: const Duration(milliseconds: 300),
       width: double.infinity,
       decoration: ShapeDecoration(
-        gradient: RadialGradient(
-          center: Alignment(0.93, 1.20),
-          radius: 0.72,
-          colors: [
-            context.color.cardGradientStart,
-            context.color.cardGradientEnd,
-          ],
-        ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.px),
+        ),
+        gradient: RadialGradient(
+          center: Alignment(0.97, -1.20),
+          radius: 1,
+          colors: [
+            context.color.cardGradientEnd,
+            context.color.cardGradientStart,
+          ],
         ),
       ),
       child: Column(

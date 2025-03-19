@@ -204,6 +204,7 @@ class SettingsPage extends StatelessWidget {
                   svgIconPath: AppConstant.icReview,
                   hasSwitch: false,
                 ),
+                SizedBox(height: 20.px),
               ],
             ),
           );
