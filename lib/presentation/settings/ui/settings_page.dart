@@ -38,13 +38,14 @@ class SettingsPage extends StatelessWidget {
               left: 16.px,
               right: 16.px,
               bottom: 16.px,
-              top: 90.px,
+              top: 110.px,
             ),
             child: Column(
+              spacing: 12.px,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: EdgeInsets.only(top: 8.px, bottom: 9.px, left: 8.px),
+                  padding: EdgeInsets.only(top: 8.px, left: 8.px),
                   child: Text(
                     'GENERAL',
                     style: theme.textTheme.titleMedium?.copyWith(
@@ -63,7 +64,6 @@ class SettingsPage extends StatelessWidget {
                     );
                   },
                 ),
-                SizedBox(height: 12.px),
                 AnimatedLangCard(
                   theme: theme,
                   title: "Select Language",
@@ -76,7 +76,6 @@ class SettingsPage extends StatelessWidget {
                   selectedTextOne: "English",
                   selectedTextTwo: "Bangla",
                 ),
-                SizedBox(height: 12.px),
                 IconTextRow(
                   theme: theme,
                   title: 'Do Not Disturb',
@@ -87,12 +86,9 @@ class SettingsPage extends StatelessWidget {
                     presenter.toggleDoNotDisturb();
                   },
                 ),
+                SizedBox(height: 12.px),
                 Padding(
-                  padding: EdgeInsets.only(
-                    top: 22.px,
-                    bottom: 8.px,
-                    left: 8.px,
-                  ),
+                  padding: EdgeInsets.only(left: 8.px),
                   child: Text(
                     'PRAYER TIMES',
                     style: theme.textTheme.titleMedium?.copyWith(
@@ -113,7 +109,6 @@ class SettingsPage extends StatelessWidget {
                     presenter.toggleUse24HourFormat(value);
                   },
                 ),
-                SizedBox(height: 12.px),
                 AnimatedCard(
                   theme: theme,
                   title: 'Juristic Method',
@@ -127,7 +122,6 @@ class SettingsPage extends StatelessWidget {
                   selectedTextOne: "Hanafi",
                   selectedTextTwo: "Shafi",
                 ),
-                SizedBox(height: 12.px),
 
                 IconTextRow(
                   theme: theme,
@@ -136,7 +130,6 @@ class SettingsPage extends StatelessWidget {
                   svgIconPath: AppConstant.icCalculator,
                   hasSwitch: false,
                 ),
-                SizedBox(height: 12.px),
                 TimeAdjustments(
                   theme: theme,
                   title: 'Time Adjustments',
@@ -149,11 +142,7 @@ class SettingsPage extends StatelessWidget {
                 ),
                 SizedBox(height: 12.px),
                 Padding(
-                  padding: EdgeInsets.only(
-                    top: 22.px,
-                    bottom: 8.px,
-                    left: 8.px,
-                  ),
+                  padding: EdgeInsets.only(left: 8.px),
                   child: Text(
                     'RAMADAN TIMES',
                     style: theme.textTheme.titleMedium?.copyWith(
@@ -176,7 +165,6 @@ class SettingsPage extends StatelessWidget {
                   selectedTextOne: "Bangladesh",
                   selectedTextTwo: "Umm Al-Qura",
                 ),
-                SizedBox(height: 12.px),
                 IconTextRow(
                   theme: theme,
                   title: 'Hide Iftar & Sahri Time',
@@ -189,11 +177,7 @@ class SettingsPage extends StatelessWidget {
                 ),
                 SizedBox(height: 12.px),
                 Padding(
-                  padding: EdgeInsets.only(
-                    top: 22.px,
-                    bottom: 8.px,
-                    left: 8.px,
-                  ),
+                  padding: EdgeInsets.only(left: 8.px),
                   child: Text(
                     'RAMADAN TIMES',
                     style: theme.textTheme.titleMedium?.copyWith(
@@ -213,7 +197,6 @@ class SettingsPage extends StatelessWidget {
                   hasSwitch: false,
                   titleFontSize: 14,
                 ),
-                SizedBox(height: 12.px),
                 IconTextRow(
                   theme: theme,
                   title: 'Calculation Method',

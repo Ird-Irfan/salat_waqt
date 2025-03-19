@@ -90,12 +90,9 @@ class TimeAdjustments extends StatelessWidget {
                   ),
                 ),
                 if (hasSwitch)
-                  Expanded(
-                    flex: 1,
-                    child: CustomSwitch(
-                      switchValue: switchValue!,
-                      onSwitchChanged: onSwitchChanged!,
-                    ),
+                  CustomSwitch(
+                    switchValue: switchValue!,
+                    onSwitchChanged: onSwitchChanged!,
                   ),
               ],
             ),

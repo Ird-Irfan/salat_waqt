@@ -35,16 +35,16 @@ class IconTextRow extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: ShapeDecoration(
-        gradient: RadialGradient(
-          center: Alignment(0.93, 1.20),
-          radius: 0.72,
-          colors: [
-            context.color.cardGradientStart,
-            context.color.cardGradientEnd,
-          ],
-        ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.px),
+        ),
+        gradient: RadialGradient(
+          center: Alignment(0.97, -1.20),
+          radius: 1,
+          colors: [
+            context.color.cardGradientEnd,
+            context.color.cardGradientStart,
+          ],
         ),
       ),
       child: Padding(
@@ -53,41 +53,36 @@ class IconTextRow extends StatelessWidget {
           children: [
             SvgPicture.asset(svgIconPath, width: 28.px, height: 28.px),
             SizedBox(width: 16.px),
-            Expanded(
-              flex: 5,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    title,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontFamily: AppTextStyles.inter,
-                      fontWeight: FontWeight.w500,
-                      fontSize: titleFontSize ?? 18.px,
-                      color: context.color.cardTitleColor,
-                    ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  title,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontFamily: AppTextStyles.inter,
+                    fontWeight: FontWeight.w500,
+                    fontSize: titleFontSize ?? 18.px,
+                    color: context.color.cardTitleColor,
                   ),
-                  SizedBox(height: 8.px),
-                  Text(
-                    subtitle,
-                    style: theme.textTheme.labelMedium?.copyWith(
-                      fontFamily: AppTextStyles.inter,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 14.px,
-                      color: context.color.cardSubtitleColor,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            if (hasSwitch)
-              Expanded(
-                flex: 1,
-                child: CustomSwitch(
-                  switchValue: switchValue!,
-                  onSwitchChanged: onSwitchChanged!,
                 ),
+                SizedBox(height: 8.px),
+                Text(
+                  subtitle,
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    fontFamily: AppTextStyles.inter,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 14.px,
+                    color: context.color.cardSubtitleColor,
+                  ),
+                ),
+              ],
+            ),
+            const Spacer(),
+            if (hasSwitch)
+              CustomSwitch(
+                switchValue: switchValue!,
+                onSwitchChanged: onSwitchChanged!,
               ),
           ],
         ),
