@@ -6,7 +6,7 @@ import 'package:salat_waqt/core/config/themes.dart';
 import 'package:salat_waqt/core/constant/app_contant.dart';
 import 'package:salat_waqt/core/constant/app_text_styles.dart';
 import 'package:salat_waqt/core/di/service_locator.dart';
-import 'package:salat_waqt/presentation/home/ui/home_page.dart';
+import 'package:salat_waqt/presentation/Onboarding/ui/flash_screen/flash_screen.dart';
 import 'package:salat_waqt/presentation/settings/presenter/setting_presenter.dart';
 
 class SalatWaqt extends StatefulWidget {
@@ -90,7 +90,7 @@ class _SalatWaqtState extends State<SalatWaqt> {
           theme: SalatTheme.getTheme('Light', AppTextStyles.inter, 14),
           darkTheme: SalatTheme.getTheme('Dark', AppTextStyles.inter, 14),
           themeMode: _themeMode,
-          home: const HomePage(),
+          home: const FlashScreen(),
         );
       },
     );

@@ -566,19 +566,12 @@ class HomePresenter extends BasePresenter<HomeUiState> {
     final coordinates = await  _locationService.getCoordinatesFromAddress(
       '${currentUiState.selectedCity}, ${currentUiState.selectedCountry}',
     );
-    print(coordinates);
-    print('--------------------------------');
-    print(currentUiState.selectedCity);
-    print(currentUiState.selectedCountry);
-    print('--------------------------------');
-    print(currentUiState.currentAddress);
     if (coordinates != null) {
       uiState.value = currentUiState.copyWith(
         isManualLocationSelected: true,
         currentAddress:
             '${currentUiState.selectedCity}, ${currentUiState.selectedCountry}',
       );
-      print(uiState.value.currentAddress);
     }
     Get.back();
     clearControllers();
