@@ -218,6 +218,8 @@ class SalatTheme {
             SalatColor.donutRingGradientStartColorLight,
         donutRingGradientEndColor: SalatColor.donutRingGradientEndColorLight,
         donutBottomCircleColor: SalatColor.donutBottomCircleColorLight,
+        btnPrimaryStartColor: SalatColor.btnPrimaryStartColorLight,
+        btnPrimaryEndColor: SalatColor.btnPrimaryEndColorLight,
 
         siblingCardActiveGradientStart:
             SalatColor.siblingCardActiveGradientStartColorLight,
@@ -376,6 +378,9 @@ class SalatTheme {
         donutRingGradientStartColor: SalatColor.donutRingGradientStartColorDark,
         donutRingGradientEndColor: SalatColor.donutRingGradientEndColorDark,
         donutBottomCircleColor: SalatColor.donutBottomCircleColorDark,
+        btnPrimaryStartColor: SalatColor.btnPrimaryStartColorDark,
+        btnPrimaryEndColor: SalatColor.btnPrimaryEndColorDark,
+  
 
         siblingCardActiveGradientStart:
             SalatColor.siblingCardActiveGradientStartColorDark,

@@ -33,16 +33,16 @@ class AnimatedExpansion extends StatelessWidget {
           duration: const Duration(milliseconds: 300),
           width: double.infinity,
           decoration: ShapeDecoration(
-            gradient: RadialGradient(
-              center: Alignment(0.93, 1.20),
-              radius: 0.72,
-              colors: [
-                context.color.cardGradientStart,
-                context.color.cardGradientEnd,
-              ],
-            ),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16.px),
+            ),
+            gradient: RadialGradient(
+              center: Alignment(0.97, -1.20),
+              radius: 1,
+              colors: [
+                context.color.cardGradientEnd,
+                context.color.cardGradientStart,
+              ],
             ),
           ),
           child: ClipRect(
@@ -57,15 +57,18 @@ class AnimatedExpansion extends StatelessWidget {
                     presenter.toggleExpansion();
                   },
                   child: Padding(
-                    padding: EdgeInsets.all(18.px),
+                    padding: EdgeInsets.all(20.px),
                     child: Row(
                       children: [
                         SvgIcon(
-                          svgPath: AppConstant.icTheme,
+                          svgPath:
+                              isDarkMode
+                                  ? AppConstant.icThemeDark
+                                  : AppConstant.icThemeLight,
                           width: 28.px,
                           height: 28.px,
                         ),
-                        const SizedBox(width: 12),
+                        SizedBox(width: 16.px),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -94,15 +97,13 @@ class AnimatedExpansion extends StatelessWidget {
                           ],
                         ),
                         const Spacer(),
-                        Padding(
-                          padding: EdgeInsets.all(12.0.px),
-                          child: SvgPicture.asset(
-                            isExpanded
-                                ? AppConstant.icArrowUp
-                                : AppConstant.icArrowDown,
-                            width: 24.px,
-                            height: 24.px,
-                          ),
+                        SvgPicture.asset(
+                          isExpanded
+                              ? AppConstant.icArrowUp
+                              : AppConstant.icArrowDown,
+                          width: 24.px,
+                          height: 24.px,
+                          color: context.color.cardTitleColor,
                         ),
                       ],
                     ),
@@ -110,6 +111,11 @@ class AnimatedExpansion extends StatelessWidget {
                 ),
                 // Expanded options
                 if (isExpanded) ...[
+                  Divider(
+                    color: context.color.cardSiblingBottomBorderColor
+                        .withOpacityInt(0.05),
+                    height: 1.px,
+                  ),
                   // Day Mode Option
                   InkWell(
                     overlayColor: MaterialStateProperty.all(Colors.transparent),
@@ -171,17 +177,16 @@ class AnimatedExpansion extends StatelessWidget {
       height: 60.px,
       decoration:
           isSelected
-              ? ShapeDecoration(
+              ? BoxDecoration(
                 gradient: RadialGradient(
-                  center: Alignment(1.20, 0.93),
-                  radius: 10,
+                  center: Alignment(0.97, 0.00),
+                  radius: 2.57,
                   colors: [
-                    context.color.siblingCardActiveGradientStart,
-                    context.color.siblingCardActiveGradientEnd,
+                    context.color.siblingCardActiveGradientStart.withOpacity(
+                      0.5,
+                    ),
+                    context.color.siblingCardActiveGradientEnd.withOpacity(0.5),
                   ],
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.px),
                 ),
               )
               : null,
@@ -200,7 +205,7 @@ class AnimatedExpansion extends StatelessWidget {
           ),
           const Spacer(),
           if (isSelected)
-            Icon(Icons.check, color: context.color.cardSubtitleColor),
+            SvgIcon(svgPath: AppConstant.icSelect, width: 24.px, height: 24.px),
         ],
       ),
     );
