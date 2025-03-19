@@ -108,11 +108,13 @@ class ForbiddenTime extends StatelessWidget {
                 ),
 
                 ClipRect(
-                  child: SizeTransition(
-                    sizeFactor: presenter.animationController,
-                    axis: Axis.vertical,
-                    child: FadeTransition(
-                      opacity: presenter.fadeAnimation,
+                  child: AnimatedSize(
+                    duration: const Duration(milliseconds: 400),
+                    curve: Curves.linear,
+                    alignment: Alignment.topCenter,
+                    clipBehavior: Clip.none,
+                    child: Visibility(
+                      visible: presenter.isExpanded,
                       child:
                           forbiddenTimes != null && forbiddenTimes.isNotEmpty
                               ? ForbiddenTimeItems(

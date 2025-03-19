@@ -33,27 +33,27 @@ class AnimatedCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      overlayColor: MaterialStateProperty.all(Colors.transparent),
-      splashColor: Colors.transparent,
-      onTap: onCardTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        width: double.infinity,
-        decoration: ShapeDecoration(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.px),
-          ),
-          gradient: RadialGradient(
-            center: Alignment(0.97, -1.20),
-            radius: 1,
-            colors: [
-              context.color.cardGradientEnd,
-              context.color.cardGradientStart,
-            ],
-          ),
+    return Container(
+      width: double.infinity,
+      decoration: ShapeDecoration(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.px),
         ),
-        child: ClipRect(
+        gradient: RadialGradient(
+          center: Alignment(0.97, -1.20),
+          radius: 1,
+          colors: [
+            context.color.cardGradientEnd,
+            context.color.cardGradientStart,
+          ],
+        ),
+      ),
+      child: ClipRect(
+        child: AnimatedSize(
+          duration: const Duration(milliseconds: 400),
+          curve: Curves.linear,
+          alignment: Alignment.topCenter,
+          clipBehavior: Clip.none,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
