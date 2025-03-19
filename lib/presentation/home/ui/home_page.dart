@@ -48,7 +48,7 @@ class HomePage extends StatelessWidget {
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(65.px),
           child: ClipRRect(
-            child: HomeAppBar(presenter: presenter, theme: theme),
+            child: HomeAppBar( theme: theme),
           ),
         ),
         body: PresentableWidgetBuilder(
@@ -115,38 +115,34 @@ class HomePage extends StatelessWidget {
 class HomeAppBar extends StatelessWidget {
   const HomeAppBar({
     super.key,
-    required this.presenter,
     required this.theme,
   });
 
-  final HomePresenter presenter;
   final ThemeData theme;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment(0.50, 0.00),
-          end: Alignment(0.50, 1.00),
-          colors: [
-            context.color.appBarBgColor.withOpacityInt(0.2),
-            context.color.appBarBgColor.withOpacityInt(0.0),
-          ],
-        ),
-      ),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-        child: AppBarSection(
-          onLocationTap: () {
-            Get.bottomSheet(SetLocationBottomSheet() as Widget);
-          },
-          location:
-              presenter.currentUiState.currentAddress ??
-              'Dhaka, Bangladesh',
-          theme: theme,
-        ),
-      ),
-    );
+        return Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment(0.50, 0.00),
+              end: Alignment(0.50, 1.00),
+              colors: [
+                context.color.appBarBgColor.withOpacityInt(0.2),
+                context.color.appBarBgColor.withOpacityInt(0.0),
+              ],
+            ),
+          ),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+            child: AppBarSection(
+              onLocationTap: () {
+                Get.bottomSheet(SetLocationBottomSheet() as Widget);
+              },
+              theme: theme,
+            ),
+          ),
+        );
+     
   }
 }

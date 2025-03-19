@@ -65,7 +65,8 @@ class HomePresenter extends BasePresenter<HomeUiState> {
       }
 
       // Update dates when calendar type changes
-      if (currentUiState.calendarType != _settingsPresenter.currentUiState.selectedRamadan) {
+      if (currentUiState.calendarType !=
+          _settingsPresenter.currentUiState.selectedRamadan) {
         // Initialize calendar type from settings on first run
         _updateDates();
         uiState.value = uiState.value.copyWith(
@@ -96,7 +97,6 @@ class HomePresenter extends BasePresenter<HomeUiState> {
     }
   }
 
-
   @override
   void onClose() {
     _timer?.cancel();
@@ -116,9 +116,11 @@ class HomePresenter extends BasePresenter<HomeUiState> {
   void _updateDates() {
     // Make sure the DateService has the latest calendar type
     if (_settingsPresenter.currentUiState.selectedRamadan != null) {
-      _dateService.setCalendarType(_settingsPresenter.currentUiState.selectedRamadan!);
+      _dateService.setCalendarType(
+        _settingsPresenter.currentUiState.selectedRamadan!,
+      );
     }
-    
+
     uiState.value = uiState.value.copyWith(
       englishDate: _dateService.getEnglishDate(),
       arabicDate: _dateService.getArabicDate(),
@@ -542,8 +544,6 @@ class HomePresenter extends BasePresenter<HomeUiState> {
     return currentUiState.currentAddress ?? '';
   }
 
-  
-
   void showSelectLocationBottomSheet() {
     // SelectLocationBottomsheet.show(
     //   context: currentUiState.context!,
@@ -552,15 +552,34 @@ class HomePresenter extends BasePresenter<HomeUiState> {
 
   void onManualLocationSelected({required bool isManualLocationSelected}) {
     uiState.value = currentUiState.copyWith(
-        isManualLocationSelected: isManualLocationSelected);
+      isManualLocationSelected: isManualLocationSelected,
+    );
   }
 
   void onUseCurrentLocationSelected() async {
     onManualLocationSelected(isManualLocationSelected: false);
     await _loadCurrentLocation();
+    Get.back();
   }
 
-  void onSaveLocationSelected() {
+  void onSaveLocationSelected() async {
+    final coordinates = await  _locationService.getCoordinatesFromAddress(
+      '${currentUiState.selectedCity}, ${currentUiState.selectedCountry}',
+    );
+    print(coordinates);
+    print('--------------------------------');
+    print(currentUiState.selectedCity);
+    print(currentUiState.selectedCountry);
+    print('--------------------------------');
+    print(currentUiState.currentAddress);
+    if (coordinates != null) {
+      uiState.value = currentUiState.copyWith(
+        isManualLocationSelected: true,
+        currentAddress:
+            '${currentUiState.selectedCity}, ${currentUiState.selectedCountry}',
+      );
+      print(uiState.value.currentAddress);
+    }
     Get.back();
     clearControllers();
   }
@@ -583,12 +602,10 @@ class HomePresenter extends BasePresenter<HomeUiState> {
     });
   }
 
-
-
   // In settings_page_presenter.dart - Update onCitySearchQueryChanged
 
   //
-  
+
   void onCountrySelected({required CountryNameEntity country}) {
     clearControllers();
     uiState.value = currentUiState.copyWith(
@@ -601,11 +618,8 @@ class HomePresenter extends BasePresenter<HomeUiState> {
 
   void onCitySelected({required CityNameEntity city}) {
     clearControllers();
-    uiState.value = currentUiState.copyWith(
-      selectedCity: city.name,
-    );
+    uiState.value = currentUiState.copyWith(selectedCity: city.name);
   }
-
 
   Future<void> launchUrls(String url) async {
     if (await launchUrl(Uri.parse(url))) {

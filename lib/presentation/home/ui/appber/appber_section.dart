@@ -1,61 +1,68 @@
 import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:salat_waqt/core/constant/app_contant.dart';
+import 'package:salat_waqt/core/di/service_locator.dart';
+import 'package:salat_waqt/core/external_libs/presentable_widget_builder.dart';
 import 'package:salat_waqt/core/utility/utility.dart';
 import 'package:salat_waqt/presentation/common/widgets/svg_icons.dart';
+import 'package:salat_waqt/presentation/home/presenter/home_presenter.dart';
 import 'package:salat_waqt/presentation/settings/ui/settings_page.dart';
 
 class AppBarSection extends StatelessWidget implements PreferredSizeWidget {
   final Function()? onLocationTap;
   final ThemeData theme;
-  final String location;
   const AppBarSection({
     super.key,
-    required this.location,
     required this.theme,
     this.onLocationTap,
   });
 
   @override
   Widget build(BuildContext context) {
+    final HomePresenter presenter = locator<HomePresenter>();
     return AppBar(
       elevation: 0,
       title: InkWell(
-        overlayColor: MaterialStateProperty.all(Colors.transparent),
+        overlayColor: WidgetStateProperty.all(Colors.transparent),
         // splashColor: Colors.transparent,
         onTap: onLocationTap,
-        child: Container(
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(20.px)),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SvgIcon(
-                  svgPath: AppConstant.icGps,
-                  width: 24.px,
-                  height: 24.px,
-                  color: context.color.cardTitleColor,
+        child: PresentableWidgetBuilder(
+          presenter: presenter,
+          builder: () {
+            return Container(
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(20.px)),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SvgIcon(
+                      svgPath: AppConstant.icGps,
+                      width: 24.px,
+                      height: 24.px,
+                      color: context.color.cardTitleColor,
+                    ),
+                    SizedBox(width: 12.px),
+                    Text(
+                      presenter.currentUiState.currentAddress ?? '',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        color: context.color.cardTitleColor,
+                        fontSize: 16.px,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    SizedBox(width: 6.px),
+                    SvgIcon(
+                      svgPath: AppConstant.icArrowDown,
+                      width: 16.px,
+                      height: 16.px,
+                      color: context.color.cardTitleColor,
+                    ),
+                  ],
                 ),
-                SizedBox(width: 12.px),
-                Text(
-                  location,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    color: context.color.cardTitleColor,
-                    fontSize: 16.px,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                SizedBox(width: 6.px),
-                SvgIcon(
-                  svgPath: AppConstant.icArrowDown,
-                  width: 16.px,
-                  height: 16.px,
-                  color: context.color.cardTitleColor,
-                ),
-              ],
-            ),
-          ),
+              ),
+            );
+          }
         ),
       ),
       actions: [
