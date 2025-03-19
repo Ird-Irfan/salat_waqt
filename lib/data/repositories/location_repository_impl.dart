@@ -1,6 +1,6 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:salat_waqt/data/data_sources/location_data_source.dart';
+import 'package:salat_waqt/data/data_sources/remote/location_data_source.dart';
 import 'package:salat_waqt/domain/repositories/location_repository.dart';
 
 class LocationRepositoryImpl implements LocationRepository {
