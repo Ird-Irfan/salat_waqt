@@ -48,7 +48,7 @@ class IconTextRow extends StatelessWidget {
         ),
       ),
       child: Padding(
-        padding:  EdgeInsets.all(18.px),
+        padding: EdgeInsets.all(18.px),
         child: Row(
           children: [
             SvgPicture.asset(svgIconPath, width: 28.px, height: 28.px),

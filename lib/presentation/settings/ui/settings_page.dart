@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:salat_waqt/core/constant/app_contant.dart';
@@ -8,6 +9,7 @@ import 'package:salat_waqt/core/constant/app_text_styles.dart';
 import 'package:salat_waqt/core/di/service_locator.dart';
 import 'package:salat_waqt/core/external_libs/presentable_widget_builder.dart';
 import 'package:salat_waqt/core/utility/utility.dart';
+import 'package:salat_waqt/presentation/home/ui/appber/custom_switch.dart';
 import 'package:salat_waqt/presentation/settings/presenter/setting_presenter.dart';
 import 'package:salat_waqt/presentation/settings/ui/animated_Card/animated_card.dart';
 import 'package:salat_waqt/presentation/settings/ui/animated_expansion/animated_expansion.dart';
@@ -26,7 +28,7 @@ class SettingsPage extends StatelessWidget {
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.transparent,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(88.px),
+        preferredSize: Size.fromHeight(70.px),
         child: ClipRRect(child: SettingsAppBar(theme: theme)),
       ),
       body: PresentableWidgetBuilder(
@@ -136,7 +138,7 @@ class SettingsPage extends StatelessWidget {
                   hasSwitch: false,
                 ),
                 SizedBox(height: 12.px),
-                IconTextRow(
+                TimeAdjustments(
                   theme: theme,
                   title: 'Time Adjustments',
                   subtitle: 'Adjust Prayer time Notification',
@@ -250,6 +252,157 @@ class SettingsAppBar extends StatelessWidget {
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
         child: CustomAppBar(theme: theme),
+      ),
+    );
+  }
+}
+
+class TimeAdjustments extends StatelessWidget {
+  final ThemeData theme;
+  final String title;
+  final double? titleFontSize;
+  final String subtitle;
+  final String svgIconPath;
+  final bool? switchValue;
+  final Function(bool)? onSwitchChanged;
+  final bool hasSwitch;
+
+  const TimeAdjustments({
+    super.key,
+    required this.theme,
+    required this.title,
+    required this.subtitle,
+    required this.svgIconPath,
+    this.titleFontSize,
+    this.hasSwitch = true,
+    this.switchValue,
+    this.onSwitchChanged,
+  }) : assert(
+         hasSwitch == false || (switchValue != null && onSwitchChanged != null),
+         'If hasSwitch is true, switchValue and onSwitchChanged must not be null',
+       );
+
+  @override
+  Widget build(BuildContext context) {
+    final SettingsPresenter presenter = locator<SettingsPresenter>();
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      width: double.infinity,
+      decoration: ShapeDecoration(
+        gradient: RadialGradient(
+          center: Alignment(0.93, 1.20),
+          radius: 0.72,
+          colors: [
+            context.color.cardGradientStart,
+            context.color.cardGradientEnd,
+          ],
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.px),
+        ),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: EdgeInsets.all(18.px),
+            child: Row(
+              children: [
+                SvgPicture.asset(svgIconPath, width: 28.px, height: 28.px),
+                SizedBox(width: 16.px),
+                Expanded(
+                  flex: 5,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        title,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontFamily: AppTextStyles.inter,
+                          fontWeight: FontWeight.w500,
+                          fontSize: titleFontSize ?? 18.px,
+                          color: context.color.cardTitleColor,
+                        ),
+                      ),
+                      SizedBox(height: 8.px),
+                      Text(
+                        subtitle,
+                        style: theme.textTheme.labelMedium?.copyWith(
+                          fontFamily: AppTextStyles.inter,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14.px,
+                          color: context.color.cardSubtitleColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                if (hasSwitch)
+                  Expanded(
+                    flex: 1,
+                    child: CustomSwitch(
+                      switchValue: switchValue!,
+                      onSwitchChanged: onSwitchChanged!,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          if (hasSwitch && switchValue == true) ...[
+            Divider(
+              color: context.color.cardSubtitleColor.withOpacity(0.3),
+              thickness: 1.px,
+              height: 1.px,
+            ),
+            Padding(
+              padding: EdgeInsets.all(18.px),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(8.px),
+                    ),
+                    child: IconButton(
+                      onPressed: () {
+                        presenter.decrementTimeAdjustment();
+                      },
+                      icon: Icon(
+                        Icons.remove,
+                        color: Colors.white,
+                        size: 20.px,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    '${presenter.currentUiState.timeAdjustmentValue} মিনিট',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontFamily: AppTextStyles.inter,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16.px,
+                      color: context.color.cardTitleColor,
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(8.px),
+                    ),
+                    child: IconButton(
+                      onPressed: () {
+                        presenter.incrementTimeAdjustment();
+                      },
+                      icon: Icon(Icons.add, color: Colors.white, size: 20.px),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ],
       ),
     );
   }
