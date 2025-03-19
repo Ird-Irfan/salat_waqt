@@ -29,8 +29,7 @@ class AnimatedExpansion extends StatelessWidget {
         final bool isExpanded = presenter.currentUiState.isExpanded;
         final bool isDarkMode = presenter.currentUiState.isDarkMode;
 
-        return AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
+        return Container(
           width: double.infinity,
           decoration: ShapeDecoration(
             shape: RoundedRectangleBorder(
@@ -46,114 +45,127 @@ class AnimatedExpansion extends StatelessWidget {
             ),
           ),
           child: ClipRect(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Header (always visible)
-                InkWell(
-                  overlayColor: MaterialStateProperty.all(Colors.transparent),
-                  splashColor: Colors.transparent,
-                  onTap: () {
-                    presenter.toggleExpansion();
-                  },
-                  child: Padding(
-                    padding: EdgeInsets.all(20.px),
-                    child: Row(
-                      children: [
-                        SvgIcon(
-                          svgPath:
-                              isDarkMode
-                                  ? AppConstant.icThemeDark
-                                  : AppConstant.icThemeLight,
-                          width: 28.px,
-                          height: 28.px,
-                        ),
-                        SizedBox(width: 16.px),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Theme',
-                              style: theme.textTheme.titleMedium?.copyWith(
-                                fontFamily: AppTextStyles.inter,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 18.px,
-                                color: context.color.cardTitleColor,
-                              ),
-                            ),
-                            SizedBox(height: 8.px),
-                            Text(
-                              isDarkMode
-                                  ? 'Night Mode Selected'
-                                  : 'Day Mode Selected',
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                fontFamily: AppTextStyles.inter,
-                                fontWeight: FontWeight.w400,
-                                fontSize: 14.px,
-                                color: context.color.cardSubtitleColor,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const Spacer(),
-                        SvgPicture.asset(
-                          isExpanded
-                              ? AppConstant.icArrowUp
-                              : AppConstant.icArrowDown,
-                          width: 24.px,
-                          height: 24.px,
-                          color: context.color.cardTitleColor,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                // Expanded options
-                if (isExpanded) ...[
-                  Divider(
-                    color: context.color.cardSiblingBottomBorderColor
-                        .withOpacityInt(0.05),
-                    height: 1.px,
-                  ),
-                  // Day Mode Option
+            child: AnimatedSize(
+              duration: const Duration(milliseconds: 400),
+              // curve: Curves.easeInOut,
+              curve: Curves.linear,
+              // curve: Curves.ease,
+              // curve: Curves.easeInOut,
+              alignment: Alignment.topCenter,
+              clipBehavior: Clip.none,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Header (always visible)
                   InkWell(
                     overlayColor: MaterialStateProperty.all(Colors.transparent),
                     splashColor: Colors.transparent,
                     onTap: () {
-                      if (isDarkMode) {
-                        presenter.changeTheme(false);
-                        onThemeChanged(false);
-                      }
+                      presenter.toggleExpansion();
                     },
-                    child: _themeMode(
-                      'Day Mode',
-                      AppConstant.icDuhur,
-                      isDarkMode,
-                      theme,
-                      context,
+                    child: Padding(
+                      padding: EdgeInsets.all(20.px),
+                      child: Row(
+                        children: [
+                          SvgIcon(
+                            svgPath:
+                                isDarkMode
+                                    ? AppConstant.icThemeDark
+                                    : AppConstant.icThemeLight,
+                            width: 28.px,
+                            height: 28.px,
+                          ),
+                          SizedBox(width: 16.px),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Theme',
+                                style: theme.textTheme.titleMedium?.copyWith(
+                                  fontFamily: AppTextStyles.inter,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18.px,
+                                  color: context.color.cardTitleColor,
+                                ),
+                              ),
+                              SizedBox(height: 8.px),
+                              Text(
+                                isDarkMode
+                                    ? 'Night Mode Selected'
+                                    : 'Day Mode Selected',
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  fontFamily: AppTextStyles.inter,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 14.px,
+                                  color: context.color.cardSubtitleColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const Spacer(),
+                          SvgPicture.asset(
+                            isExpanded
+                                ? AppConstant.icArrowUp
+                                : AppConstant.icArrowDown,
+                            width: 24.px,
+                            height: 24.px,
+                            color: context.color.cardTitleColor,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                  // Night Mode Option
-                  InkWell(
-                    overlayColor: MaterialStateProperty.all(Colors.transparent),
-                    splashColor: Colors.transparent,
-                    onTap: () {
-                      if (!isDarkMode) {
-                        presenter.changeTheme(true);
-                        onThemeChanged(true);
-                      }
-                    },
-                    child: _themeMode(
-                      'Night Mode',
-                      AppConstant.icIsha,
-                      isDarkMode,
-                      theme,
-                      context,
+                  // Expanded options
+                  if (isExpanded) ...[
+                    Divider(
+                      color: context.color.cardSiblingBottomBorderColor
+                          .withOpacityInt(0.05),
+                      height: 1.px,
                     ),
-                  ),
+                    // Day Mode Option
+                    InkWell(
+                      overlayColor: MaterialStateProperty.all(
+                        Colors.transparent,
+                      ),
+                      splashColor: Colors.transparent,
+                      onTap: () {
+                        if (isDarkMode) {
+                          presenter.changeTheme(false);
+                          onThemeChanged(false);
+                        }
+                      },
+                      child: _themeMode(
+                        'Day Mode',
+                        AppConstant.icDuhur,
+                        isDarkMode,
+                        theme,
+                        context,
+                      ),
+                    ),
+                    // Night Mode Option
+                    InkWell(
+                      overlayColor: MaterialStateProperty.all(
+                        Colors.transparent,
+                      ),
+                      splashColor: Colors.transparent,
+                      onTap: () {
+                        if (!isDarkMode) {
+                          presenter.changeTheme(true);
+                          onThemeChanged(true);
+                        }
+                      },
+                      child: _themeMode(
+                        'Night Mode',
+                        AppConstant.icIsha,
+                        isDarkMode,
+                        theme,
+                        context,
+                      ),
+                    ),
+                  ],
                 ],
-              ],
+              ),
             ),
           ),
         );
