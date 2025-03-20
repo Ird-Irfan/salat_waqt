@@ -29,125 +29,143 @@ class AnimatedExpansion extends StatelessWidget {
         final bool isExpanded = presenter.currentUiState.isExpanded;
         final bool isDarkMode = presenter.currentUiState.isDarkMode;
 
-        return AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
+        return Container(
           width: double.infinity,
           decoration: ShapeDecoration(
-            gradient: RadialGradient(
-              center: Alignment(0.93, 1.20),
-              radius: 0.72,
-              colors: [
-                context.color.cardGradientStart,
-                context.color.cardGradientEnd,
-              ],
-            ),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16.px),
             ),
+            gradient: RadialGradient(
+              center: Alignment(0.97, -1.20),
+              radius: 1,
+              colors: [
+                context.color.cardGradientEnd,
+                context.color.cardGradientStart,
+              ],
+            ),
           ),
           child: ClipRect(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Header (always visible)
-                InkWell(
-                  overlayColor: MaterialStateProperty.all(Colors.transparent),
-                  splashColor: Colors.transparent,
-                  onTap: () {
-                    presenter.toggleExpansion();
-                  },
-                  child: Padding(
-                    padding: EdgeInsets.all(18.px),
-                    child: Row(
-                      children: [
-                        SvgIcon(
-                          svgPath: AppConstant.icTheme,
-                          width: 28.px,
-                          height: 28.px,
-                        ),
-                        const SizedBox(width: 12),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Theme',
-                              style: theme.textTheme.titleMedium?.copyWith(
-                                fontFamily: AppTextStyles.inter,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 18.px,
-                                color: context.color.cardTitleColor,
+            child: AnimatedSize(
+              duration: const Duration(milliseconds: 400),
+              // curve: Curves.easeInOut,
+              curve: Curves.linear,
+              // curve: Curves.ease,
+              // curve: Curves.easeInOut,
+              alignment: Alignment.topCenter,
+              clipBehavior: Clip.none,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Header (always visible)
+                  InkWell(
+                    overlayColor: MaterialStateProperty.all(Colors.transparent),
+                    splashColor: Colors.transparent,
+                    onTap: () {
+                      presenter.toggleExpansion();
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.all(20.px),
+                      child: Row(
+                        children: [
+                          SvgIcon(
+                            svgPath:
+                                isDarkMode
+                                    ? AppConstant.icThemeDark
+                                    : AppConstant.icThemeLight,
+                            width: 28.px,
+                            height: 28.px,
+                          ),
+                          SizedBox(width: 16.px),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Theme',
+                                style: theme.textTheme.titleMedium?.copyWith(
+                                  fontFamily: AppTextStyles.inter,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18.px,
+                                  color: context.color.cardTitleColor,
+                                ),
                               ),
-                            ),
-                            SizedBox(height: 8.px),
-                            Text(
-                              isDarkMode
-                                  ? 'Night Mode Selected'
-                                  : 'Day Mode Selected',
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                fontFamily: AppTextStyles.inter,
-                                fontWeight: FontWeight.w400,
-                                fontSize: 14.px,
-                                color: context.color.cardSubtitleColor,
+                              SizedBox(height: 8.px),
+                              Text(
+                                isDarkMode
+                                    ? 'Night Mode Selected'
+                                    : 'Day Mode Selected',
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  fontFamily: AppTextStyles.inter,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 14.px,
+                                  color: context.color.cardSubtitleColor,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                        const Spacer(),
-                        Padding(
-                          padding: EdgeInsets.all(12.0.px),
-                          child: SvgPicture.asset(
+                            ],
+                          ),
+                          const Spacer(),
+                          SvgPicture.asset(
                             isExpanded
                                 ? AppConstant.icArrowUp
                                 : AppConstant.icArrowDown,
                             width: 24.px,
                             height: 24.px,
+                            color: context.color.cardTitleColor,
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                // Expanded options
-                if (isExpanded) ...[
-                  // Day Mode Option
-                  InkWell(
-                    overlayColor: MaterialStateProperty.all(Colors.transparent),
-                    splashColor: Colors.transparent,
-                    onTap: () {
-                      if (isDarkMode) {
-                        presenter.changeTheme(false);
-                        onThemeChanged(false);
-                      }
-                    },
-                    child: _themeMode(
-                      'Day Mode',
-                      AppConstant.icDuhur,
-                      isDarkMode,
-                      theme,
-                      context,
+                  // Expanded options
+                  if (isExpanded) ...[
+                    Divider(
+                      color: context.color.cardSiblingBottomBorderColor
+                          .withOpacityInt(0.05),
+                      height: 1.px,
                     ),
-                  ),
-                  // Night Mode Option
-                  InkWell(
-                    overlayColor: MaterialStateProperty.all(Colors.transparent),
-                    splashColor: Colors.transparent,
-                    onTap: () {
-                      if (!isDarkMode) {
-                        presenter.changeTheme(true);
-                        onThemeChanged(true);
-                      }
-                    },
-                    child: _themeMode(
-                      'Night Mode',
-                      AppConstant.icIsha,
-                      isDarkMode,
-                      theme,
-                      context,
+                    // Day Mode Option
+                    InkWell(
+                      overlayColor: MaterialStateProperty.all(
+                        Colors.transparent,
+                      ),
+                      splashColor: Colors.transparent,
+                      onTap: () {
+                        if (isDarkMode) {
+                          presenter.changeTheme(false);
+                          onThemeChanged(false);
+                        }
+                      },
+                      child: _themeMode(
+                        'Day Mode',
+                        AppConstant.icDuhur,
+                        isDarkMode,
+                        theme,
+                        context,
+                      ),
                     ),
-                  ),
+                    // Night Mode Option
+                    InkWell(
+                      overlayColor: MaterialStateProperty.all(
+                        Colors.transparent,
+                      ),
+                      splashColor: Colors.transparent,
+                      onTap: () {
+                        if (!isDarkMode) {
+                          presenter.changeTheme(true);
+                          onThemeChanged(true);
+                        }
+                      },
+                      child: _themeMode(
+                        'Night Mode',
+                        AppConstant.icIsha,
+                        isDarkMode,
+                        theme,
+                        context,
+                      ),
+                    ),
+                  ],
                 ],
-              ],
+              ),
             ),
           ),
         );
@@ -171,17 +189,16 @@ class AnimatedExpansion extends StatelessWidget {
       height: 60.px,
       decoration:
           isSelected
-              ? ShapeDecoration(
+              ? BoxDecoration(
                 gradient: RadialGradient(
-                  center: Alignment(1.20, 0.93),
-                  radius: 10,
+                  center: Alignment(0.97, 0.00),
+                  radius: 2.57,
                   colors: [
-                    context.color.siblingCardActiveGradientStart,
-                    context.color.siblingCardActiveGradientEnd,
+                    context.color.siblingCardActiveGradientStart.withOpacity(
+                      0.5,
+                    ),
+                    context.color.siblingCardActiveGradientEnd.withOpacity(0.5),
                   ],
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.px),
                 ),
               )
               : null,
@@ -200,7 +217,7 @@ class AnimatedExpansion extends StatelessWidget {
           ),
           const Spacer(),
           if (isSelected)
-            Icon(Icons.check, color: context.color.cardSubtitleColor),
+            SvgIcon(svgPath: AppConstant.icSelect, width: 24.px, height: 24.px),
         ],
       ),
     );

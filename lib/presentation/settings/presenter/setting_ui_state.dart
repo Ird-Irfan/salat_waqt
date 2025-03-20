@@ -8,6 +8,7 @@ class SettingsUiState extends BaseUiState {
   final bool use24HourFormatEnabled;
   final bool timeAdjustmentEnabled;
   final bool hideIftaarTimeEnabled;
+  final int timeAdjustmentValue;    
 
   final bool isExpanded;
   final bool isDarkMode;
@@ -30,6 +31,7 @@ class SettingsUiState extends BaseUiState {
     this.doNotDisturbEnabled = false,
     this.use24HourFormatEnabled = false,
     this.timeAdjustmentEnabled = false,
+    this.timeAdjustmentValue = 0,
     this.hideIftaarTimeEnabled = false,
     this.isExpanded = false,
     this.isDarkMode = false,
@@ -59,7 +61,8 @@ class SettingsUiState extends BaseUiState {
       isExpandedJuristic: false,
       selectedJuristic: 'Hanafi',
       isExpandedRamadan: false,
-      selectedRamadan: 'Bangladesh',
+      selectedRamadan: null,
+      timeAdjustmentValue: 0,
     );
   }
 
@@ -82,6 +85,7 @@ class SettingsUiState extends BaseUiState {
     selectedJuristic,
     isExpandedRamadan,
     selectedRamadan,
+    timeAdjustmentValue,
   ];
 
   SettingsUiState copyWith({
@@ -102,6 +106,7 @@ class SettingsUiState extends BaseUiState {
     String? selectedJuristic,
     bool? isExpandedRamadan,
     String? selectedRamadan,
+    int? timeAdjustmentValue,
   }) {
     return SettingsUiState(
       isLoading: isLoading ?? this.isLoading,
@@ -124,6 +129,7 @@ class SettingsUiState extends BaseUiState {
       selectedJuristic: selectedJuristic ?? this.selectedJuristic,
       isExpandedRamadan: isExpandedRamadan ?? this.isExpandedRamadan,
       selectedRamadan: selectedRamadan ?? this.selectedRamadan,
+      timeAdjustmentValue: timeAdjustmentValue ?? this.timeAdjustmentValue,
     );
   }
 }

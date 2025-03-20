@@ -38,6 +38,9 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
   final Color cardGradientStart;
   final Color cardGradientEnd;
 
+  final Color btnPrimaryStartColor;
+  final Color btnPrimaryEndColor;
+
   final Color donutRingGradientStartColor;
   final Color donutRingGradientEndColor;
   final Color donutBottomCircleColor;
@@ -85,6 +88,8 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
     required this.donutBottomCircleColor,
     required this.siblingCardActiveGradientStart,
     required this.siblingCardActiveGradientEnd,
+    required this.btnPrimaryStartColor,
+    required this.btnPrimaryEndColor,
   });
 
   // Light Theme
@@ -127,8 +132,12 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
     donutRingGradientStartColor: SalatColor.donutRingGradientStartColorLight,
     donutRingGradientEndColor: SalatColor.donutRingGradientEndColorLight,
     donutBottomCircleColor: SalatColor.donutBottomCircleColorLight,
-    siblingCardActiveGradientStart: SalatColor.siblingCardActiveGradientStartColorLight,
-    siblingCardActiveGradientEnd: SalatColor.siblingCardActiveGradientEndColorLight,
+    siblingCardActiveGradientStart:
+        SalatColor.siblingCardActiveGradientStartColorLight,
+    siblingCardActiveGradientEnd:
+        SalatColor.siblingCardActiveGradientEndColorLight,
+    btnPrimaryStartColor: SalatColor.btnPrimaryStartColorLight,
+    btnPrimaryEndColor: SalatColor.btnPrimaryEndColorLight,
   );
 
   // Dark Theme
@@ -170,8 +179,12 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
     donutRingGradientStartColor: SalatColor.donutRingGradientStartColorDark,
     donutRingGradientEndColor: SalatColor.donutRingGradientEndColorDark,
     donutBottomCircleColor: SalatColor.donutBottomCircleColorDark,
-    siblingCardActiveGradientStart: SalatColor.siblingCardActiveGradientStartColorDark,
-    siblingCardActiveGradientEnd: SalatColor.siblingCardActiveGradientEndColorDark,
+    siblingCardActiveGradientStart:
+        SalatColor.siblingCardActiveGradientStartColorDark,
+    siblingCardActiveGradientEnd:
+        SalatColor.siblingCardActiveGradientEndColorDark,
+    btnPrimaryStartColor: SalatColor.btnPrimaryStartColorDark,
+    btnPrimaryEndColor: SalatColor.btnPrimaryEndColorDark,
   );
 
   @override
@@ -215,6 +228,8 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
     Color? donutBottomCircleColor,
     Color? siblingCardActiveGradientStart,
     Color? siblingCardActiveGradientEnd,
+    Color? btnPrimaryStartColor,
+    Color? btnPrimaryEndColor,
   }) {
     return SalatCustomTheme(
       primaryColor100: primaryColor100 ?? this.primaryColor100,
@@ -269,6 +284,8 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
           siblingCardActiveGradientStart ?? this.siblingCardActiveGradientStart,
       siblingCardActiveGradientEnd:
           siblingCardActiveGradientEnd ?? this.siblingCardActiveGradientEnd,
+      btnPrimaryStartColor: btnPrimaryStartColor ?? this.btnPrimaryStartColor,
+      btnPrimaryEndColor: btnPrimaryEndColor ?? this.btnPrimaryEndColor,
     );
   }
 
@@ -346,7 +363,8 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
       onBIconSecondaryColor:
           Color.lerp(onBIconSecondaryColor, other.onBIconSecondaryColor, t)!,
       iftaarSunColor: Color.lerp(iftaarSunColor, other.iftaarSunColor, t)!,
-      cardGradientStart: Color.lerp(cardGradientStart, other.cardGradientStart, t)!,
+      cardGradientStart:
+          Color.lerp(cardGradientStart, other.cardGradientStart, t)!,
       cardGradientEnd: Color.lerp(cardGradientEnd, other.cardGradientEnd, t)!,
       donutRingGradientStartColor:
           Color.lerp(
@@ -363,9 +381,21 @@ class SalatCustomTheme extends ThemeExtension<SalatCustomTheme> {
       donutBottomCircleColor:
           Color.lerp(donutBottomCircleColor, other.donutBottomCircleColor, t)!,
       siblingCardActiveGradientStart:
-          Color.lerp(siblingCardActiveGradientStart, other.siblingCardActiveGradientStart, t)!,
+          Color.lerp(
+            siblingCardActiveGradientStart,
+            other.siblingCardActiveGradientStart,
+            t,
+          )!,
       siblingCardActiveGradientEnd:
-          Color.lerp(siblingCardActiveGradientEnd, other.siblingCardActiveGradientEnd, t)!,
+          Color.lerp(
+            siblingCardActiveGradientEnd,
+            other.siblingCardActiveGradientEnd,
+            t,
+          )!,
+      btnPrimaryStartColor:
+          Color.lerp(btnPrimaryStartColor, other.btnPrimaryStartColor, t)!,
+      btnPrimaryEndColor:
+          Color.lerp(btnPrimaryEndColor, other.btnPrimaryEndColor, t)!,
     );
   }
 }

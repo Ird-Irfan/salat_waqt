@@ -33,27 +33,27 @@ class AnimatedLangCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      overlayColor: MaterialStateProperty.all(Colors.transparent),
-      splashColor: Colors.transparent,
-      onTap: onCardTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        width: double.infinity,
-        decoration: ShapeDecoration(
-          gradient: RadialGradient(
-            center: Alignment(0.93, 1.20),
-            radius: 0.72,
-            colors: [
-              context.color.cardGradientStart,
-              context.color.cardGradientEnd,
-            ],
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.px),
-          ),
+    return Container(
+      width: double.infinity,
+      decoration: ShapeDecoration(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.px),
         ),
-        child: ClipRect(
+        gradient: RadialGradient(
+          center: Alignment(0.97, -1.20),
+          radius: 1,
+          colors: [
+            context.color.cardGradientEnd,
+            context.color.cardGradientStart,
+          ],
+        ),
+      ),
+      child: ClipRect(
+        child: AnimatedSize(
+          duration: const Duration(milliseconds: 400),
+          curve: Curves.linear,
+          alignment: Alignment.topCenter,
+          clipBehavior: Clip.none,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -97,14 +97,12 @@ class AnimatedLangCard extends StatelessWidget {
                         ],
                       ),
                       Spacer(),
-                      Padding(
-                        padding: EdgeInsets.all(12.px),
-                        child: SvgIcon(
-                          svgPath:
-                              isExpanded
-                                  ? AppConstant.icArrowUp
-                                  : AppConstant.icArrowDown,
-                        ),
+                      SvgIcon(
+                        svgPath:
+                            isExpanded
+                                ? AppConstant.icArrowUp
+                                : AppConstant.icArrowDown,
+                        color: context.color.cardTitleColor,
                       ),
                     ],
                   ),
@@ -112,6 +110,11 @@ class AnimatedLangCard extends StatelessWidget {
               ),
               // Expanded section
               if (isExpanded) ...[
+                Divider(
+                  color: context.color.cardSiblingBottomBorderColor
+                      .withOpacityInt(0.05),
+                  height: 1.px,
+                ),
                 InkWell(
                   overlayColor: MaterialStateProperty.all(Colors.transparent),
                   splashColor: Colors.transparent,
@@ -154,17 +157,16 @@ class AnimatedLangCard extends StatelessWidget {
       height: 60.px,
       decoration:
           isSelected
-              ? ShapeDecoration(
+              ? BoxDecoration(
                 gradient: RadialGradient(
-                  center: Alignment(1.20, 0.93),
-                  radius: 10,
+                  center: Alignment(0.97, 0.00),
+                  radius: 2.57,
                   colors: [
-                    context.color.siblingCardActiveGradientStart,
-                    context.color.siblingCardActiveGradientEnd,
+                    context.color.siblingCardActiveGradientStart.withOpacity(
+                      0.5,
+                    ),
+                    context.color.siblingCardActiveGradientEnd.withOpacity(0.5),
                   ],
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.px),
                 ),
               )
               : null,
@@ -183,7 +185,7 @@ class AnimatedLangCard extends StatelessWidget {
           ),
           Spacer(),
           if (isSelected)
-            Icon(Icons.check, color: context.color.cardSubtitleColor),
+            SvgIcon(svgPath: AppConstant.icSelect, width: 24.px, height: 24.px),
         ],
       ),
     );

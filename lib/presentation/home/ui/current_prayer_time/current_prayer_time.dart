@@ -30,7 +30,7 @@ class CurrentPrayerTime extends StatelessWidget {
       builder: () {
         return AnimatedContainer(
           duration: const Duration(milliseconds: 600),
-          curve: Curves.easeInOut,
+          curve: Curves.linear,
           decoration: ShapeDecoration(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16.px),
@@ -120,15 +120,67 @@ class CurrentPrayerTime extends StatelessWidget {
                 color: context.color.cardSiblingBottomBorderColor
                     .withOpacityInt(0.05),
               ),
-              AnimatedSwitcher(
-                duration: const Duration(milliseconds: 600),
-                child:
-                    presenter.currentUiState.isCurrentPrayerTimeExpanded
-                        ? ColumnItem(theme: theme, presenter: presenter)
-                        : Padding(
-                          padding: EdgeInsets.symmetric(vertical: 20.px),
-                          child: RowItem(theme: theme, presenter: presenter),
-                        ),
+              AnimatedSize(
+                duration: const Duration(milliseconds: 400),
+                curve: Curves.easeInOut,
+                alignment: Alignment.topCenter,
+                clipBehavior: Clip.none,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    // RowItem (collapsed view)
+                    AnimatedOpacity(
+                      opacity:
+                          presenter.currentUiState.isCurrentPrayerTimeExpanded
+                              ? 0.0
+                              : 1.0,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                      child: AnimatedSlide(
+                        offset:
+                            presenter.currentUiState.isCurrentPrayerTimeExpanded
+                                ? const Offset(0, -1.0)
+                                : Offset.zero,
+                        duration: const Duration(milliseconds: 400),
+                        curve: Curves.easeInOut,
+                        child:
+                            presenter.currentUiState.isCurrentPrayerTimeExpanded
+                                ? const SizedBox.shrink()
+                                : Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 20.px,
+                                  ),
+                                  child: RowItem(
+                                    theme: theme,
+                                    presenter: presenter,
+                                  ),
+                                ),
+                      ),
+                    ),
+
+                    // ColumnItem (expanded view)
+                    AnimatedOpacity(
+                      opacity:
+                          presenter.currentUiState.isCurrentPrayerTimeExpanded
+                              ? 1.0
+                              : 0.0,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                      child: AnimatedSlide(
+                        offset:
+                            presenter.currentUiState.isCurrentPrayerTimeExpanded
+                                ? Offset.zero
+                                : const Offset(0, 1.0),
+                        duration: const Duration(milliseconds: 400),
+                        curve: Curves.easeInOut,
+                        child:
+                            presenter.currentUiState.isCurrentPrayerTimeExpanded
+                                ? ColumnItem(theme: theme, presenter: presenter)
+                                : const SizedBox.shrink(),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

@@ -191,4 +191,18 @@ class SettingsPresenter extends BasePresenter<SettingsUiState> {
   Future<void> toggleLoading({required bool loading}) {
     throw UnimplementedError();
   }
+
+  void incrementTimeAdjustment() {
+    uiState.value = currentUiState.copyWith(
+      timeAdjustmentValue: currentUiState.timeAdjustmentValue + 1,
+    );
+  }
+
+  void decrementTimeAdjustment() {
+    if (currentUiState.timeAdjustmentValue > 0) {
+      uiState.value = currentUiState.copyWith(
+        timeAdjustmentValue: currentUiState.timeAdjustmentValue - 1,
+      );
+    }
+  }
 }
