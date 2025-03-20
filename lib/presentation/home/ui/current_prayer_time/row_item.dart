@@ -94,7 +94,7 @@ class RowItem extends StatelessWidget {
           Text(
             time,
             style: theme.textTheme.labelMedium?.copyWith(
-              fontSize: 12.px,
+              fontSize: 11.px,
               color: context.color.cardTitleColor,
               fontFamily: AppTextStyles.inter,
               fontWeight: FontWeight.w500,

@@ -28,115 +28,104 @@ class ForbiddenTime extends StatelessWidget {
       final forbiddenTimes = presenter.forbiddenTimes;
       final timeRangeDisplay = presenter.getTimeRangeDisplay();
 
-      return AnimatedBuilder(
-        animation: presenter.animationController,
-        builder: (context, child) {
-          return AnimatedContainer(
-            duration: const Duration(milliseconds: 500),
-            curve: Curves.easeInOut,
-            padding: EdgeInsets.all(20.px),
-            decoration: ShapeDecoration(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16.px),
-              ),
-              gradient: RadialGradient(
-                center: Alignment(0.97, -1.20),
-                radius: 1,
-                colors: [
-                  context.color.cardGradientEnd,
-                  context.color.cardGradientStart,
-                ],
-              ),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                InkWell(
-                  overlayColor: MaterialStateProperty.all(Colors.transparent),
-                  splashColor: Colors.transparent,
-                  onTap: () => presenter.toggleExpanded(),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      return Container(
+        padding: EdgeInsets.all(20.px),
+        decoration: ShapeDecoration(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.px),
+          ),
+          gradient: RadialGradient(
+            center: Alignment(0.97, -1.20),
+            radius: 1,
+            colors: [
+              context.color.cardGradientEnd,
+              context.color.cardGradientStart,
+            ],
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            InkWell(
+              overlayColor: MaterialStateProperty.all(Colors.transparent),
+              splashColor: Colors.transparent,
+              onTap: () => presenter.toggleExpanded(),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SvgIcon(
+                    svgPath: AppConstant.icForbidden,
+                    color: Colors.red,
+                    height: 32.px,
+                    width: 32.px,
+                  ),
+                  SizedBox(width: 16.px),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SvgIcon(
-                        svgPath: AppConstant.icForbidden,
-                        color: Colors.red,
-                        height: 32.px,
-                        width: 32.px,
+                      Text(
+                        isInForbiddenTime
+                            ? 'Currently Forbidden'
+                            : 'Forbidden Times',
+                        style: theme.textTheme.labelMedium?.copyWith(
+                          fontSize: 18.px,
+                          color: context.color.cardTitleColor,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                      SizedBox(width: 16.px),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            isInForbiddenTime
-                                ? 'Currently Forbidden'
-                                : 'Forbidden Times',
-                            style: theme.textTheme.labelMedium?.copyWith(
-                              fontSize: 18.px,
-                              color: context.color.cardTitleColor,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          SizedBox(height: 8.px),
-                          Text(
-                            timeRangeDisplay,
-                            style: theme.textTheme.labelMedium?.copyWith(
-                              fontSize: 14.px,
-                              fontWeight: FontWeight.w400,
-                              color: context.color.cardSubtitleColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Spacer(),
-                      AnimatedRotation(
-                        duration: const Duration(milliseconds: 300),
-                        turns: presenter.isExpanded ? 0.5 : 0,
-                        child: SvgPicture.asset(
-                          AppConstant.icArrowDown,
-                          height: 24.px,
-                          width: 24.px,
-                          colorFilter: ColorFilter.mode(
-                            context.color.collapseBtnColor,
-                            BlendMode.srcIn,
-                          ),
+                      SizedBox(height: 8.px),
+                      Text(
+                        timeRangeDisplay,
+                        style: theme.textTheme.labelMedium?.copyWith(
+                          fontSize: 14.px,
+                          fontWeight: FontWeight.w400,
+                          color: context.color.cardSubtitleColor,
                         ),
                       ),
                     ],
                   ),
-                ),
-
-                ClipRect(
-                  child: AnimatedSize(
-                    duration: const Duration(milliseconds: 400),
-                    curve: Curves.linear,
-                    alignment: Alignment.topCenter,
-                    clipBehavior: Clip.none,
-                    child: Visibility(
-                      visible: presenter.isExpanded,
-                      child:
-                          forbiddenTimes != null && forbiddenTimes.isNotEmpty
-                              ? ForbiddenTimeItems(
-                                theme: theme,
-                                forbiddenTimes: forbiddenTimes,
-                              )
-                              : Center(
-                                child: Padding(
-                                  padding: EdgeInsets.only(top: 16.0),
-                                  child: Text(
-                                    "Loading forbidden times...",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                              ),
+                  Spacer(),
+                  SvgPicture.asset(
+                    AppConstant.icArrowDown,
+                    height: 24.px,
+                    width: 24.px,
+                    colorFilter: ColorFilter.mode(
+                      context.color.collapseBtnColor,
+                      BlendMode.srcIn,
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          );
-        },
+
+            AnimatedCrossFade(
+              firstChild: const SizedBox.shrink(),
+              secondChild: Padding(
+                padding: const EdgeInsets.only(top: 16.0),
+                child:
+                    forbiddenTimes != null && forbiddenTimes.isNotEmpty
+                        ? ForbiddenTimeItems(
+                          theme: theme,
+                          forbiddenTimes: forbiddenTimes,
+                        )
+                        : Center(
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 16.0),
+                            child: Text(
+                              "Loading forbidden times...",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+              ),
+              crossFadeState:
+                  presenter.isExpanded
+                      ? CrossFadeState.showSecond
+                      : CrossFadeState.showFirst,
+              duration: const Duration(milliseconds: 300),
+            ),
+          ],
+        ),
       );
     });
   }
@@ -154,75 +143,99 @@ class ForbiddenTimeItems extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 16.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ...List.generate(
-            forbiddenTimes.length,
-            (index) => Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 12.0),
-                  child: Divider(
-                    color: context.color.cardSiblingBottomBorderColor
-                        .withOpacityInt(0.05),
-                    height: 0.5.px,
-                  ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ...List.generate(
+          forbiddenTimes.length,
+          (index) => Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 12.0),
+                child: Divider(
+                  color: context.color.cardSiblingBottomBorderColor
+                      .withOpacityInt(0.05),
+                  height: 0.5.px,
                 ),
-                InkWell(
-                  overlayColor: MaterialStateProperty.all(Colors.transparent),
-                  splashColor: Colors.transparent,
-                  onTap: () {
-                    CustomBottomSheet.show(
-                      context: context,
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 24.px),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              forbiddenTimesList[index].title,
-                              style: theme.textTheme.titleMedium?.copyWith(
-                                color: context.color.cardTitleColor,
-                                fontSize: 24.px,
-                                fontWeight: FontWeight.w400,
-                                fontFamily: AppTextStyles.inter,
-                                letterSpacing: 0.24,
-                              ),
+              ),
+              InkWell(
+                overlayColor: MaterialStateProperty.all(Colors.transparent),
+                splashColor: Colors.transparent,
+                onTap: () {
+                  CustomBottomSheet.show(
+                    context: context,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 24.px),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            forbiddenTimesList[index].title,
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              color: context.color.cardTitleColor,
+                              fontSize: 24.px,
+                              fontWeight: FontWeight.w400,
+                              fontFamily: AppTextStyles.inter,
+                              letterSpacing: 0.24,
                             ),
-                            SizedBox(height: 12.px),
-                            Text(
-                              forbiddenTimesList[index].description,
-                              style: theme.textTheme.titleMedium?.copyWith(
-                                color: context.color.cardTitleColor,
-                                fontSize: 16.px,
-                                fontWeight: FontWeight.w400,
-                                fontFamily: AppTextStyles.inter,
-                              ),
+                          ),
+                          SizedBox(height: 12.px),
+                          Text(
+                            forbiddenTimesList[index].description,
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              color: context.color.cardTitleColor,
+                              fontSize: 16.px,
+                              fontWeight: FontWeight.w400,
+                              fontFamily: AppTextStyles.inter,
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    );
-                  },
-                  child: _buildForbiddenTimeItem(
-                    context,
-                    getIconPath(forbiddenTimes[index]['icon'] ?? 'Fajr'),
-                    forbiddenTimes[index]['name'] ?? '',
-                    index,
-                    theme,
-                    '${forbiddenTimes[index]['startTime']} - ${forbiddenTimes[index]['endTime']}',
-                  ),
+                    ),
+                  );
+                },
+                child: Row(
+                  children: [
+                    SvgIcon(
+                      svgPath: getIconPath(
+                        forbiddenTimes[index]['icon'] ?? 'Fajr',
+                      ),
+                      height: 27.px,
+                      width: 29.px,
+                    ),
+                    SizedBox(width: 16.px),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          forbiddenTimes[index]['name'] ?? '',
+                          style: theme.textTheme.labelMedium?.copyWith(
+                            fontSize: 12.px,
+                            fontWeight: FontWeight.w400,
+                            color: context.color.cardSubtitleColor,
+                          ),
+                        ),
+                        SizedBox(height: 6.px),
+                        Text(
+                          '${forbiddenTimes[index]['startTime']} - ${forbiddenTimes[index]['endTime']}',
+                          style: theme.textTheme.labelMedium?.copyWith(
+                            fontSize: 16.px,
+                            color: context.color.cardTitleColor,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: AppTextStyles.inter,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                SizedBox(height: 12.px),
-              ],
-            ),
+              ),
+              SizedBox(height: 12.px),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -243,57 +256,5 @@ class ForbiddenTimeItems extends StatelessWidget {
       default:
         return AppConstant.icFajr;
     }
-  }
-
-  Widget _buildForbiddenTimeItem(
-    BuildContext context,
-    String svgPath,
-    String title,
-    int index,
-    ThemeData theme,
-    String timeRange,
-  ) {
-    return TweenAnimationBuilder<double>(
-      tween: Tween(begin: 0.0, end: 1.0),
-      duration: Duration(milliseconds: 300 + (index * 100)),
-      curve: Curves.easeOut,
-      builder: (context, value, child) {
-        return Transform.translate(
-          offset: Offset((1.0 - value) * 20, 0),
-          child: Opacity(
-            opacity: value,
-            child: Row(
-              children: [
-                SvgIcon(svgPath: svgPath, height: 27.px, width: 29.px),
-                SizedBox(width: 16.px),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: theme.textTheme.labelMedium?.copyWith(
-                        fontSize: 12.px,
-                        fontWeight: FontWeight.w400,
-                        color: context.color.cardSubtitleColor,
-                      ),
-                    ),
-                    SizedBox(height: 6.px),
-                    Text(
-                      timeRange,
-                      style: theme.textTheme.labelMedium?.copyWith(
-                        fontSize: 16.px,
-                        color: context.color.cardTitleColor,
-                        fontWeight: FontWeight.w500,
-                        fontFamily: AppTextStyles.inter,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
   }
 }
