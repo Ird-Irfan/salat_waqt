@@ -8,6 +8,8 @@ import 'package:salat_waqt/core/constant/app_text_styles.dart';
 import 'package:salat_waqt/core/di/service_locator.dart';
 import 'package:salat_waqt/core/external_libs/presentable_widget_builder.dart';
 import 'package:salat_waqt/core/utility/utility.dart';
+import 'package:salat_waqt/presentation/home/ui/custom_click_card/custom_click_card.dart';
+import 'package:salat_waqt/presentation/home/ui/custom_click_card/custom_click_report_card.dart';
 import 'package:salat_waqt/presentation/settings/presenter/setting_presenter.dart';
 import 'package:salat_waqt/presentation/settings/ui/animated_Card/animated_card.dart';
 import 'package:salat_waqt/presentation/settings/ui/animated_expansion/animated_expansion.dart';
@@ -123,12 +125,12 @@ class SettingsPage extends StatelessWidget {
                   selectedTextTwo: "Shafi",
                 ),
 
-                IconTextRow(
+                CustonClickCard(
                   theme: theme,
                   title: 'Calculation Method',
                   subtitle: 'Current: Moonsighting Comitte...',
                   svgIconPath: AppConstant.icCalculator,
-                  hasSwitch: false,
+                  onTap: () {},
                 ),
                 TimeAdjustments(
                   theme: theme,
@@ -179,7 +181,7 @@ class SettingsPage extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(left: 8.px),
                   child: Text(
-                    'RAMADAN TIMES',
+                    'OTHER OPTIONS',
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontSize: 14.px,
                       fontFamily: AppTextStyles.inter,
@@ -189,20 +191,20 @@ class SettingsPage extends StatelessWidget {
                   ),
                 ),
 
-                IconTextRow(
+                CustonClickCard(
                   theme: theme,
                   title: 'About Us',
                   subtitle: 'www.irdfoundation.com',
                   svgIconPath: AppConstant.icLayer,
-                  hasSwitch: false,
-                  titleFontSize: 14,
+                  onTap: () {},
                 ),
-                IconTextRow(
+                CUstomClickReportCard(
                   theme: theme,
-                  title: 'Calculation Method',
-                  subtitle: 'Current: Moonsighting Comitte...',
-                  svgIconPath: AppConstant.icReview,
-                  hasSwitch: false,
+                  title: 'Report or Give Feedback',
+                  subtitle:
+                      'Give us valuable feedbacks so we keep \nimprooving',
+                  svgIconPath: AppConstant.icLayer,
+                  onTap: () {},
                 ),
                 SizedBox(height: 20.px),
               ],

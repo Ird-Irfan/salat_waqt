@@ -4,11 +4,12 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:salat_waqt/core/base/base_presenter.dart';
+import 'package:salat_waqt/core/constant/app_contant.dart';
 import 'package:salat_waqt/core/di/service_locator.dart';
 import 'package:salat_waqt/core/external_libs/presentable_widget_builder.dart';
 import 'package:salat_waqt/core/utility/utility.dart';
 import 'package:salat_waqt/presentation/home/presenter/home_presenter.dart';
-import 'package:salat_waqt/presentation/home/ui/about_us_footer/about_us_footer.dart';
+import 'package:salat_waqt/presentation/home/ui/custom_click_card/custom_click_card.dart';
 import 'package:salat_waqt/presentation/home/ui/appber/appber_section.dart';
 import 'package:salat_waqt/presentation/home/ui/current_prayer_time/current_prayer_time.dart';
 import 'package:salat_waqt/presentation/home/ui/date_display/date_display.dart';
@@ -76,10 +77,14 @@ class HomePage extends StatelessWidget {
                             ),
                           ),
                           // Iftar Time Counter - Only show if hideIftaarTimeEnabled is false
-                          if (!settingsPresenter.currentUiState.hideIftaarTimeEnabled)
+                          if (!settingsPresenter
+                              .currentUiState
+                              .hideIftaarTimeEnabled)
                             IftarTimeCounter(theme: theme),
                           // Sahri & Iftar Times - Only show if hideIftaarTimeEnabled is false
-                          if (!settingsPresenter.currentUiState.hideIftaarTimeEnabled)
+                          if (!settingsPresenter
+                              .currentUiState
+                              .hideIftaarTimeEnabled)
                             SahriIftarTimesSection(
                               theme: theme,
                               sahriTime:
@@ -100,7 +105,7 @@ class HomePage extends StatelessWidget {
                           // Forbidden Times Section
                           ForbiddenTime(theme: theme),
                           // About Us Footer
-                          AboutUsFooter(theme: theme),
+                          CustonClickCard(theme: theme, title: 'Support Us', subtitle: 'Be a Part of Sadaqah Jariyah', svgIconPath: AppConstant.icSupport, onTap: () {}),
                           SizedBox(height: 20.px),
                         ],
                       ),
@@ -117,11 +122,7 @@ class HomePage extends StatelessWidget {
 }
 
 class HomeAppBar extends StatelessWidget {
-  const HomeAppBar({
-    super.key,
-    required this.presenter,
-    required this.theme,
-  });
+  const HomeAppBar({super.key, required this.presenter, required this.theme});
 
   final HomePresenter presenter;
   final ThemeData theme;
@@ -146,8 +147,7 @@ class HomeAppBar extends StatelessWidget {
             Get.bottomSheet(SetLocationBottomSheet() as Widget);
           },
           location:
-              presenter.currentUiState.currentAddress ??
-              'Dhaka, Bangladesh',
+              presenter.currentUiState.currentAddress ?? 'Dhaka, Bangladesh',
           theme: theme,
         ),
       ),
