@@ -39,7 +39,7 @@ class FlashScreen extends StatelessWidget {
     });
 
     return ReusableFlashScreen(
-      backgroundImagePath: AppConstant.bgflashScreen,
+      backgroundImagePath: 'assets/images/bg_flash_screen.png',
       logoImagePath: AppConstant.flashScreenlogo,
       title: 'Muslim Prayer Time',
       subtitle: 'IRD Foundation',

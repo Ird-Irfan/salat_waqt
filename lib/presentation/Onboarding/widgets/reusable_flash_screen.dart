@@ -200,6 +200,7 @@ class ReusableFlashScreen extends StatelessWidget {
     // Add second logo if provided
     if (secondLogoImagePath != null) {
       widgets.add(
+        
         Image.asset(
           secondLogoImagePath!,
           width: secondLogoWidth,
@@ -222,7 +223,7 @@ class ReusableFlashScreen extends StatelessWidget {
             secondSubtitle!,
             style:
                 secondSubtitleStyle ??
-                const TextStyle(
+                TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w400,
                   color: SalatColor.primaryColorDark300,

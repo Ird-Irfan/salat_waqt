@@ -44,6 +44,7 @@ class AppConstant {
   static const String appBgPngLight = 'assets/images/appBgPngLight.png';
   static const String bgflashScreen = 'assets/images/bg_flash_screen.png';
   static const String flashScreenlogo = 'assets/images/flash_screen_logo.png';
+
   static const String locationicon = 'assets/images/location_icon.png';
   static const String moslemmosque = 'assets/images/moslem_mosque.png';
   static const String splashScreenlogo = 'assets/images/splash_screen_logo.png';
@@ -55,4 +56,9 @@ class AppConstant {
   static const String icEnglish = 'assets/svgs/ic_english.svg';
   static const String icLanguage = 'assets/svgs/ic_language.svg'; 
   static const String icBangla = 'assets/svgs/ic_bangla.svg';
+
+  static const String icOnbsDark = 'assets/svgs/ic_onbsDark.svg';
+  static const String icOnbsLight = 'assets/svgs/ic_onbsLight.svg';
+
+
 }

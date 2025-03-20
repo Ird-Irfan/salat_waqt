@@ -34,30 +34,22 @@ class GradientButton extends StatelessWidget {
     return Container(
       width: width,
       height: height,
-      decoration: BoxDecoration(
+      decoration: ShapeDecoration(
         gradient: LinearGradient(
-          colors: gradientColors,
-          begin: gradientStart,
-          end: gradientEnd,
+          begin: Alignment(0.50, 0.00),
+          end: Alignment(0.50, 1.00),
+          colors: [
+           context.color.btnPrimaryStartColor /* Gradient-BTN-Primary-Start */,
+                  context.color.btnPrimaryEndColor  /* Gradient-BTN-Primary-End */,
+          ],
         ),
-        borderRadius: BorderRadius.circular(borderRadius),
-        boxShadow:
-            elevation > 0
-                ? [
-                  BoxShadow(
-                    color: Colors.black.withOpacityInt(30),
-                    spreadRadius: 0.5,
-                    blurRadius: elevation,
-                    offset: const Offset(0, 2),
-                  ),
-                ]
-                : null,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
           overlayColor: MaterialStateProperty.all(Colors.transparent),
-                splashColor: Colors.transparent,
+          splashColor: Colors.transparent,
           onTap: onPressed,
           borderRadius: BorderRadius.circular(borderRadius),
           child: Center(

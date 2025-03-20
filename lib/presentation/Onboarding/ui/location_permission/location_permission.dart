@@ -5,6 +5,7 @@ import 'package:salat_waqt/core/config/salat_color.dart';
 import 'package:salat_waqt/core/constant/app_contant.dart';
 import 'package:salat_waqt/core/constant/app_text_styles.dart';
 import 'package:salat_waqt/core/services/preferences_service.dart';
+import 'package:salat_waqt/core/utility/utility.dart';
 import 'package:salat_waqt/presentation/Onboarding/widgets/reusable_flash_screen.dart';
 import 'package:salat_waqt/presentation/home/ui/home_page.dart';
 import 'package:salat_waqt/core/services/logger_service.dart';
@@ -230,23 +231,26 @@ class _LocationPermissionState extends State<LocationPermission> {
     return ReusableFlashScreen(
       // Primary section
       title: 'Location',
-      titleStyle: const TextStyle(
-        fontSize: 24,
+      titleStyle: TextStyle(
+        fontSize: 30,
         fontWeight: FontWeight.w600,
-        color: SalatColor.primaryColorDark300,
+        color: context.color.cardTitleColor,
         fontFamily: AppTextStyles.inter,
       ),
       spaceBetween: 12,
       subtitle: 'Enable location permission',
-      subtitleStyle: const TextStyle(
-        fontSize: 16,
+      subtitleStyle: TextStyle(
+        fontSize: 20,
         fontWeight: FontWeight.w400,
-        color: SalatColor.primaryColorDark300,
+        color: context.color.cardSubtitleColor,
         fontFamily: AppTextStyles.inter,
       ),
 
       // Background
-      backgroundImagePath: AppConstant.bgflashScreen,
+      backgroundImagePath:
+          Theme.of(context).brightness == Brightness.dark
+              ? AppConstant.appBgPngDark
+              : AppConstant.appBgPngLight,
 
       // Secondary section
       secondLogoImagePath: AppConstant.locationicon,
@@ -256,10 +260,10 @@ class _LocationPermissionState extends State<LocationPermission> {
           _isLoading
               ? _statusMessage
               : 'Enable location permissions to find your local prayer times & calculate qibla directions.',
-      secondSubtitleStyle: const TextStyle(
-        fontSize: 14,
+      secondSubtitleStyle: TextStyle(
+        fontSize: 16,
         fontWeight: FontWeight.w400,
-        color: SalatColor.primaryColorDark300,
+        color: context.color.cardSubtitleColor,
         fontFamily: AppTextStyles.inter,
         height: 1.5,
       ),
